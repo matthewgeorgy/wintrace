@@ -56,6 +56,22 @@ PatchIAT(void)
 				if (lstrcmpiA(FunctionName->Name, "MessageBoxA") == 0) PatchEntry(WtMessageBoxA);
 				if (lstrcmpiA(FunctionName->Name, "GetCurrentProcess") == 0) PatchEntry(WtGetCurrentProcess);
 				if (lstrcmpiA(FunctionName->Name, "GetCurrentProcessId") == 0) PatchEntry(WtGetCurrentProcessId);
+				// heapapi.h
+				if (lstrcmpiA(FunctionName->Name, "GetProcessHeap") == 0) 		PatchEntry(WtGetProcessHeap);
+				if (lstrcmpiA(FunctionName->Name, "GetProcessHeaps") == 0) 		PatchEntry(WtGetProcessHeaps);
+				if (lstrcmpiA(FunctionName->Name, "HeapAlloc") == 0)			PatchEntry(WtHeapAlloc);
+				if (lstrcmpiA(FunctionName->Name, "HeapCompact") == 0)			PatchEntry(WtHeapCompact);
+				if (lstrcmpiA(FunctionName->Name, "HeapCreate") == 0)			PatchEntry(WtHeapCreate);
+				if (lstrcmpiA(FunctionName->Name, "HeapDestroy") == 0)			PatchEntry(WtHeapDestroy);
+				if (lstrcmpiA(FunctionName->Name, "HeapFree") == 0)				PatchEntry(WtHeapFree);
+				if (lstrcmpiA(FunctionName->Name, "HeapLock") == 0) 			PatchEntry(WtHeapLock);
+				if (lstrcmpiA(FunctionName->Name, "HeapQueryInformation") == 0)	PatchEntry(WtHeapQueryInformation);
+				if (lstrcmpiA(FunctionName->Name, "HeapReAlloc") == 0) 			PatchEntry(WtHeapReAlloc);
+				if (lstrcmpiA(FunctionName->Name, "HeapSetInformation") == 0) 	PatchEntry(WtHeapSetInformation);
+				if (lstrcmpiA(FunctionName->Name, "HeapSize") == 0)				PatchEntry(WtHeapSize);
+				if (lstrcmpiA(FunctionName->Name, "HeapUnlock") == 0)			PatchEntry(WtHeapUnlock);
+				if (lstrcmpiA(FunctionName->Name, "HeapValidate") == 0)			PatchEntry(WtHeapValidate);
+				if (lstrcmpiA(FunctionName->Name, "HeapWalk") == 0)				PatchEntry(WtHeapWalk);
 
 				OriginalFirstThunk++;
 				FirstThunk++;

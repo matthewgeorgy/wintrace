@@ -1,6 +1,7 @@
 /*
 	Version History
 
+		0.1.4	Fully add wt_heapapi.h/c; BUG ON x86!
 		0.1.3	Added dummy macro to easily patch individual IAT entries
 		0.1.2	Added dllmain.h and moved #includes around
 		0.1.1	Added wt_winuser.h/c and wt_processthreadsapi.c/h
@@ -14,6 +15,7 @@
 #include <Dbghelp.h>
 
 #include "wt_winuser.h"
+#include "wt_heapapi.h"
 #include "wt_processthreadsapi.h"
 
 void PatchIAT(void);
