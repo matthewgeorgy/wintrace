@@ -4,12 +4,12 @@
 int WINAPI
 WtMessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)
 {
-	int			Ret;
-	FARPROC		_MessageBoxA;
+	int					Ret;
+	static DWORD		Cnt;
 
-	_MessageBoxA = GetProcAddress(GetModuleHandle("User32.dll"), "MessageBoxA");
+	printf("[%u] MessageBoxA(0x%p, \"%s\", \"%s\", %u)", Cnt++, hWnd, lpText, lpCaption, uType);
 	Ret = MessageBoxA(hWnd, lpText, lpCaption, uType);
-	printf("MessageBoxA(0x%p, \"%s\", \"%s\", %u) = %d\n", hWnd, lpText, lpCaption, uType, Ret);
+	printf(" = %d\n", Ret);
 	return Ret;
 }
 

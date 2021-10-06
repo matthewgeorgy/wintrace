@@ -1,6 +1,7 @@
 /*
 	Version History
 
+		0.1.5	Added counters for hooked function calls
 		0.1.4	Fully add wt_heapapi.h/c; BUG ON x86!
 		0.1.3	Added dummy macro to easily patch individual IAT entries
 		0.1.2	Added dllmain.h and moved #includes around

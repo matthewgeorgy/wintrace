@@ -4,10 +4,11 @@
 HANDLE
 WtGetProcessHeap()
 {
-	HANDLE		Ret;
+	HANDLE				Ret;
+	static DWORD		Cnt;
 
 
-	printf("GetProcessHeap()");
+	printf("[%u] GetProcessHeap()", Cnt++);
 	Ret = GetProcessHeap();
 	printf(" = 0x%p\n", Ret);
 
@@ -18,10 +19,10 @@ DWORD
 WtGetProcessHeaps(DWORD NumberOfHeaps,
 				  PHANDLE ProcessHeaps)
 {
-	DWORD		Ret;
+	DWORD				Ret;
+	static DWORD		Cnt;
 
-
-	printf("GetProcessHeaps(%u, 0x%p)", NumberOfHeaps, ProcessHeaps);
+	printf("[%u] GetProcessHeaps(%u, 0x%p)", Cnt++, NumberOfHeaps, ProcessHeaps);
 	Ret = GetProcessHeaps(NumberOfHeaps, ProcessHeaps);
 	printf(" = %u\n", Ret);
 
@@ -33,10 +34,11 @@ WtHeapAlloc(HANDLE hHeap,
   		    DWORD dwFlags,
   		    SIZE_T dwBytes)
 {
-	LPVOID		Ret;
+	LPVOID				Ret;
+	static DWORD		Cnt;
 
 
-	printf("HeapAlloc(0x%p, %Iu, %llu)", hHeap, dwFlags, dwBytes);
+	printf("[%u] HeapAlloc(0x%p, %u, %llu)", Cnt++, hHeap, dwFlags, dwBytes);
 	Ret = HeapAlloc(hHeap, dwFlags, dwBytes);
 	printf(" = 0x%p\n", Ret);
 
@@ -47,10 +49,11 @@ SIZE_T
 WtHeapCompact(HANDLE hHeap,
 			  DWORD dwFlags)
 {
-	SIZE_T		Ret;
+	SIZE_T				Ret;
+	static DWORD		Cnt;
 
 
-	printf("HeapCompact(0x%p, %u) = %ul\n", hHeap, dwFlags);
+	printf("[%u] HeapCompact(0x%p, %u) = %ul\n", Cnt++, hHeap, dwFlags);
 	Ret = HeapCompact(hHeap, dwFlags);
 	printf(" = %u\n", Ret);
 
@@ -62,10 +65,11 @@ WtHeapCreate(DWORD flOptions,
 			 SIZE_T dwInitialSize,
 			 SIZE_T dwMaximumSize)
 {
-	HANDLE		Ret;
+	HANDLE				Ret;
+	static DWORD 		Cnt;
 
 
-	printf("HeapCreate(%u, %u, %u) = 0x%p\n", flOptions, dwInitialSize, dwMaximumSize);
+	printf("[%u] HeapCreate(%u, %u, %u) = 0x%p\n", Cnt++, flOptions, dwInitialSize, dwMaximumSize);
 	Ret = HeapCreate(flOptions, dwInitialSize, dwMaximumSize);
 	printf(" = 0x%p\n", Ret);
 
@@ -75,10 +79,11 @@ WtHeapCreate(DWORD flOptions,
 BOOL
 WtHeapDestroy(HANDLE hHeap)
 {
-	BOOL		Ret;
+	BOOL				Ret;
+	static DWORD		Cnt;
 
 
-	printf("HeapDestroy(0x%p)", hHeap);
+	printf("[%u] HeapDestroy(0x%p)", Cnt++, hHeap);
 	Ret = HeapDestroy(hHeap);
 	printf(" = %d\n", Ret);
 
@@ -90,10 +95,11 @@ WtHeapFree(HANDLE hHeap,
 		   DWORD dwFlags,
 		   LPVOID lpMem)
 {
-	BOOL		Ret;
+	BOOL				Ret;
+	static DWORD 		Cnt;
 
 
-	printf("HeapFree(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
+	printf("[%u] HeapFree(0x%p, %u, 0x%p)", Cnt++, hHeap, dwFlags, lpMem);
 	Ret = HeapFree(hHeap, dwFlags, lpMem);
 	printf(" = %d\n", Ret);
 
@@ -103,10 +109,11 @@ WtHeapFree(HANDLE hHeap,
 BOOL
 WtHeapLock(HANDLE hHeap)
 {
-	BOOL		Ret;
+	BOOL				Ret;
+	static DWORD 		Cnt;
 
 
-	printf("HeapLock(0x%p)", hHeap);
+	printf("[%u] HeapLock(0x%p)", Cnt++, hHeap);
 	Ret = HeapLock(hHeap);
 	printf(" = %d\n", Ret);
 
@@ -120,10 +127,11 @@ WtHeapQueryInformation(HANDLE HeapHandle,
 					   SIZE_T HeapInformationLength,
 					   PSIZE_T ReturnLength)
 {
-	BOOL		Ret;
+	BOOL				Ret;
+	static DWORD 		Cnt;
 
 
-	printf("HeapQueryInformation(0x%p, %d, 0x%p, %u, 0x%p)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
+	printf("[%u] HeapQueryInformation(0x%p, %d, 0x%p, %u, 0x%p)", Cnt++, HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
 	Ret = HeapQueryInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
 	printf(" = %d\n", Ret);
 
@@ -136,10 +144,11 @@ WtHeapReAlloc(HANDLE hHeap,
 			  LPVOID lpMem,
 			  SIZE_T dwBytes)
 {
-	LPVOID		Ret;
+	LPVOID				Ret;
+	static DWORD 		Cnt;
 
 
-	printf("HeapReAlloc(0x%p, %u, 0x%p, %u)", hHeap, dwFlags, lpMem, dwBytes);
+	printf("[%u] HeapReAlloc(0x%p, %u, 0x%p, %u)", Cnt++, hHeap, dwFlags, lpMem, dwBytes);
 	Ret = HeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
 	printf(" = 0x%p\n", Ret);
 
@@ -152,12 +161,14 @@ WtHeapSetInformation(HANDLE HeapHandle,
 					 PVOID  HeapInformation,
 					 SIZE_T HeapInformationLength)
 {
-	BOOL		Ret;
+	BOOL				Ret;
+	static DWORD 		Cnt;
 
 
-	printf("HeapSetInformation(0x%p, %d, 0x%p, %u)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
+	printf("[%u] HeapSetInformation(0x%p, %d, 0x%p, %u)", Cnt++, HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
 	Ret = HeapSetInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
 	printf(" = %d\n", Ret);
+	printf("%u\n", GetLastError());
 
 	return Ret;
 }
@@ -167,10 +178,11 @@ WtHeapSize(HANDLE hHeap,
 		   DWORD dwFlags,
 		   LPCVOID lpMem)
 {
-	SIZE_T		Ret;
+	SIZE_T				Ret;
+	static DWORD 		Cnt;
 
 
-	printf("HeapSize(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
+	printf("[%u] HeapSize(0x%p, %u, 0x%p)", Cnt++, hHeap, dwFlags, lpMem);
 	Ret = HeapSize(hHeap, dwFlags, lpMem);
 	printf(" = %u\n", Ret);
 
@@ -180,10 +192,11 @@ WtHeapSize(HANDLE hHeap,
 BOOL
 WtHeapUnlock(HANDLE hHeap)
 {
-	BOOL		Ret;
+	BOOL				Ret;
+	static DWORD 		Cnt;
 
 
-	printf("HeapUnlock(0x%p)", hHeap);
+	printf("[%u] HeapUnlock(0x%p)", Cnt++, hHeap);
 	Ret = HeapUnlock(hHeap);
 	printf(" = %d\n", Ret);
 
@@ -195,10 +208,11 @@ WtHeapValidate(HANDLE hHeap,
 			   DWORD dwFlags,
 			   LPCVOID lpMem)
 {
-	BOOL		Ret;
+	BOOL				Ret;
+	static DWORD 		Cnt;
 
 
-	printf("HeapValidate(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
+	printf("[%u] HeapValidate(0x%p, %u, 0x%p)", Cnt++, hHeap, dwFlags, lpMem);
 	Ret = HeapValidate(hHeap, dwFlags, lpMem);
 	printf(" = %d\n", Ret);
 
@@ -209,10 +223,11 @@ BOOL
 WtHeapWalk(HANDLE hHeap,
 		   LPPROCESS_HEAP_ENTRY lpEntry)
 {
-	BOOL		Ret;
+	BOOL				Ret;
+	static DWORD 		Cnt;
 
 
-	printf("HeapWalk(0x%p, 0x%p)", hHeap, lpEntry);
+	printf("[%u] HeapWalk(0x%p, 0x%p)", Cnt++, hHeap, lpEntry);
 	Ret = HeapWalk(hHeap, lpEntry);
 	printf(" = %d\n", Ret);
 
