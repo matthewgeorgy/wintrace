@@ -1,0 +1,83 @@
+/*
+	Version History
+
+		0.1.1	Added VirtualFreeEx in the remote thread to free DllPath
+		0.1.0	Initial creation
+*/
+
+#include <windows.h>
+#include <stdio.h>
+
+int
+main(int argc, char **argv)
+{
+	LPCSTR						DllPath = "wintrace.dll";
+	LPCSTR						ProgramName = argv[1];
+	STARTUPINFO					si = {0};
+	PROCESS_INFORMATION			pi = {0};
+	LPVOID						pDllPath;
+	HANDLE						LoadThread;
+	SIZE_T						Len = strlen(DllPath) + 1;
+	BOOL						Status;
+	LPTHREAD_START_ROUTINE		lpfnLoadLibA;
+	LPTHREAD_START_ROUTINE		lpfnFreeLib;
+
+
+	si.cb = sizeof(STARTUPINFO);
+	Status = CreateProcess(ProgramName, NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi);
+	if (!Status)
+	{
+		printf("failed to create process!\n");
+		return -1;
+	}
+
+	lpfnLoadLibA = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "LoadLibraryA");
+	if (!lpfnLoadLibA)
+	{
+		printf("could no locate loadliba\n");
+		return -1;
+	}
+
+	lpfnFreeLib = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "FreeLibrary");
+	if (!lpfnFreeLib)
+	{
+		printf("could no locate freeliba\n");
+		return -1;
+	}
+
+	pDllPath = VirtualAllocEx(pi.hProcess, 0, Len, MEM_COMMIT, PAGE_READWRITE);
+	if (!pDllPath)
+	{
+		printf("failed to allocate!\n");
+		return -1;
+	}
+
+	Status = WriteProcessMemory(pi.hProcess, pDllPath, (LPVOID)DllPath, Len, 0);
+	if (!Status)
+	{
+		printf("failed to write memory!\n");
+		return -1;
+	}
+
+	LoadThread = CreateRemoteThread(pi.hProcess, NULL, 0, lpfnLoadLibA, pDllPath, 0, NULL);
+	if (!LoadThread)
+	{
+		printf("failed to load thread\n");
+		return -1;
+	}
+
+	WaitForSingleObject(LoadThread, INFINITE);
+
+	ResumeThread(pi.hThread);
+
+	WaitForSingleObject(pi.hThread, INFINITE);
+
+	LoadThread = CreateRemoteThread(pi.hProcess, NULL, 0, lpfnFreeLib, pDllPath, 0, NULL);
+
+	WaitForSingleObject(pi.hThread, INFINITE);
+
+	VirtualFreeEx(pi.hProcess, pDllPath, Len, MEM_RELEASE);
+
+	return 0;
+}
+
