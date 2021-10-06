@@ -1,11 +1,17 @@
+/*
+	Version History
+
+		0.1.0	Initial creation
+*/
+
 #include <windows.h>
 #include <stdio.h>
 
 int
-main(void)
+main(int argc, char **argv)
 {
-	LPCSTR					DllPath = "lib.dll";
-	LPCSTR					ProgramName = "main.exe";
+	LPCSTR					DllPath = "wintrace.dll";
+	LPCSTR					ProgramName = argv[1];
 	HANDLE					Process;
 	STARTUPINFO				si = {0};
 	PROCESS_INFORMATION		pi = {0};
@@ -17,7 +23,7 @@ main(void)
 
 
 	si.cb = sizeof(STARTUPINFO);
-	Status = CreateProcess(NULL, ProgramName, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi);
+	Status = CreateProcess(ProgramName, NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi);
 	if (!Status)
 	{
 		printf("failed to create process!\n");

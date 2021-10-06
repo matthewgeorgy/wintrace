@@ -1,4 +1,4 @@
 @echo off
 
-rm main.exe
+rm *.exe
 del *.exe *.obj *.lib *.dll *.exp *.ilk *.pdb

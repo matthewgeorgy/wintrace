@@ -1,3 +1,9 @@
+/*
+	Version History
+
+		0.1.0	Initial creation
+*/
+
 #include <windows.h>
 #include <Dbghelp.h>
 #include <stdio.h>
