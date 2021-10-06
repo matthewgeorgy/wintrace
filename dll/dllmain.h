@@ -1,6 +1,7 @@
 /*
 	Version History
 
+		0.1.3	Added dummy macro to easily patch individual IAT entries
 		0.1.2	Added dllmain.h and moved #includes around
 		0.1.1	Added wt_winuser.h/c and wt_processthreadsapi.c/h
 		0.1.0	Initial creation
@@ -16,5 +17,12 @@
 #include "wt_processthreadsapi.h"
 
 void PatchIAT(void);
+
+#define PatchEntry(__Func) \
+	do \
+	{ \
+		VirtualProtect((LPVOID)(&FirstThunk->u1.Function), 8, PAGE_READWRITE, &OldProtect); \
+		FirstThunk->u1.Function = (DWORD_PTR)(__Func); \
+	} while (0);
 
 #endif // DLLMAIN_H

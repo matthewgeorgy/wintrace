@@ -53,21 +53,9 @@ PatchIAT(void)
 			{
 				FunctionName = (PIMAGE_IMPORT_BY_NAME)((DWORD_PTR)ImageBase + OriginalFirstThunk->u1.AddressOfData);
 
-				if (lstrcmpiA(FunctionName->Name, "MessageBoxA") == 0)
-				{
-					VirtualProtect((LPVOID)(&FirstThunk->u1.Function), 8, PAGE_READWRITE, &OldProtect);
-					FirstThunk->u1.Function = (DWORD_PTR)(WtMessageBoxA);
-				}
-				if (lstrcmpiA(FunctionName->Name, "GetCurrentProcess") == 0)
-				{
-					VirtualProtect((LPVOID)(&FirstThunk->u1.Function), 8, PAGE_READWRITE, &OldProtect);
-					FirstThunk->u1.Function = (DWORD_PTR)(WtGetCurrentProcess);
-				}
-				if (lstrcmpiA(FunctionName->Name, "GetCurrentProcessId") == 0)
-				{
-					VirtualProtect((LPVOID)(&FirstThunk->u1.Function), 8, PAGE_READWRITE, &OldProtect);
-					FirstThunk->u1.Function = (DWORD_PTR)(WtGetCurrentProcessId);
-				}
+				if (lstrcmpiA(FunctionName->Name, "MessageBoxA") == 0) PatchEntry(WtMessageBoxA);
+				if (lstrcmpiA(FunctionName->Name, "GetCurrentProcess") == 0) PatchEntry(WtGetCurrentProcess);
+				if (lstrcmpiA(FunctionName->Name, "GetCurrentProcessId") == 0) PatchEntry(WtGetCurrentProcessId);
 
 				OriginalFirstThunk++;
 				FirstThunk++;
