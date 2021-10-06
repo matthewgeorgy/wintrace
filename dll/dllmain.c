@@ -1,11 +1,3 @@
-/*
-	Version History
-
-		0.1.2	Added dllmain.h and move #includes around
-		0.1.1	Added wt_winuser.h/c and wt_processthreadsapi.c/h
-		0.1.0	Initial creation
-*/
-
 #include "dllmain.h"
 
 BOOL APIENTRY
