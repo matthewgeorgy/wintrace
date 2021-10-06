@@ -1,13 +1,14 @@
 /*
-	Version History
+    Version History
 
-		0.1.6	Fixed wt_heapapi bug*, added ReadIAT()
-		0.1.5	Added counters for hooked function calls
-		0.1.4	Fully added wt_heapapi.h/c; wt_heapapi BUG ON x86!
-		0.1.3	Added dummy macro to easily patch individual IAT entries
-		0.1.2	Added dllmain.h and moved #includes around
-		0.1.1	Added wt_winuser.h/c and wt_processthreadsapi.c/h
-		0.1.0	Initial creation
+        0.1.7   Cleanup + retab; forcing x64 DLLCRT
+        0.1.6   Fixed wt_heapapi bug*, added ReadIAT()
+        0.1.5   Added counters for hooked function calls
+        0.1.4   Fully added wt_heapapi.h/c; wt_heapapi BUG ON x86!
+        0.1.3   Added dummy macro to easily patch individual IAT entries
+        0.1.2   Added dllmain.h and moved #includes around
+        0.1.1   Added wt_winuser.h/c and wt_processthreadsapi.c/h
+        0.1.0   Initial creation
 */
 
 // TODO: Fix bug that requires test programs to be compiled with msvcrt.lib:
@@ -21,6 +22,9 @@
 // seen in the output.
 // However, if I DO compile the test program with msvcrt.lib, then this issue
 // somehow disappears.
+// NOTE: For now, I am ignoring this issue; target programs MUST be built for
+// x64 and linked to the CRT DLL (/MD or link ... msvcrt.lib). I'll
+// investigate this later.
 
 #ifndef DLLMAIN_H
 #define DLLMAIN_H
@@ -39,10 +43,10 @@ void PatchIAT(void);
 void ReadIAT(void);
 
 #define PatchEntry(__Func) \
-	do \
-	{ \
-		VirtualProtect((LPVOID)(&FirstThunk->u1.Function), 8, PAGE_READWRITE, &OldProtect); \
-		FirstThunk->u1.Function = (DWORD_PTR)(__Func); \
-	} while (0);
+    do \
+    { \
+        VirtualProtect((LPVOID)(&FirstThunk->u1.Function), sizeof(DWORD_PTR), PAGE_READWRITE, &OldProtect); \
+        FirstThunk->u1.Function = (DWORD_PTR)(__Func); \
+    } while (0);
 
 #endif // DLLMAIN_H
