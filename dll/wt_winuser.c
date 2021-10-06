@@ -1,4 +1,5 @@
 #include "wt_winuser.h"
+#include <stdio.h>
 
 int WINAPI
 WtMessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)

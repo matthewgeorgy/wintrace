@@ -1,21 +1,31 @@
 /*
 	Version History
 
+		0.1.2	Added dllmain.h and move #includes around
 		0.1.1	Added wt_winuser.h/c and wt_processthreadsapi.c/h
 		0.1.0	Initial creation
 */
 
-#include <windows.h>
-#include <Dbghelp.h>
-#include <stdio.h>
-
-#include "wt_winuser.h"
-#include "wt_processthreadsapi.h"
+#include "dllmain.h"
 
 BOOL APIENTRY
 DllMain(HMODULE hModule,
 		DWORD fdwReason,
 		LPVOID lpReserved)
+{
+	switch (fdwReason)
+	{
+		case DLL_PROCESS_ATTACH:
+		{
+			PatchIAT();
+		} break;
+	}
+
+	return TRUE;
+}
+
+void
+PatchIAT(void)
 {
 	LPVOID							ImageBase;
 	PIMAGE_DOS_HEADER 				DosHeader;
@@ -29,57 +39,49 @@ DllMain(HMODULE hModule,
 	PIMAGE_THUNK_DATA				OriginalFirstThunk,
 									FirstThunk;
 
-	switch (fdwReason)
+
+	ImageBase = GetModuleHandle(NULL);
+	DosHeader = (PIMAGE_DOS_HEADER)ImageBase;
+	NtHeader = (PIMAGE_NT_HEADERS)((DWORD_PTR)ImageBase + DosHeader->e_lfanew);
+
+	ImportDir = NtHeader->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
+	ImportDesc = (PIMAGE_IMPORT_DESCRIPTOR)(ImportDir.VirtualAddress + (DWORD_PTR)ImageBase);
+
+	while (ImportDesc->Name != 0)
 	{
-		case DLL_PROCESS_ATTACH:
+		LibraryName = (LPCSTR)ImportDesc->Name + (DWORD_PTR)ImageBase;
+		Library = LoadLibraryA(LibraryName);
+
+		if (Library)
 		{
-			ImageBase = GetModuleHandle(NULL);
-			DosHeader = (PIMAGE_DOS_HEADER)ImageBase;
-			NtHeader = (PIMAGE_NT_HEADERS)((DWORD_PTR)ImageBase + DosHeader->e_lfanew);
+			OriginalFirstThunk = (PIMAGE_THUNK_DATA)((DWORD_PTR)ImageBase + ImportDesc->OriginalFirstThunk);
+			FirstThunk = (PIMAGE_THUNK_DATA)((DWORD_PTR)ImageBase + ImportDesc->FirstThunk);
 
-			ImportDir = NtHeader->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
-			ImportDesc = (PIMAGE_IMPORT_DESCRIPTOR)(ImportDir.VirtualAddress + (DWORD_PTR)ImageBase);
-
-			while (ImportDesc->Name != 0)
+			while (OriginalFirstThunk->u1.AddressOfData != 0)
 			{
-				LibraryName = (LPCSTR)ImportDesc->Name + (DWORD_PTR)ImageBase;
-				Library = LoadLibraryA(LibraryName);
+				FunctionName = (PIMAGE_IMPORT_BY_NAME)((DWORD_PTR)ImageBase + OriginalFirstThunk->u1.AddressOfData);
 
-				if (Library)
+				if (lstrcmpiA(FunctionName->Name, "MessageBoxA") == 0)
 				{
-					OriginalFirstThunk = (PIMAGE_THUNK_DATA)((DWORD_PTR)ImageBase + ImportDesc->OriginalFirstThunk);
-					FirstThunk = (PIMAGE_THUNK_DATA)((DWORD_PTR)ImageBase + ImportDesc->FirstThunk);
-
-					while (OriginalFirstThunk->u1.AddressOfData != 0)
-					{
-						FunctionName = (PIMAGE_IMPORT_BY_NAME)((DWORD_PTR)ImageBase + OriginalFirstThunk->u1.AddressOfData);
-
-						if (lstrcmpiA(FunctionName->Name, "MessageBoxA") == 0)
-						{
-							VirtualProtect((LPVOID)(&FirstThunk->u1.Function), 8, PAGE_READWRITE, &OldProtect);
-							FirstThunk->u1.Function = (DWORD_PTR)(WtMessageBoxA);
-						}
-
-						if (lstrcmpiA(FunctionName->Name, "GetCurrentProcess") == 0)
-						{
-							VirtualProtect((LPVOID)(&FirstThunk->u1.Function), 8, PAGE_READWRITE, &OldProtect);
-							FirstThunk->u1.Function = (DWORD_PTR)(WtGetCurrentProcess);
-						}
-						if (lstrcmpiA(FunctionName->Name, "GetCurrentProcessId") == 0)
-						{
-							VirtualProtect((LPVOID)(&FirstThunk->u1.Function), 8, PAGE_READWRITE, &OldProtect);
-							FirstThunk->u1.Function = (DWORD_PTR)(WtGetCurrentProcessId);
-						}
-
-						OriginalFirstThunk++;
-						FirstThunk++;
-					}
+					VirtualProtect((LPVOID)(&FirstThunk->u1.Function), 8, PAGE_READWRITE, &OldProtect);
+					FirstThunk->u1.Function = (DWORD_PTR)(WtMessageBoxA);
+				}
+				if (lstrcmpiA(FunctionName->Name, "GetCurrentProcess") == 0)
+				{
+					VirtualProtect((LPVOID)(&FirstThunk->u1.Function), 8, PAGE_READWRITE, &OldProtect);
+					FirstThunk->u1.Function = (DWORD_PTR)(WtGetCurrentProcess);
+				}
+				if (lstrcmpiA(FunctionName->Name, "GetCurrentProcessId") == 0)
+				{
+					VirtualProtect((LPVOID)(&FirstThunk->u1.Function), 8, PAGE_READWRITE, &OldProtect);
+					FirstThunk->u1.Function = (DWORD_PTR)(WtGetCurrentProcessId);
 				}
 
-				ImportDesc++;
+				OriginalFirstThunk++;
+				FirstThunk++;
 			}
-		} break;
-	}
+		}
 
-	return TRUE;
+		ImportDesc++;
+	}
 }
