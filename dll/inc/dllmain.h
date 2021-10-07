@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.1.9   Added common.h to contain common defs we'll need across files
         0.1.8   Added basic file mapping to retrieve options from core process
         0.1.7   Cleanup + retab; forcing x64 DLLCRT
         0.1.6   Fixed wt_heapapi bug*, added ReadIAT()
@@ -35,13 +36,7 @@
 #include <Dbghelp.h>
 #include <stdio.h>
 
-typedef struct _tag_WINTRACEOPTS
-{
-    BOOL        ShowThreadID;
-    BOOL        ShowProcessID;
-    BOOL        ShowFuncCount;
-} T_WINTRACEOPTS;
-
+#include "common.h"
 #include "wt_winuser.h"
 #include "wt_heapapi.h"
 #include "wt_processthreadsapi.h"
