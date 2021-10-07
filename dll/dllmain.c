@@ -1,5 +1,7 @@
 #include "dllmain.h"
 
+T_WINTRACEOPTS      *pOpts;
+
 BOOL APIENTRY
 DllMain(HMODULE hModule,
         DWORD fdwReason,
@@ -9,6 +11,25 @@ DllMain(HMODULE hModule,
     {
         case DLL_PROCESS_ATTACH:
         {
+            HANDLE      FileMap;
+
+            FileMap = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, "wintraceOpts");
+            if (FileMap)
+            {
+                pOpts = (T_WINTRACEOPTS *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WINTRACEOPTS));
+                if (pOpts)
+                {
+                    printf("opts!:%d %d %d\n", pOpts->ShowThreadID, pOpts->ShowProcessID, pOpts->ShowFuncCount);
+                }
+                else
+                {
+                    printf("failed to map file view!(%d)\n", GetLastError());
+                }
+            }
+            else
+            {
+                printf("could not open file map!(%d)\n", GetLastError());
+            }
             /* ReadIAT(); */
             PatchIAT();
         } break;
