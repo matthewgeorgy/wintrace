@@ -1,4 +1,4 @@
-#include "dllmain.h"
+#include "inc/dllmain.h"
 
 T_WINTRACEOPTS      *pOpts;
 

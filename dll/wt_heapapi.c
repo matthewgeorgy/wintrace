@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "wt_heapapi.h"
+#include "inc/wt_heapapi.h"
 
 HANDLE
 WtGetProcessHeap()
