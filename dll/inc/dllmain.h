@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.2.2   Added procID/threadID tracing
         0.2.1   Function call counts starts at 1 and enclosed in ()
         0.2.0   Function call counts print conditionally according to options
         0.1.9   Added common.h to contain common defs we'll need across files
