@@ -10,12 +10,7 @@ WtMessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)
     static DWORD        Cnt;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     printf("MessageBoxA(0x%p, \"%s\", \"%s\", %u)", hWnd, lpText, lpCaption, uType);
     Ret = MessageBoxA(hWnd, lpText, lpCaption, uType);
     printf(" = %d\n", Ret);
