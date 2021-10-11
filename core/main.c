@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.1.3   Tidied up option parsing and usage printing
         0.1.2   Added plumbing for option/switch parsing
         0.1.1   Added VirtualFreeEx in the remote thread to free DllPath
         0.1.0   Initial creation
@@ -16,6 +17,9 @@ typedef struct _tag_WINTRACEOPTS
     BOOL        ShowFuncCount;
 } T_WINTRACEOPTS;
 
+void PrintUsage(void);
+T_WINTRACEOPTS ParseOpts(int argc, char **argv);
+
 int
 main(int argc,
      char **argv)
@@ -30,36 +34,13 @@ main(int argc,
     BOOL                        Status;
     LPTHREAD_START_ROUTINE      lpfnLoadLibA;
     LPTHREAD_START_ROUTINE      lpfnFreeLib;
-
-    INT                         OptInd;
-    T_WINTRACEOPTS              Opts = {0};
+    T_WINTRACEOPTS              Opts;
     LPVOID                      pOpts;
     HANDLE                      FileMap;
 
 
     // Parse opts
-    for (OptInd = 1; (OptInd < argc) && argv[OptInd][0] == '/'; OptInd++)
-    {
-        switch (argv[OptInd][1])
-        {
-            case 'c':
-                Opts.ShowFuncCount = TRUE;
-                break;
-            case 't':
-                Opts.ShowThreadID = TRUE;
-                break;
-            case 'p':
-                Opts.ShowProcessID = TRUE;
-                break;
-            case '?':
-                printf("Help!\n");
-                break;
-            default:
-                printf("\nUsage: wintrace [options] <exe>\n");
-                printf("Use /? for more info\n\n");
-                break;
-        }
-    }
+    Opts = ParseOpts(argc, argv);
 
     // Map shared memory
     FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WINTRACEOPTS), "wintraceOpts");
@@ -137,5 +118,63 @@ main(int argc,
     CloseHandle(FileMap);
 
     return 0;
+}
+
+void
+PrintUsage(void)
+{
+    printf("\nOptions:\n");
+    printf("  /c    Show function call count\n");
+    printf("  /p    Show process ID\n");
+    printf("  /t    Show thread ID\n");
+}
+
+T_WINTRACEOPTS
+ParseOpts(int argc,
+          char **argv)
+{
+    DWORD               OptInd;
+    T_WINTRACEOPTS      Opts = {0};
+
+
+    if (argc < 2)
+    {
+        printf("\nUsage: wintrace [options] <exe>\n");
+        printf("Use /? for more info\n\n");
+        exit(-1);
+    }
+
+    for (OptInd = 1; (OptInd < argc) && argv[OptInd][0] == '/'; OptInd++)
+    {
+        switch (argv[OptInd][1])
+        {
+            case 'c':
+            {
+                Opts.ShowFuncCount = TRUE;
+            } break;
+            case 't':
+            {
+                Opts.ShowThreadID = TRUE;
+            } break;
+            case 'p':
+            {
+                Opts.ShowProcessID = TRUE;
+            } break;
+            case '?':
+            {
+                PrintUsage();
+                exit(1);
+            } break;
+
+            default:
+            {
+                printf("\nUsage: wintrace [options] <exe>\n");
+                printf("Use /? for more info\n");
+                exit(-1);
+            } break;
+        }
+    }
+
+    return Opts;
 }
 
