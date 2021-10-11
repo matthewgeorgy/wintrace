@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.3.1   Small print fix in WtHeapCompact
         0.3.0   Added wt_fileapi.h/c + functions + added to patch list
         0.2.9   PatchIAT now uses switch+case table with Djb2 hashes
         0.2.8   Added more winuser functions + added them to the patch list
