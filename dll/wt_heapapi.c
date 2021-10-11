@@ -8,13 +8,11 @@ WtGetProcessHeap()
 {
     HANDLE              Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnGetProcessHeap;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnGetProcessHeap = GetProcAddress(GetModuleHandle("Kernel32.dll"), "GetProcessHeap");
     printf("GetProcessHeap()");
-    Ret = lpfnGetProcessHeap();
+    Ret = GetProcessHeap();
     printf(" = 0x%p\n", Ret);
 
     return Ret;
@@ -26,13 +24,11 @@ WtGetProcessHeaps(DWORD NumberOfHeaps,
 {
     DWORD               Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnGetProcessHeaps;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnGetProcessHeaps = GetProcAddress(GetModuleHandle("Kernel32.dll"), "GetProcessHeaps");
     printf("GetProcessHeaps(%u, 0x%p)", NumberOfHeaps, ProcessHeaps);
-    Ret = lpfnGetProcessHeaps(NumberOfHeaps, ProcessHeaps);
+    Ret = GetProcessHeaps(NumberOfHeaps, ProcessHeaps);
     printf(" = %u\n", Ret);
 
     return Ret;
@@ -45,13 +41,11 @@ WtHeapAlloc(HANDLE hHeap,
 {
     LPVOID              Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapAlloc;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapAlloc = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapAlloc");
     printf("HeapAlloc(0x%p, %u, %llu)", hHeap, dwFlags, dwBytes);
-    Ret = lpfnHeapAlloc(hHeap, dwFlags, dwBytes);
+    Ret = HeapAlloc(hHeap, dwFlags, dwBytes);
     printf(" = 0x%p\n", Ret);
 
     return Ret;
@@ -63,13 +57,11 @@ WtHeapCompact(HANDLE hHeap,
 {
     SIZE_T              Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapCompact;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapCompact = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapCompact");
     printf("HeapCompact(0x%p, %u) = %ul\n", hHeap, dwFlags);
-    Ret = lpfnHeapCompact(hHeap, dwFlags);
+    Ret = HeapCompact(hHeap, dwFlags);
     printf(" = %u\n", Ret);
 
     return Ret;
@@ -82,13 +74,11 @@ WtHeapCreate(DWORD flOptions,
 {
     HANDLE              Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapCreate;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapCreate = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapCreate");
     printf("HeapCreate(%u, %llu, %llu)", flOptions, dwInitialSize, dwMaximumSize);
-    Ret = lpfnHeapCreate(flOptions, dwInitialSize, dwMaximumSize);
+    Ret = HeapCreate(flOptions, dwInitialSize, dwMaximumSize);
     printf(" = 0x%p\n", Ret);
 
     return Ret;
@@ -99,13 +89,11 @@ WtHeapDestroy(HANDLE hHeap)
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapDestroy;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapDestroy = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapDestroy");
     printf("HeapDestroy(0x%p)", hHeap);
-    Ret = lpfnHeapDestroy(hHeap);
+    Ret = HeapDestroy(hHeap);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -118,13 +106,11 @@ WtHeapFree(HANDLE hHeap,
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapFree;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapFree = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapFree");
     printf("HeapFree(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
-    Ret = lpfnHeapFree(hHeap, dwFlags, lpMem);
+    Ret = HeapFree(hHeap, dwFlags, lpMem);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -135,13 +121,11 @@ WtHeapLock(HANDLE hHeap)
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapLock;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapLock = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapLock");
     printf("HeapLock(0x%p)", hHeap);
-    Ret = lpfnHeapLock(hHeap);
+    Ret = HeapLock(hHeap);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -156,13 +140,11 @@ WtHeapQueryInformation(HANDLE HeapHandle,
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapQueryInformation;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapQueryInformation = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapQueryInformation");
     printf("HeapQueryInformation(0x%p, %d, 0x%p, %u, 0x%p)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
-    Ret = lpfnHeapQueryInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
+    Ret = HeapQueryInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -176,13 +158,11 @@ WtHeapReAlloc(HANDLE hHeap,
 {
     LPVOID              Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapReAlloc;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapReAlloc = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapReAlloc");
     printf("HeapReAlloc(0x%p, %u, 0x%p, %u)", hHeap, dwFlags, lpMem, dwBytes);
-    Ret = lpfnHeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
+    Ret = HeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
     printf(" = 0x%p\n", Ret);
 
     return Ret;
@@ -196,13 +176,11 @@ WtHeapSetInformation(HANDLE HeapHandle,
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapSetInformation;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapSetInformation = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapSetInformation");
     printf("HeapSetInformation(0x%p, %d, 0x%p, %u)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
-    Ret = lpfnHeapSetInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
+    Ret = HeapSetInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -215,13 +193,11 @@ WtHeapSize(HANDLE hHeap,
 {
     SIZE_T              Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapSize;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapSize = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapSize");
     printf("HeapSize(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
-    Ret = lpfnHeapSize(hHeap, dwFlags, lpMem);
+    Ret = HeapSize(hHeap, dwFlags, lpMem);
     printf(" = %u\n", Ret);
 
     return Ret;
@@ -232,13 +208,11 @@ WtHeapUnlock(HANDLE hHeap)
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapUnlock;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapUnlock = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapUnlock");
     printf("HeapUnlock(0x%p)", hHeap);
-    Ret = lpfnHeapUnlock(hHeap);
+    Ret = HeapUnlock(hHeap);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -251,13 +225,11 @@ WtHeapValidate(HANDLE hHeap,
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapValidate;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapValidate = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapValidate");
     printf("HeapValidate(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
-    Ret = lpfnHeapValidate(hHeap, dwFlags, lpMem);
+    Ret = HeapValidate(hHeap, dwFlags, lpMem);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -269,13 +241,11 @@ WtHeapWalk(HANDLE hHeap,
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnHeapWalk;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnHeapWalk = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapWalk");
     printf("HeapWalk(0x%p, 0x%p)", hHeap, lpEntry);
-    Ret = lpfnHeapWalk(hHeap, lpEntry);
+    Ret = HeapWalk(hHeap, lpEntry);
     printf(" = %d\n", Ret);
 
     return Ret;

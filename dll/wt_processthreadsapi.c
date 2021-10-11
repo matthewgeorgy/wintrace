@@ -19,16 +19,14 @@ WtCreateProcessA(
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnCreateProcessA;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnCreateProcessA = GetProcAddress(GetModuleHandle("Kernel32.dll"), "CreateProcessA");
     printf("CreateProcessA(\"%s\", \"%s\", 0x%p, 0x%p, %d, %u, 0x%p, \"%s\", 0x%p, 0x%p", lpApplicationName, lpCommandLine,
             lpProcessAttributes, lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory,
             lpStartupInfo, lpProcessInformation);
     printf(")");
-    Ret = lpfnCreateProcessA(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
+    Ret = CreateProcessA(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
             dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
     printf(" = %d\n", Ret);
 
@@ -51,16 +49,14 @@ WtCreateProcessW(
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnCreateProcessW;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnCreateProcessW = GetProcAddress(GetModuleHandle("Kernel32.dll"), "CreateProcessW");
     printf("CreateProcessW(\"%ws\", \"%ws\", 0x%p, 0x%p, %d, %u, 0x%p, \"%ws\", 0x%p, 0x%p", lpApplicationName, lpCommandLine,
             lpProcessAttributes, lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory,
             lpStartupInfo, lpProcessInformation);
     printf(")");
-    Ret = lpfnCreateProcessW(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
+    Ret = CreateProcessW(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
             dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
     printf(" = %d\n", Ret);
 
@@ -84,16 +80,14 @@ WtCreateProcessAsUserA(
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnCreateProcessAsUserA;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnCreateProcessAsUserA = GetProcAddress(GetModuleHandle("Kernel32.dll"), "CreateProcessAsUserA");
     printf("CreateProcessAsUserA(0x%p, \"%s\", \"%s\", 0x%p, 0x%p, %d, %u, 0x%p, \"%s\", 0x%p, 0x%p", hToken, lpApplicationName, lpCommandLine,
             lpProcessAttributes, lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory,
             lpStartupInfo, lpProcessInformation);
     printf(")");
-    Ret = lpfnCreateProcessAsUserA(hToken, lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
+    Ret = CreateProcessAsUserA(hToken, lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
             dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
     printf(" = %d\n", Ret);
 
@@ -116,16 +110,14 @@ BOOL WtCreateProcessAsUserW(
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnCreateProcessAsUserW;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnCreateProcessAsUserW = GetProcAddress(GetModuleHandle("Kernel32.dll"), "CreateProcessAsUserW");
     printf("CreateProcessAsUserW(0x%p, \"%ws\", \"%ws\", 0x%p, 0x%p, %d, %u, 0x%p, \"%ws\", 0x%p, 0x%p", hToken, lpApplicationName, lpCommandLine,
             lpProcessAttributes, lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory,
             lpStartupInfo, lpProcessInformation);
     printf(")");
-    Ret = lpfnCreateProcessAsUserW(hToken, lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
+    Ret = CreateProcessAsUserW(hToken, lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
             dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
     printf(" = %d\n", Ret);
 
@@ -145,14 +137,12 @@ WtCreateRemoteThread(
 {
     HANDLE              Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnCreateRemoteThread;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnCreateRemoteThread = GetProcAddress(GetModuleHandle("Kernel32.dll"), "CreateRemoteThread");
     printf("CreateRemoteThread(0x%p, 0x%p, %u, 0x%p, 0x%p, %u, 0x%p)", hProcess, lpThreadAttributes, dwStackSize,
             lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
-    Ret = lpfnCreateRemoteThread(hProcess, lpThreadAttributes, dwStackSize,
+    Ret = CreateRemoteThread(hProcess, lpThreadAttributes, dwStackSize,
             lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
     printf(" = 0x%p\n", Ret);
 
@@ -173,14 +163,12 @@ WtCreateRemoteThreadEx(
 {
     HANDLE              Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnCreateRemoteThreadEx;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnCreateRemoteThreadEx = GetProcAddress(GetModuleHandle("Kernel32.dll"), "CreateRemoteThreadEx");
     printf("CreateRemoteThreadEx(0x%p, 0x%p, %u, 0x%p, 0x%p, %u, 0x%p, 0x%p)", hProcess, lpThreadAttributes, dwStackSize,
             lpStartAddress, lpParameter, dwCreationFlags, lpAttributeList, lpThreadId);
-    Ret = lpfnCreateRemoteThreadEx(hProcess, lpThreadAttributes, dwStackSize,
+    Ret = CreateRemoteThreadEx(hProcess, lpThreadAttributes, dwStackSize,
             lpStartAddress, lpParameter, dwCreationFlags, lpAttributeList, lpThreadId);
     printf(" = 0x%p\n", Ret);
 
@@ -199,14 +187,12 @@ WtCreateThread(
 {
     HANDLE              Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnCreateThread;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnCreateThread = GetProcAddress(GetModuleHandle("Kernel32.dll"), "CreateThread");
     printf("CreateThread(0x%p, %u, 0x%p, 0x%p, %u, 0x%p)", lpThreadAttributes, dwStackSize, lpStartAddress,
             lpParameter, dwCreationFlags, lpThreadId);
-    Ret = lpfnCreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
+    Ret = CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
     printf(" = 0x%p\n", Ret);
 
     return Ret;
@@ -218,13 +204,11 @@ WtDeleteProcThreadAttributeList(
 )
 {
     static DWORD        Cnt;
-    FARPROC             lpfnDeleteProcThreadAttributeList;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnDeleteProcThreadAttributeList = GetProcAddress(GetModuleHandle("Kernel32.dll"), "DeleteProcThreadAttributeList");
     printf("DeleteProcThreadAttributeList(0x%p)", lpAttributeList);
-    lpfnDeleteProcThreadAttributeList(lpAttributeList);
+    DeleteProcThreadAttributeList(lpAttributeList);
     printf(" = VOID\n");
 }
 
@@ -234,13 +218,11 @@ WtExitProcess(
 )
 {
     static DWORD        Cnt;
-    FARPROC             lpfnExitProcess;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnExitProcess = GetProcAddress(GetModuleHandle("Kernel32.dll"), "ExitProcess");
     printf("ExitProcess(%u)", uExitCode);
-    lpfnExitProcess(uExitCode);
+    ExitProcess(uExitCode);
     printf(" = VOID\n");
 }
 
@@ -251,13 +233,11 @@ WtExitThread(
 )
 {
     static DWORD        Cnt;
-    FARPROC             lpfnExitThread;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnExitThread = GetProcAddress(GetModuleHandle("Kernel32.dll"), "ExitThread");
     printf("ExitThread(%u)", dwExitCode);
-    lpfnExitThread(dwExitCode);
+    ExitThread(dwExitCode);
     printf(" = VOID\n");
 }
 
@@ -298,13 +278,11 @@ WtResumeThread(
 {
     DWORD               Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnResumeThread;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnResumeThread = GetProcAddress(GetModuleHandle("Kernel32.dll"), "ResumeThread");
     printf("ResumeThread(0x%p)", hThread);
-    Ret = lpfnResumeThread(hThread);
+    Ret = ResumeThread(hThread);
     printf(" = %u\n", Ret);
 
     return Ret;
@@ -317,13 +295,11 @@ WtSuspendThread(
 {
     DWORD               Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnSuspendThread;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnSuspendThread = GetProcAddress(GetModuleHandle("Kernel32.dll"), "SuspendThread");
     printf("SuspendThread(0x%p)", hThread);
-    Ret = lpfnSuspendThread(hThread);
+    Ret = SuspendThread(hThread);
     printf(" = %u\n", Ret);
 
     return Ret;
@@ -337,13 +313,11 @@ WtTerminateProcess(
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnTerminateProcess;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnTerminateProcess = GetProcAddress(GetModuleHandle("Kernel32.dll"), "TerminateProcess");
     printf("TerminateProcess(0x%p, %u)", hProcess, uExitCode);
-    Ret = lpfnTerminateProcess(hProcess, uExitCode);
+    Ret = TerminateProcess(hProcess, uExitCode);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -357,13 +331,11 @@ WtTerminateThread(
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnTerminateThread;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnTerminateThread = GetProcAddress(GetModuleHandle("Kernel32.dll"), "TerminateThread");
     printf("TerminateThread(0x%p, %u)", hThread, dwExitCode);
-    Ret = lpfnTerminateThread(hThread, dwExitCode);
+    Ret = TerminateThread(hThread, dwExitCode);
     printf(" = %d\n", Ret);
 
     return Ret;
