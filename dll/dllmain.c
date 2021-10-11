@@ -160,6 +160,23 @@ PatchIAT(void)
                     case FUNC_SuspendThread:                    { PatchEntry(WtSuspendThread); } break;
                     case FUNC_TerminateProcess:                 { PatchEntry(WtTerminateProcess); } break;
                     case FUNC_TerminateThread:                  { PatchEntry(WtTerminateThread); } break;
+                    // fileapi.h
+                    case FUNC_CreateDirectoryA:                 { PatchEntry(WtCreateDirectoryA); } break;
+                    case FUNC_CreateDirectoryW:                 { PatchEntry(WtCreateDirectoryW); } break;
+                    case FUNC_CreateFileA:                      { PatchEntry(WtCreateFileA); } break;
+                    case FUNC_CreateFileW:                      { PatchEntry(WtCreateFileW); } break;
+                    case FUNC_DeleteFileA:                      { PatchEntry(WtDeleteFileA); } break;
+                    case FUNC_DeleteFileW:                      { PatchEntry(WtDeleteFileW); } break;
+                    case FUNC_GetFileSize:                      { PatchEntry(WtGetFileSize); } break;
+                    case FUNC_GetFileSizeEx:                    { PatchEntry(WtGetFileSizeEx); } break;
+                    case FUNC_GetFileType:                      { PatchEntry(WtGetFileType); } break;
+                    case FUNC_ReadFile:                         { PatchEntry(WtReadFile); } break;
+                    case FUNC_ReadFileEx:                       { PatchEntry(WtReadFileEx); } break;
+                    case FUNC_SetEndOfFile:                     { PatchEntry(WtSetEndOfFile); } break;
+                    case FUNC_SetFilePointer:                   { PatchEntry(WtSetFilePointer); } break;
+                    case FUNC_SetFilePointerEx:                 { PatchEntry(WtSetFilePointerEx); } break;
+                    case FUNC_WriteFile:						{ PatchEntry(WtWriteFile); } break;
+                    case FUNC_WriteFileEx:						{ PatchEntry(WtWriteFileEx); } break;
 #pragma warning(default: 4127)
                 }
 
