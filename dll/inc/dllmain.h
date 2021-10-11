@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.2.9   PatchIAT now uses switch+case table with Djb2 hashes
         0.2.8   Added more winuser functions + added them to the patch list
         0.2.7   Removed FARPROC + lpfn function loading in hooks
         0.2.6   Added more winuser functions
