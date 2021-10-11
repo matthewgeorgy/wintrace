@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.2.8   Added more winuser functions + added them to the patch list
         0.2.7   Removed FARPROC + lpfn function loading in hooks
         0.2.6   Added more winuser functions
         0.2.5   Added processthreadsapi functions to the patch list
@@ -35,6 +36,8 @@
 // NOTE: For now, I am ignoring this issue; target programs MUST be built for
 // x64 and linked to the CRT DLL (/MD or link ... msvcrt.lib). I'll
 // investigate this later.
+// TODO: Check functions with 64bit params and see what format specifier to
+// use (ie, %u vs %lu vs %llu).
 
 #ifndef DLLMAIN_H
 #define DLLMAIN_H
