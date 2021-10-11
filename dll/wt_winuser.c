@@ -11,12 +11,11 @@ WtMessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)
 
 
     if (pOpts->ShowFuncCount)
-        printf("[%u] ", Cnt);
+        printf("(%u) ", ++Cnt);
     printf("MessageBoxA(0x%p, \"%s\", \"%s\", %u)", hWnd, lpText, lpCaption, uType);
     Ret = MessageBoxA(hWnd, lpText, lpCaption, uType);
     printf(" = %d\n", Ret);
 
-    Cnt++;
     return Ret;
 }
 

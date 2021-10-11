@@ -11,12 +11,11 @@ WtGetCurrentProcess(void)
 
 
     if (pOpts->ShowFuncCount)
-        printf("[%u] ", Cnt);
+        printf("(%u) ", ++Cnt);
     printf("GetCurrentProcess()");
     Ret = GetCurrentProcess();
     printf(" = 0x%p\n", Ret);
 
-    Cnt++;
     return Ret;
 }
 
@@ -28,12 +27,11 @@ WtGetCurrentProcessId(void)
 
 
     if (pOpts->ShowFuncCount)
-        printf("[%u] ", Cnt);
+        printf("(%u) ", ++Cnt);
     printf("GetCurrentProcessId()");
     Ret = GetCurrentProcessId();
     printf(" = %u\n", Ret);
 
-    Cnt++;
     return Ret;
 }
 
