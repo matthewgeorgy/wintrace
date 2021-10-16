@@ -92,60 +92,60 @@ PatchIAT(void)
                 {
 #pragma warning(disable: 4127)
                     // winuser.h
-                    case FUNC_AdjustWindowRect:     { PatchEntry(WtAdjustWindowRect); } break;
-                    case FUNC_AdjustWindowRectEx:   { PatchEntry(WtAdjustWindowRectEx); } break;
-                    case FUNC_BeginPaint:           { PatchEntry(WtBeginPaint); } break;
-                    case FUNC_ClientToScreen:       { PatchEntry(WtClientToScreen); } break;
-                    case FUNC_ClipCursor:           { PatchEntry(WtClipCursor); } break;
-                    case FUNC_CloseWindow:          { PatchEntry(WtCloseWindow); } break;
-                    case FUNC_CreateWindowA:        { PatchEntry(WtCreateWindowA); } break;
-                    case FUNC_CreateWindowW:        { PatchEntry(WtCreateWindowW); } break;
-                    case FUNC_CreateWindowExA:      { PatchEntry(WtCreateWindowExA); } break;
-                    case FUNC_CreateWindowExW:      { PatchEntry(WtCreateWindowExW); } break;
-                    case FUNC_DefWindowProc:        { PatchEntry(WtDefWindowProc); } break;
-                    case FUNC_DestroyWindow:        { PatchEntry(WtDestroyWindow); } break;
-                    case FUNC_DispatchMessageA:     { PatchEntry(WtDispatchMessageA); } break;
-                    case FUNC_DispatchMessageW:     { PatchEntry(WtDispatchMessageW); } break;
-                    case FUNC_EndPaint:             { PatchEntry(WtEndPaint); } break;
-                    case FUNC_FillRect:             { PatchEntry(WtFillRect); } break;
-                    case FUNC_GetClientRect:        { PatchEntry(WtGetClientRect); } break;
-                    case FUNC_GetCursorPos:         { PatchEntry(WtGetCursorPos); } break;
-                    case FUNC_GetDC:                { PatchEntry(WtGetDC); } break;
-                    case FUNC_GetMessage:           { PatchEntry(WtGetMessage); } break;
-                    case FUNC_GetWindowRect:        { PatchEntry(WtGetWindowRect); } break;
-                    case FUNC_MessageBoxA:          { PatchEntry(WtMessageBoxA); } break;
-                    case FUNC_MessageBoxW:          { PatchEntry(WtMessageBoxW); } break;
-                    case FUNC_MessageBoxExA:        { PatchEntry(WtMessageBoxExA); } break;
-                    case FUNC_MessageBoxExW:        { PatchEntry(WtMessageBoxExW); } break;
-                    case FUNC_PeekMessageA:         { PatchEntry(WtPeekMessageA); } break;
-                    case FUNC_PeekMessageW:         { PatchEntry(WtPeekMessageW); } break;
-                    case FUNC_PostMessageA:         { PatchEntry(WtPostMessageA); } break;
-                    case FUNC_PostMessageW:         { PatchEntry(WtPostMessageW); } break;
-                    case FUNC_PostQuitMessage:      { PatchEntry(WtPostQuitMessage); } break;
-                    case FUNC_RegisterClassExA:     { PatchEntry(WtRegisterClassExA); } break;
-                    case FUNC_RegisterClassExW:     { PatchEntry(WtRegisterClassExW); } break;
-                    case FUNC_ReleaseDC:            { PatchEntry(WtReleaseDC); } break;
-                    case FUNC_ScreenToClient:       { PatchEntry(WtScreenToClient); } break;
-                    case FUNC_ShowCursor:           { PatchEntry(WtShowCursor); } break;
-                    case FUNC_ShowWindow:           { PatchEntry(WtShowWindow); } break;
-                    case FUNC_TranslateMessage:     { PatchEntry(WtTranslateMessage); } break;
-                    case FUNC_UpdateWindow:         { PatchEntry(WtUpdateWindow); } break;
+                    case FUNC_AdjustWindowRect:					{ PatchEntry(WtAdjustWindowRect); } break;
+                    case FUNC_AdjustWindowRectEx:				{ PatchEntry(WtAdjustWindowRectEx); } break;
+                    case FUNC_BeginPaint:						{ PatchEntry(WtBeginPaint); } break;
+                    case FUNC_ClientToScreen:					{ PatchEntry(WtClientToScreen); } break;
+                    case FUNC_ClipCursor:						{ PatchEntry(WtClipCursor); } break;
+                    case FUNC_CloseWindow:						{ PatchEntry(WtCloseWindow); } break;
+                    case FUNC_CreateWindowA:					{ PatchEntry(WtCreateWindowA); } break;
+                    case FUNC_CreateWindowW:					{ PatchEntry(WtCreateWindowW); } break;
+                    case FUNC_CreateWindowExA:					{ PatchEntry(WtCreateWindowExA); } break;
+                    case FUNC_CreateWindowExW:					{ PatchEntry(WtCreateWindowExW); } break;
+                    case FUNC_DefWindowProc:					{ PatchEntry(WtDefWindowProc); } break;
+                    case FUNC_DestroyWindow:					{ PatchEntry(WtDestroyWindow); } break;
+                    case FUNC_DispatchMessageA:					{ PatchEntry(WtDispatchMessageA); } break;
+                    case FUNC_DispatchMessageW:					{ PatchEntry(WtDispatchMessageW); } break;
+                    case FUNC_EndPaint:							{ PatchEntry(WtEndPaint); } break;
+                    case FUNC_FillRect:							{ PatchEntry(WtFillRect); } break;
+                    case FUNC_GetClientRect:					{ PatchEntry(WtGetClientRect); } break;
+                    case FUNC_GetCursorPos:						{ PatchEntry(WtGetCursorPos); } break;
+                    case FUNC_GetDC:							{ PatchEntry(WtGetDC); } break;
+                    case FUNC_GetMessage:						{ PatchEntry(WtGetMessage); } break;
+                    case FUNC_GetWindowRect:					{ PatchEntry(WtGetWindowRect); } break;
+                    case FUNC_MessageBoxA:						{ PatchEntry(WtMessageBoxA); } break;
+                    case FUNC_MessageBoxW:						{ PatchEntry(WtMessageBoxW); } break;
+                    case FUNC_MessageBoxExA:					{ PatchEntry(WtMessageBoxExA); } break;
+                    case FUNC_MessageBoxExW:					{ PatchEntry(WtMessageBoxExW); } break;
+                    case FUNC_PeekMessageA:						{ PatchEntry(WtPeekMessageA); } break;
+                    case FUNC_PeekMessageW:						{ PatchEntry(WtPeekMessageW); } break;
+                    case FUNC_PostMessageA:						{ PatchEntry(WtPostMessageA); } break;
+                    case FUNC_PostMessageW:						{ PatchEntry(WtPostMessageW); } break;
+                    case FUNC_PostQuitMessage:					{ PatchEntry(WtPostQuitMessage); } break;
+                    case FUNC_RegisterClassExA:					{ PatchEntry(WtRegisterClassExA); } break;
+                    case FUNC_RegisterClassExW:					{ PatchEntry(WtRegisterClassExW); } break;
+                    case FUNC_ReleaseDC:						{ PatchEntry(WtReleaseDC); } break;
+                    case FUNC_ScreenToClient:					{ PatchEntry(WtScreenToClient); } break;
+                    case FUNC_ShowCursor:						{ PatchEntry(WtShowCursor); } break;
+                    case FUNC_ShowWindow:						{ PatchEntry(WtShowWindow); } break;
+                    case FUNC_TranslateMessage:					{ PatchEntry(WtTranslateMessage); } break;
+                    case FUNC_UpdateWindow:						{ PatchEntry(WtUpdateWindow); } break;
                     // heapapi.h
-                    case FUNC_GetProcessHeap:       { PatchEntry(WtGetProcessHeap); } break;
-                    case FUNC_GetProcessHeaps:      { PatchEntry(WtGetProcessHeaps); } break;
-                    case FUNC_HeapAlloc:            { PatchEntry(WtHeapAlloc); } break;
-                    case FUNC_HeapCompact:          { PatchEntry(WtHeapCompact); } break;
-                    case FUNC_HeapCreate:           { PatchEntry(WtHeapCreate); } break;
-                    case FUNC_HeapDestroy:          { PatchEntry(WtHeapDestroy); } break;
-                    case FUNC_HeapFree:             { PatchEntry(WtHeapFree); } break;
-                    case FUNC_HeapLock:             { PatchEntry(WtHeapLock); } break;
-                    case FUNC_HeapQueryInformation: { PatchEntry(WtHeapQueryInformation); } break;
-                    case FUNC_HeapReAlloc:          { PatchEntry(WtHeapReAlloc); } break;
-                    case FUNC_HeapSetInformation:   { PatchEntry(WtHeapSetInformation); } break;
-                    case FUNC_HeapSize:             { PatchEntry(WtHeapSize); } break;
-                    case FUNC_HeapUnlock:           { PatchEntry(WtHeapUnlock); } break;
-                    case FUNC_HeapValidate:         { PatchEntry(WtHeapValidate); } break;
-                    case FUNC_HeapWalk:             { PatchEntry(WtHeapWalk); } break;
+                    case FUNC_GetProcessHeap:					{ PatchEntry(WtGetProcessHeap); } break;
+                    case FUNC_GetProcessHeaps:					{ PatchEntry(WtGetProcessHeaps); } break;
+                    case FUNC_HeapAlloc:						{ PatchEntry(WtHeapAlloc); } break;
+                    case FUNC_HeapCompact:						{ PatchEntry(WtHeapCompact); } break;
+                    case FUNC_HeapCreate:						{ PatchEntry(WtHeapCreate); } break;
+                    case FUNC_HeapDestroy:						{ PatchEntry(WtHeapDestroy); } break;
+                    case FUNC_HeapFree:							{ PatchEntry(WtHeapFree); } break;
+                    case FUNC_HeapLock:							{ PatchEntry(WtHeapLock); } break;
+                    case FUNC_HeapQueryInformation:				{ PatchEntry(WtHeapQueryInformation); } break;
+                    case FUNC_HeapReAlloc:						{ PatchEntry(WtHeapReAlloc); } break;
+                    case FUNC_HeapSetInformation:				{ PatchEntry(WtHeapSetInformation); } break;
+                    case FUNC_HeapSize:							{ PatchEntry(WtHeapSize); } break;
+                    case FUNC_HeapUnlock:						{ PatchEntry(WtHeapUnlock); } break;
+                    case FUNC_HeapValidate:						{ PatchEntry(WtHeapValidate); } break;
+                    case FUNC_HeapWalk:							{ PatchEntry(WtHeapWalk); } break;
                     // processthreadspi.h
                     case FUNC_CreateProcessA:                   { PatchEntry(WtCreateProcessA); } break;
                     case FUNC_CreateProcessW:                   { PatchEntry(WtCreateProcessW); } break;
@@ -190,9 +190,9 @@ PatchIAT(void)
                     case FUNC_OutputDebugStringA:               { PatchEntry(WtOutputDebugStringA); } break;
                     case FUNC_OutputDebugStringW:               { PatchEntry(WtOutputDebugStringW); } break;
                     case FUNC_WaitForDebugEvent:                { PatchEntry(WtWaitForDebugEvent); } break;
-
-
-
+                    // profileapi.h
+                    case FUNC_QueryPerformanceCounter:          { PatchEntry(WtQueryPerformanceCounter); } break;
+                    case FUNC_QueryPerformanceFrequency:        { PatchEntry(WtQueryPerformanceFrequency); } break;
 #pragma warning(default: 4127)
                 }
 
