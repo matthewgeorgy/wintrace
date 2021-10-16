@@ -1,7 +1,7 @@
 #include "inc/dllmain.h"
 #include "inc/hashes.h"
 
-T_WINTRACE_OPTS		*pOpts;
+T_WINTRACE_OPTS     *pOpts;
 
 DWORD Djb2(LPSTR String);
 
@@ -10,7 +10,7 @@ DllMain(HMODULE hModule,
         DWORD fdwReason,
         LPVOID lpReserved)
 {
-	hModule; lpReserved; // to resolve warning
+    hModule; lpReserved; // to resolve warning
     switch (fdwReason)
     {
         case DLL_PROCESS_ATTACH:
@@ -24,10 +24,10 @@ DllMain(HMODULE hModule,
                 if (pOpts)
                 {
                     printf("opts!:%d %d %d %s\n", pOpts->ShowThreadID, pOpts->ShowProcessID, pOpts->ShowFuncCount, pOpts->OutputFilename);
-					if (!pOpts->OutputFilename[0])
-						pOpts->OutputFile = stderr;
-					else
-						pOpts->OutputFile = fopen(pOpts->OutputFilename, "w+");
+                    if (!pOpts->OutputFilename[0])
+                        pOpts->OutputFile = stderr;
+                    else
+                        pOpts->OutputFile = fopen(pOpts->OutputFilename, "w+");
                 }
                 else
                 {
@@ -42,7 +42,7 @@ DllMain(HMODULE hModule,
         } break;
         case DLL_PROCESS_DETACH:
         {
-			fclose(pOpts->OutputFile);
+            fclose(pOpts->OutputFile);
         } break;
     }
 
@@ -178,8 +178,21 @@ PatchIAT(void)
                     case FUNC_SetEndOfFile:                     { PatchEntry(WtSetEndOfFile); } break;
                     case FUNC_SetFilePointer:                   { PatchEntry(WtSetFilePointer); } break;
                     case FUNC_SetFilePointerEx:                 { PatchEntry(WtSetFilePointerEx); } break;
-                    case FUNC_WriteFile:						{ PatchEntry(WtWriteFile); } break;
-                    case FUNC_WriteFileEx:						{ PatchEntry(WtWriteFileEx); } break;
+                    case FUNC_WriteFile:                        { PatchEntry(WtWriteFile); } break;
+                    case FUNC_WriteFileEx:                      { PatchEntry(WtWriteFileEx); } break;
+                    // debugapi.h
+                    case FUNC_CheckRemoteDebuggerPresent:       { PatchEntry(WtCheckRemoteDebuggerPresent); } break;
+                    case FUNC_ContinueDebugEvent:               { PatchEntry(WtContinueDebugEvent); } break;
+                    case FUNC_DebugActiveProcess:               { PatchEntry(WtDebugActiveProcess); } break;
+                    case FUNC_DebugActiveProcessStop:           { PatchEntry(WtDebugActiveProcessStop); } break;
+                    case FUNC_DebugBreak:                       { PatchEntry(WtDebugBreak); } break;
+                    case FUNC_IsDebuggerPresent:                { PatchEntry(WtIsDebuggerPresent); } break;
+                    case FUNC_OutputDebugStringA:               { PatchEntry(WtOutputDebugStringA); } break;
+                    case FUNC_OutputDebugStringW:               { PatchEntry(WtOutputDebugStringW); } break;
+                    case FUNC_WaitForDebugEvent:                { PatchEntry(WtWaitForDebugEvent); } break;
+
+
+
 #pragma warning(default: 4127)
                 }
 
