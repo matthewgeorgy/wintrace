@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "inc/wt_heapapi.h"
 
-extern T_WINTRACEOPTS      *pOpts;
+extern T_WINTRACE_OPTS      *pOpts;
 
 HANDLE
 WtGetProcessHeap()
@@ -11,9 +11,9 @@ WtGetProcessHeap()
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "GetProcessHeap()");
+    fprintf(pOpts->OutputFile, "GetProcessHeap()");
     Ret = GetProcessHeap();
-    fprintf(stderr, " = 0x%p\n", Ret);
+    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
 
     return Ret;
 }
@@ -27,9 +27,9 @@ WtGetProcessHeaps(DWORD NumberOfHeaps,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "GetProcessHeaps(%u, 0x%p)", NumberOfHeaps, ProcessHeaps);
+    fprintf(pOpts->OutputFile, "GetProcessHeaps(%u, 0x%p)", NumberOfHeaps, ProcessHeaps);
     Ret = GetProcessHeaps(NumberOfHeaps, ProcessHeaps);
-    fprintf(stderr, " = %u\n", Ret);
+    fprintf(pOpts->OutputFile, " = %u\n", Ret);
 
     return Ret;
 }
@@ -44,9 +44,9 @@ WtHeapAlloc(HANDLE hHeap,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapAlloc(0x%p, %u, %llu)", hHeap, dwFlags, dwBytes);
+    fprintf(pOpts->OutputFile, "HeapAlloc(0x%p, %u, %llu)", hHeap, dwFlags, dwBytes);
     Ret = HeapAlloc(hHeap, dwFlags, dwBytes);
-    fprintf(stderr, " = 0x%p\n", Ret);
+    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
 
     return Ret;
 }
@@ -60,9 +60,9 @@ WtHeapCompact(HANDLE hHeap,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapCompact(0x%p, %u)", hHeap, dwFlags);
+    fprintf(pOpts->OutputFile, "HeapCompact(0x%p, %u)", hHeap, dwFlags);
     Ret = HeapCompact(hHeap, dwFlags);
-    fprintf(stderr, " = %u\n", Ret);
+    fprintf(pOpts->OutputFile, " = %u\n", Ret);
 
     return Ret;
 }
@@ -77,9 +77,9 @@ WtHeapCreate(DWORD flOptions,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapCreate(%u, %llu, %llu)", flOptions, dwInitialSize, dwMaximumSize);
+    fprintf(pOpts->OutputFile, "HeapCreate(%u, %llu, %llu)", flOptions, dwInitialSize, dwMaximumSize);
     Ret = HeapCreate(flOptions, dwInitialSize, dwMaximumSize);
-    fprintf(stderr, " = 0x%p\n", Ret);
+    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
 
     return Ret;
 }
@@ -92,9 +92,9 @@ WtHeapDestroy(HANDLE hHeap)
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapDestroy(0x%p)", hHeap);
+    fprintf(pOpts->OutputFile, "HeapDestroy(0x%p)", hHeap);
     Ret = HeapDestroy(hHeap);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -109,9 +109,9 @@ WtHeapFree(HANDLE hHeap,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapFree(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
+    fprintf(pOpts->OutputFile, "HeapFree(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
     Ret = HeapFree(hHeap, dwFlags, lpMem);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -124,9 +124,9 @@ WtHeapLock(HANDLE hHeap)
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapLock(0x%p)", hHeap);
+    fprintf(pOpts->OutputFile, "HeapLock(0x%p)", hHeap);
     Ret = HeapLock(hHeap);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -143,9 +143,9 @@ WtHeapQueryInformation(HANDLE HeapHandle,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapQueryInformation(0x%p, %d, 0x%p, %u, 0x%p)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
+    fprintf(pOpts->OutputFile, "HeapQueryInformation(0x%p, %d, 0x%p, %u, 0x%p)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
     Ret = HeapQueryInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -161,9 +161,9 @@ WtHeapReAlloc(HANDLE hHeap,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapReAlloc(0x%p, %u, 0x%p, %u)", hHeap, dwFlags, lpMem, dwBytes);
+    fprintf(pOpts->OutputFile, "HeapReAlloc(0x%p, %u, 0x%p, %u)", hHeap, dwFlags, lpMem, dwBytes);
     Ret = HeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
-    fprintf(stderr, " = 0x%p\n", Ret);
+    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
 
     return Ret;
 }
@@ -179,9 +179,9 @@ WtHeapSetInformation(HANDLE HeapHandle,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapSetInformation(0x%p, %d, 0x%p, %u)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
+    fprintf(pOpts->OutputFile, "HeapSetInformation(0x%p, %d, 0x%p, %u)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
     Ret = HeapSetInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -196,9 +196,9 @@ WtHeapSize(HANDLE hHeap,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapSize(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
+    fprintf(pOpts->OutputFile, "HeapSize(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
     Ret = HeapSize(hHeap, dwFlags, lpMem);
-    fprintf(stderr, " = %u\n", Ret);
+    fprintf(pOpts->OutputFile, " = %u\n", Ret);
 
     return Ret;
 }
@@ -211,9 +211,9 @@ WtHeapUnlock(HANDLE hHeap)
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapUnlock(0x%p)", hHeap);
+    fprintf(pOpts->OutputFile, "HeapUnlock(0x%p)", hHeap);
     Ret = HeapUnlock(hHeap);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -228,9 +228,9 @@ WtHeapValidate(HANDLE hHeap,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapValidate(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
+    fprintf(pOpts->OutputFile, "HeapValidate(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
     Ret = HeapValidate(hHeap, dwFlags, lpMem);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -244,9 +244,9 @@ WtHeapWalk(HANDLE hHeap,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "HeapWalk(0x%p, 0x%p)", hHeap, lpEntry);
+    fprintf(pOpts->OutputFile, "HeapWalk(0x%p, 0x%p)", hHeap, lpEntry);
     Ret = HeapWalk(hHeap, lpEntry);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }

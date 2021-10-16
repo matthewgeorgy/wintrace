@@ -1,7 +1,7 @@
 #include "inc/wt_winuser.h"
 #include <stdio.h>
 
-extern T_WINTRACEOPTS      *pOpts;
+extern T_WINTRACE_OPTS      *pOpts;
 
 BOOL
 WtAdjustWindowRect(
@@ -15,9 +15,9 @@ WtAdjustWindowRect(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "AdjustWindowRect(0x%p, %u, %d)", lpRect, dwStyle, bMenu);
+    fprintf(pOpts->OutputFile, "AdjustWindowRect(0x%p, %u, %d)", lpRect, dwStyle, bMenu);
     Ret = AdjustWindowRect(lpRect, dwStyle, bMenu);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -35,9 +35,9 @@ WtAdjustWindowRectEx(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "AdjustWindowRectEx(0x%p, %u, %d, %u)", lpRect, dwStyle, bMenu, dwExStyle);
+    fprintf(pOpts->OutputFile, "AdjustWindowRectEx(0x%p, %u, %d, %u)", lpRect, dwStyle, bMenu, dwExStyle);
     Ret = AdjustWindowRectEx(lpRect, dwStyle, bMenu, dwExStyle);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -53,9 +53,9 @@ WtBeginPaint(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "BeginPaint(0x%p, 0x%p)", hWnd, lpPaint);
+    fprintf(pOpts->OutputFile, "BeginPaint(0x%p, 0x%p)", hWnd, lpPaint);
     Ret = BeginPaint(hWnd, lpPaint);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -71,9 +71,9 @@ WtClientToScreen(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "ClientToScreen(0x%p, 0x%p)", hWnd, lpPoint);
+    fprintf(pOpts->OutputFile, "ClientToScreen(0x%p, 0x%p)", hWnd, lpPoint);
     Ret = ClientToScreen(hWnd, lpPoint);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -86,9 +86,9 @@ WtClipCursor( const RECT *lpRect
     static DWORD        Cnt;
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "ClipCursor(0x%p)", lpRect);
+    fprintf(pOpts->OutputFile, "ClipCursor(0x%p)", lpRect);
     Ret = ClipCursor(lpRect);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
 
     return Ret;
@@ -104,9 +104,9 @@ WtCloseWindow(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "CloseWindow(0x%p)", hWnd);
+    fprintf(pOpts->OutputFile, "CloseWindow(0x%p)", hWnd);
     Ret = CloseWindow(hWnd);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -131,13 +131,13 @@ WtCreateWindowA(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "CreateWindowA(\"%s\", \"%s\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p",
+    fprintf(pOpts->OutputFile, "CreateWindowA(\"%s\", \"%s\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p",
             lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent,
             hMenu, hInstance, lpParam);
-    fprintf(stderr, ")");
+    fprintf(pOpts->OutputFile, ")");
     Ret = CreateWindowA(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight,
             hWndParent, hMenu, hInstance, lpParam);
-    fprintf(stderr, " = 0x%p\n", Ret);
+    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
 
     return Ret;
 }
@@ -162,13 +162,13 @@ WtCreateWindowW(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "CreateWindowW(\"%ws\", \"%ws\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p",
+    fprintf(pOpts->OutputFile, "CreateWindowW(\"%ws\", \"%ws\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p",
             lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent,
             hMenu, hInstance, lpParam);
-    fprintf(stderr, ")");
+    fprintf(pOpts->OutputFile, ")");
     Ret = CreateWindowW(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight,
             hWndParent, hMenu, hInstance, lpParam);
-    fprintf(stderr, " = 0x%p\n", Ret);
+    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
 
     return Ret;
 }
@@ -194,13 +194,13 @@ WtCreateWindowExA(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "CreateWindowExA(%u, \"%s\", \"%s\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p",
+    fprintf(pOpts->OutputFile, "CreateWindowExA(%u, \"%s\", \"%s\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p",
             dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent,
             hMenu, hInstance, lpParam);
-    fprintf(stderr, ")");
+    fprintf(pOpts->OutputFile, ")");
     Ret = CreateWindowA(lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight,
             hWndParent, hMenu, hInstance, lpParam);
-    fprintf(stderr, " = 0x%p\n", Ret);
+    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
 
     return Ret;
 }
@@ -226,13 +226,13 @@ WtCreateWindowExW(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "CreateWindowExW(%u, \"%ws\", \"%ws\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p",
+    fprintf(pOpts->OutputFile, "CreateWindowExW(%u, \"%ws\", \"%ws\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p",
             dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent,
             hMenu, hInstance, lpParam);
-    fprintf(stderr, ")");
+    fprintf(pOpts->OutputFile, ")");
     Ret = CreateWindowW(lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight,
             hWndParent, hMenu, hInstance, lpParam);
-    fprintf(stderr, " = 0x%p\n", Ret);
+    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
 
     return Ret;
 }
@@ -250,9 +250,9 @@ WtDefWindowProc(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "DefWindowProc(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
+    fprintf(pOpts->OutputFile, "DefWindowProc(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
     Ret = DefWindowProc(hWnd, Msg, wParam, lParam);
-    fprintf(stderr, " = %u", Ret);
+    fprintf(pOpts->OutputFile, " = %u", Ret);
 
     return Ret;
 }
@@ -267,9 +267,9 @@ WtDestroyWindow(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "DestroyWindow(0x%p)", hWnd);
+    fprintf(pOpts->OutputFile, "DestroyWindow(0x%p)", hWnd);
     Ret = DestroyWindow(hWnd);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -284,9 +284,9 @@ WtDispatchMessageA(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "DispatchMessageA(0x%p)", lpMsg);
+    fprintf(pOpts->OutputFile, "DispatchMessageA(0x%p)", lpMsg);
     Ret = DispatchMessageA(lpMsg);
-    fprintf(stderr, " = %u\n", Ret);
+    fprintf(pOpts->OutputFile, " = %u\n", Ret);
 
     return Ret;
 }
@@ -301,9 +301,9 @@ WtDispatchMessageW(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "DispatchMessageW(0x%p)", lpMsg);
+    fprintf(pOpts->OutputFile, "DispatchMessageW(0x%p)", lpMsg);
     Ret = DispatchMessageW(lpMsg);
-    fprintf(stderr, " = %u\n", Ret);
+    fprintf(pOpts->OutputFile, " = %u\n", Ret);
 
     return Ret;
 }
@@ -320,9 +320,9 @@ WtEndPaint(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "EndPaint(0x%p, 0x%p)", hWnd, lpPaint);
+    fprintf(pOpts->OutputFile, "EndPaint(0x%p, 0x%p)", hWnd, lpPaint);
     Ret = EndPaint(hWnd, lpPaint);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -339,9 +339,9 @@ WtFillRect(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "FillRect(0x%p, 0x%p, 0x%p)", hDC, lprc, hbr);
+    fprintf(pOpts->OutputFile, "FillRect(0x%p, 0x%p, 0x%p)", hDC, lprc, hbr);
     Ret = FillRect(hDC, lprc, hbr);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -357,9 +357,9 @@ WtGetClientRect(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "GetClientRect(0x%p, 0x%p)", hWnd, lpRect);
+    fprintf(pOpts->OutputFile, "GetClientRect(0x%p, 0x%p)", hWnd, lpRect);
     Ret = GetClientRect(hWnd, lpRect);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -374,9 +374,9 @@ WtGetCursorPos(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "GetCursorPos(0x%p)", lpPoint);
+    fprintf(pOpts->OutputFile, "GetCursorPos(0x%p)", lpPoint);
     Ret = GetCursorPos(lpPoint);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -391,9 +391,9 @@ WtGetDC(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "GetDC(0x%p)", hWnd);
+    fprintf(pOpts->OutputFile, "GetDC(0x%p)", hWnd);
     Ret = GetDC(hWnd);
-    fprintf(stderr, " = 0x%p\n", Ret);
+    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
 
     return Ret;
 }
@@ -411,9 +411,9 @@ WtGetMessage(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "GetMessage(0x%p, 0x%p, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+    fprintf(pOpts->OutputFile, "GetMessage(0x%p, 0x%p, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
     Ret = GetMessage(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -429,9 +429,9 @@ WtGetWindowRect(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "GetWindowRect(0x%p, 0x%p)", hWnd, lpRect);
+    fprintf(pOpts->OutputFile, "GetWindowRect(0x%p, 0x%p)", hWnd, lpRect);
     Ret = GetWindowRect(hWnd, lpRect);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -444,9 +444,9 @@ WtMessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "MessageBoxA(0x%p, \"%s\", \"%s\", %u)", hWnd, lpText, lpCaption, uType);
+    fprintf(pOpts->OutputFile, "MessageBoxA(0x%p, \"%s\", \"%s\", %u)", hWnd, lpText, lpCaption, uType);
     Ret = MessageBoxA(hWnd, lpText, lpCaption, uType);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -459,9 +459,9 @@ WtMessageBoxW(HWND hWnd, LPCWSTR lpText, LPCWSTR lpCaption, UINT uType)
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "MessageBoxW(0x%p, \"%ws\", \"%ws\", %u)", hWnd, lpText, lpCaption, uType);
+    fprintf(pOpts->OutputFile, "MessageBoxW(0x%p, \"%ws\", \"%ws\", %u)", hWnd, lpText, lpCaption, uType);
     Ret = MessageBoxW(hWnd, lpText, lpCaption, uType);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -480,9 +480,9 @@ WtMessageBoxExA(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "MessageBoxExA(0x%p, \"%s\", \"%s\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
+    fprintf(pOpts->OutputFile, "MessageBoxExA(0x%p, \"%s\", \"%s\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
     Ret = MessageBoxExA(hWnd, lpText, lpCaption, uType, wLanguageId);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -501,9 +501,9 @@ WtMessageBoxExW(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "MessageBoxExW(0x%p, \"%ws\", \"%ws\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
+    fprintf(pOpts->OutputFile, "MessageBoxExW(0x%p, \"%ws\", \"%ws\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
     Ret = MessageBoxExW(hWnd, lpText, lpCaption, uType, wLanguageId);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -522,9 +522,9 @@ WtPeekMessageA(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "PeekMessageA(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
+    fprintf(pOpts->OutputFile, "PeekMessageA(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
     Ret = PeekMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -543,9 +543,9 @@ WtPeekMessageW(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "PeekMessageW(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
+    fprintf(pOpts->OutputFile, "PeekMessageW(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
     Ret = PeekMessageW(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -563,9 +563,9 @@ WtPostMessageA(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "PostMessageA(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
+    fprintf(pOpts->OutputFile, "PostMessageA(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
     Ret = PostMessageA(hWnd, Msg, wParam, lParam);
-    fprintf(stderr, " = %d", Ret);
+    fprintf(pOpts->OutputFile, " = %d", Ret);
 
     return Ret;
 }
@@ -583,9 +583,9 @@ WtPostMessageW(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "PostMessageW(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
+    fprintf(pOpts->OutputFile, "PostMessageW(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
     Ret = PostMessageW(hWnd, Msg, wParam, lParam);
-    fprintf(stderr, " = %d", Ret);
+    fprintf(pOpts->OutputFile, " = %d", Ret);
 
     return Ret;
 }
@@ -599,9 +599,9 @@ WtPostQuitMessage(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "PostQuitMessage(%d)", nExitCode);
+    fprintf(pOpts->OutputFile, "PostQuitMessage(%d)", nExitCode);
     PostQuitMessage(nExitCode);
-    fprintf(stderr, " = VOID\n");
+    fprintf(pOpts->OutputFile, " = VOID\n");
 }
 
 ATOM
@@ -614,9 +614,9 @@ WtRegisterClassExA(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "RegisterClassExA(0x%p)", unnamedParam1);
+    fprintf(pOpts->OutputFile, "RegisterClassExA(0x%p)", unnamedParam1);
     Ret = RegisterClassExA(unnamedParam1);
-    fprintf(stderr, " = %hu", Ret);
+    fprintf(pOpts->OutputFile, " = %hu", Ret);
 
     return Ret;
 }
@@ -631,9 +631,9 @@ WtRegisterClassExW(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "RegisterClassExW(0x%p)", unnamedParam1);
+    fprintf(pOpts->OutputFile, "RegisterClassExW(0x%p)", unnamedParam1);
     Ret = RegisterClassExW(unnamedParam1);
-    fprintf(stderr, " = %hu", Ret);
+    fprintf(pOpts->OutputFile, " = %hu", Ret);
 
     return Ret;
 }
@@ -649,9 +649,9 @@ WtReleaseDC(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "ReleaseDC(0x%p, 0x%p)", hWnd, hDC);
+    fprintf(pOpts->OutputFile, "ReleaseDC(0x%p, 0x%p)", hWnd, hDC);
     Ret = ReleaseDC(hWnd, hDC);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -667,9 +667,9 @@ WtScreenToClient(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "ScreenToClient(0x%p, 0x%p)", hWnd, lpPoint);
+    fprintf(pOpts->OutputFile, "ScreenToClient(0x%p, 0x%p)", hWnd, lpPoint);
     Ret = ScreenToClient(hWnd, lpPoint);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -684,9 +684,9 @@ WtShowCursor(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "ShowCursor(%d)", bShow);
+    fprintf(pOpts->OutputFile, "ShowCursor(%d)", bShow);
     Ret = ShowCursor(bShow);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -702,9 +702,9 @@ WtShowWindow(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "ShowWindow(0x%p, %d)", hWnd, nCmdShow);
+    fprintf(pOpts->OutputFile, "ShowWindow(0x%p, %d)", hWnd, nCmdShow);
     Ret = ShowWindow(hWnd, nCmdShow);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -719,9 +719,9 @@ WtTranslateMessage(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "TranslateMessage(0x%p)", lpMsg);
+    fprintf(pOpts->OutputFile, "TranslateMessage(0x%p)", lpMsg);
     Ret = TranslateMessage(lpMsg);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }
@@ -736,9 +736,9 @@ WtUpdateWindow(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(stderr, "UpdateWindow(0x%p)", hWnd);
+    fprintf(pOpts->OutputFile, "UpdateWindow(0x%p)", hWnd);
     Ret = UpdateWindow(hWnd);
-    fprintf(stderr, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
     return Ret;
 }

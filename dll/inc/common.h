@@ -5,15 +5,17 @@
 #include <windows.h>
 #include <stdio.h>
 
-typedef struct _tag_WINTRACEOPTS
+typedef struct _tag_WINTRACE_OPTS
 {
     BOOL        ShowThreadID;
     BOOL        ShowProcessID;
     BOOL        ShowFuncCount;
-} T_WINTRACEOPTS;
+	CHAR		OutputFilename[64];
+	FILE		*OutputFile;
+} T_WINTRACE_OPTS;
 
 typedef HANDLE	T_HFILEMAP;
 
-void ShowDetails(T_WINTRACEOPTS *pOpts, DWORD Cnt);
+void ShowDetails(T_WINTRACE_OPTS *pOpts, DWORD Cnt);
 
 #endif // COMMON_H

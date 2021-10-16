@@ -2,13 +2,13 @@
 #include <stdio.h>
 
 void
-ShowDetails(T_WINTRACEOPTS *pOpts,
+ShowDetails(T_WINTRACE_OPTS *pOpts,
             DWORD Cnt)
 {
     if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
+        fprintf(pOpts->OutputFile, "[%u] ", GetCurrentProcessId());
     if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
+        fprintf(pOpts->OutputFile, "<%u> ", GetCurrentThreadId());
     if (pOpts->ShowFuncCount)
-        printf("(%u) ", Cnt);
+        fprintf(pOpts->OutputFile, "(%u) ", Cnt);
 }
