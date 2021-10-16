@@ -112,3 +112,4 @@
 #define FUNC_VirtualQuery 961702338
 #define FUNC_VirtualQueryEx 3616795551
 #define FUNC_VirtualUnlock 1819893880
+

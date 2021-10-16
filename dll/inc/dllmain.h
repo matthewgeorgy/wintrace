@@ -76,3 +76,4 @@ void ReadIAT(void);
     } while (0);
 
 #endif // DLLMAIN_H
+

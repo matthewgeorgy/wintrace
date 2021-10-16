@@ -22,3 +22,4 @@ BOOL        WtHeapValidate(HANDLE  hHeap, DWORD dwFlags, LPCVOID lpMem);
 BOOL        WtHeapWalk(HANDLE hHeap, LPPROCESS_HEAP_ENTRY lpEntry);
 
 #endif // WT_HEAPAPI_H
+

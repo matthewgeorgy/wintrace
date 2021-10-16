@@ -149,7 +149,6 @@ main(void)
 {
     HANDLE      HashFile;
     SIZE_T      FuncsLen = sizeof(Funcs) / sizeof(Funcs[0]);
-    SIZE_T      StrLen;
     INT         I;
     CHAR        Str[256];
 
@@ -158,12 +157,14 @@ main(void)
 
     for (I = 0; I < FuncsLen; I++)
     {
-        sprintf(Str, "#define FUNC_%s %u\n", Funcs[I], Djb2(Funcs[I]));
-        StrLen = strlen(Str);
-        WriteFile(HashFile, Str, StrLen, NULL, NULL);
+        sprintf(Str, "#define FUNC_%s %u\r\n", Funcs[I], Djb2(Funcs[I]));
+        WriteFile(HashFile, Str, strlen(Str), NULL, NULL);
     }
+    sprintf(Str, "\r\n");
+    WriteFile(HashFile, Str, strlen(Str), NULL, NULL);
 
     CloseHandle(HashFile);
 
     return 0;
 }
+
