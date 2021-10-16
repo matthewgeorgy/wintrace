@@ -19,6 +19,9 @@ goto :EOF
 :clean
     pushd build
         del /Q *.*
+		pushd tests
+			del /Q *.*
+		popd
     popd
 goto :EOF
 
