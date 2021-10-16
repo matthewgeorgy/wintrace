@@ -107,7 +107,27 @@ LPSTR Funcs[] =
     /* ,"WaitForDebugEventEx" */ // WIN10 ONLY
     // profileapi.h
     "QueryPerformanceCounter",
-    "QueryPerformanceFrequency"
+    "QueryPerformanceFrequency",
+    // memoryapi.h
+    "CreateFileMappingA",
+    "CreateFileMappingW",
+    "FlushViewOfFile",
+    "MapViewOfFile",
+    "MapViewOfFileEx",
+    "OpenFileMappingA",
+    "OpenFileMappingW",
+    "UnmapViewOfFile",
+    /* "UnmapViewOfFileEx", */ // WIN8
+    "VirtualAlloc",
+    "VirtualAllocEx",
+    "VirtualFree",
+    "VirtualFreeEx",
+    "VirtualLock",
+    "VirtualProtect",
+    "VirtualProtectEx",
+    "VirtualQuery",
+    "VirtualQueryEx",
+    "VirtualUnlock",
 };
 
 
