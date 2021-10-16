@@ -221,9 +221,8 @@ WtExitProcess(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "ExitProcess(%u)", uExitCode);
+    fprintf(pOpts->OutputFile, "ExitProcess(%u) = VOID\n", uExitCode);
     ExitProcess(uExitCode);
-    fprintf(pOpts->OutputFile, " = VOID\n");
 }
 
 
@@ -236,9 +235,8 @@ WtExitThread(
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "ExitThread(%u)", dwExitCode);
+    fprintf(pOpts->OutputFile, "ExitThread(%u) = VOID\n", dwExitCode);
     ExitThread(dwExitCode);
-    fprintf(pOpts->OutputFile, " = VOID\n");
 }
 
 HANDLE

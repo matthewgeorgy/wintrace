@@ -52,7 +52,7 @@ WtCreateFileA(LPCSTR lpFileName,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "CreateFileA(\"%s\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+    fprintf(pOpts->OutputFile, "CreateFileA(\"%s\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
     Ret = CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
     fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
 
@@ -73,7 +73,7 @@ WtCreateFileW(LPCWSTR lpFileName,
 
 
     ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "CreateFileW(\"%ws\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+    fprintf(pOpts->OutputFile, "CreateFileW(\"%ws\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
     Ret = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
     fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
 

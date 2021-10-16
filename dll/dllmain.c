@@ -10,6 +10,7 @@ DllMain(HMODULE hModule,
         DWORD fdwReason,
         LPVOID lpReserved)
 {
+	hModule; lpReserved; // to resolve warning
     switch (fdwReason)
     {
         case DLL_PROCESS_ATTACH:
@@ -129,7 +130,6 @@ PatchIAT(void)
                     case FUNC_ShowWindow:           { PatchEntry(WtShowWindow); } break;
                     case FUNC_TranslateMessage:     { PatchEntry(WtTranslateMessage); } break;
                     case FUNC_UpdateWindow:         { PatchEntry(WtUpdateWindow); } break;
-#ifdef _WIN64
                     // heapapi.h
                     case FUNC_GetProcessHeap:       { PatchEntry(WtGetProcessHeap); } break;
                     case FUNC_GetProcessHeaps:      { PatchEntry(WtGetProcessHeaps); } break;
@@ -146,7 +146,6 @@ PatchIAT(void)
                     case FUNC_HeapUnlock:           { PatchEntry(WtHeapUnlock); } break;
                     case FUNC_HeapValidate:         { PatchEntry(WtHeapValidate); } break;
                     case FUNC_HeapWalk:             { PatchEntry(WtHeapWalk); } break;
-#endif // _WIN64
                     // processthreadspi.h
                     case FUNC_CreateProcessA:                   { PatchEntry(WtCreateProcessA); } break;
                     case FUNC_CreateProcessW:                   { PatchEntry(WtCreateProcessW); } break;
