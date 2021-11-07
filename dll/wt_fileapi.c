@@ -214,6 +214,42 @@ WtReadFileEx(
 }
 
 BOOL
+WtRemoveDirectoryA(
+  LPCSTR lpPathName
+)
+{
+    BOOL                Ret;
+    static DWORD        Cnt;
+
+
+    ShowDetails(pOpts, ++Cnt);
+    fprintf(pOpts->OutputFile, "RemoveDirectoryA(\"%s\")",
+            lpPathName);
+    Ret = RemoveDirectoryA(lpPathName);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+
+    return Ret;
+}
+
+BOOL
+WtRemoveDirectoryW(
+  LPCWSTR lpPathName
+)
+{
+    BOOL                Ret;
+    static DWORD        Cnt;
+
+
+    ShowDetails(pOpts, ++Cnt);
+    fprintf(pOpts->OutputFile, "RemoveDirectoryW(\"%ws\")",
+            lpPathName);
+    Ret = RemoveDirectoryW(lpPathName);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+
+    return Ret;
+}
+
+BOOL
 WtSetEndOfFile(
   HANDLE hFile
 )

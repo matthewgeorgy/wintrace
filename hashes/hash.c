@@ -89,6 +89,8 @@ LPSTR Funcs[] =
     "GetFileType",
     "ReadFile",
     "ReadFileEx",
+	"RemoveDirectoryA",
+	"RemoveDirectoryW",
     "SetEndOfFile",
     "SetFilePointer",
     "SetFilePointerEx",
