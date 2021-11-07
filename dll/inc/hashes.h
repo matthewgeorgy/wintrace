@@ -17,7 +17,8 @@
 #define FUNC_GetClientRect 2958303922
 #define FUNC_GetCursorPos 821011093
 #define FUNC_GetDC 222110892
-#define FUNC_GetMessage 1925723178
+#define FUNC_GetMessageA 3419322795
+#define FUNC_GetMessageW 3419322817
 #define FUNC_GetWindowRect 4136403979
 #define FUNC_MessageBoxA 944706740
 #define FUNC_MessageBoxW 944706762
