@@ -3,11 +3,11 @@
 #include <stdio.h>
 
 extern T_FuncRec g_FuncRecs[];
-extern T_WINTRACE_OPTS *pOpts;
+extern T_WintraceOpts *pOpts;
 BOOL g_TraceAll = TRUE;
 
 void
-ShowDetails(T_WINTRACE_OPTS *Opts,
+ShowDetails(T_WintraceOpts *Opts,
             DWORD Cnt)
 {
     if (Opts->ShowProcessID)

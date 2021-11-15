@@ -1,6 +1,6 @@
 #include "inc/wt_debugapi.h"
 
-extern T_WINTRACE_OPTS *pOpts;
+extern T_WintraceOpts *pOpts;
 
 BOOL
 WtCheckRemoteDebuggerPresent(

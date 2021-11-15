@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "inc/wt_heapapi.h"
 
-extern T_WINTRACE_OPTS      *pOpts;
+extern T_WintraceOpts      *pOpts;
 
 HANDLE
 WtGetProcessHeap()

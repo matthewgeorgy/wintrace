@@ -29,6 +29,8 @@ goto :EOF
     pushd build\tests
         cl /W4 /MD w:\wintrace\tests\test_heapapi.c
         cl /W4 /MD w:\wintrace\tests\test_fileapi.c
+        cl /W4 /MD w:\wintrace\tests\test_winuser.c user32.lib
+        cl /W4 /MD w:\wintrace\tests\test_memoryapi.c
     popd
 goto :EOF
 

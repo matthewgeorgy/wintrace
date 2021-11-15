@@ -2,7 +2,7 @@
 #include "inc/dllmain.h"
 #include "inc/hashes.h"
 
-T_WINTRACE_OPTS     *pOpts;
+T_WintraceOpts		*pOpts;
 
 // Fix hook bugs (ie, GetMessage)
 BOOL APIENTRY
@@ -20,7 +20,7 @@ DllMain(HMODULE hModule,
             FileMap = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, "WintraceOpts");
             if (FileMap)
             {
-                pOpts = (T_WINTRACE_OPTS *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WINTRACE_OPTS));
+                pOpts = (T_WintraceOpts *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WintraceOpts));
                 if (pOpts)
                 {
                     if (!pOpts->OutputFilename[0])
