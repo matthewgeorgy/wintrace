@@ -1,5 +1,4 @@
 #include "inc/wt_processthreadsapi.h"
-#include <stdio.h>
 
 extern T_WintraceOpts      *pOpts;
 
@@ -17,23 +16,23 @@ WtCreateProcessA(
   LPPROCESS_INFORMATION lpProcessInformation
 )
 {
-    BOOL		Ret;
+    BOOL        Ret;
 
 
-	if (BeginTrace(E_CreateProcessA))
-	{
-		fprintf(pOpts->OutputFile, "(\"%s\", \"%s\", 0x%p, 0x%p, %d, %u, 0x%p, \"%s\", 0x%p, 0x%p)", lpApplicationName, lpCommandLine,
-				lpProcessAttributes, lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory,
-				lpStartupInfo, lpProcessInformation);
-		Ret = CreateProcessA(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
-				dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
-		fprintf(pOpts->OutputFile, " = %d\n", Ret);
-	}
-	else
-	{
-		Ret = CreateProcessA(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
-				dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
-	}
+    if (BeginTrace(E_CreateProcessA))
+    {
+        fprintf(pOpts->OutputFile, "(\"%s\", \"%s\", 0x%p, 0x%p, %d, %u, 0x%p, \"%s\", 0x%p, 0x%p)", lpApplicationName, lpCommandLine,
+                lpProcessAttributes, lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory,
+                lpStartupInfo, lpProcessInformation);
+        Ret = CreateProcessA(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
+                dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
+        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+    }
+    else
+    {
+        Ret = CreateProcessA(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
+                dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
+    }
 
     return Ret;
 }
@@ -52,23 +51,23 @@ WtCreateProcessW(
   LPPROCESS_INFORMATION lpProcessInformation
 )
 {
-    BOOL		Ret;
+    BOOL        Ret;
 
 
-	if (BeginTrace(E_CreateProcessW))
-	{
-		fprintf(pOpts->OutputFile, "(\"%ws\", \"%ws\", 0x%p, 0x%p, %d, %u, 0x%p, \"%ws\", 0x%p, 0x%p)", lpApplicationName, lpCommandLine,
-				lpProcessAttributes, lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory,
-				lpStartupInfo, lpProcessInformation);
-		Ret = CreateProcessW(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
-				dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
-		fprintf(pOpts->OutputFile, " = %d\n", Ret);
-	}
-	else
-	{
-		Ret = CreateProcessW(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
-				dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
-	}
+    if (BeginTrace(E_CreateProcessW))
+    {
+        fprintf(pOpts->OutputFile, "(\"%ws\", \"%ws\", 0x%p, 0x%p, %d, %u, 0x%p, \"%ws\", 0x%p, 0x%p)", lpApplicationName, lpCommandLine,
+                lpProcessAttributes, lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory,
+                lpStartupInfo, lpProcessInformation);
+        Ret = CreateProcessW(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
+                dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
+        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+    }
+    else
+    {
+        Ret = CreateProcessW(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
+                dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
+    }
 
     return Ret;
 }
@@ -88,23 +87,23 @@ WtCreateProcessAsUserA(
   LPPROCESS_INFORMATION lpProcessInformation
 )
 {
-    BOOL		Ret;
+    BOOL        Ret;
 
 
-	if (BeginTrace(E_CreateProcessAsUserA))
-	{
+    if (BeginTrace(E_CreateProcessAsUserA))
+    {
     fprintf(pOpts->OutputFile, "(0x%p, \"%s\", \"%s\", 0x%p, 0x%p, %d, %u, 0x%p, \"%s\", 0x%p, 0x%p)", hToken, lpApplicationName, lpCommandLine,
             lpProcessAttributes, lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory,
             lpStartupInfo, lpProcessInformation);
     Ret = CreateProcessAsUserA(hToken, lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
             dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
     fprintf(pOpts->OutputFile, " = %d\n", Ret);
-	}
-	else
-	{
-		Ret = CreateProcessAsUserA(hToken, lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
-				dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
-	}
+    }
+    else
+    {
+        Ret = CreateProcessAsUserA(hToken, lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
+                dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
+    }
 
     return Ret;
 }
@@ -123,23 +122,23 @@ BOOL WtCreateProcessAsUserW(
   LPPROCESS_INFORMATION lpProcessInformation
 )
 {
-    BOOL		Ret;
+    BOOL        Ret;
 
 
-	if (BeginTrace(E_CreateProcessAsUserW))
-	{
-		fprintf(pOpts->OutputFile, "(0x%p, \"%ws\", \"%ws\", 0x%p, 0x%p, %d, %u, 0x%p, \"%ws\", 0x%p, 0x%p)", hToken, lpApplicationName, lpCommandLine,
-				lpProcessAttributes, lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory,
-				lpStartupInfo, lpProcessInformation);
-		Ret = CreateProcessAsUserW(hToken, lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
-				dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
-		fprintf(pOpts->OutputFile, " = %d\n", Ret);
-	}
-	else
-	{
-		Ret = CreateProcessAsUserW(hToken, lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
-				dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
-	}
+    if (BeginTrace(E_CreateProcessAsUserW))
+    {
+        fprintf(pOpts->OutputFile, "(0x%p, \"%ws\", \"%ws\", 0x%p, 0x%p, %d, %u, 0x%p, \"%ws\", 0x%p, 0x%p)", hToken, lpApplicationName, lpCommandLine,
+                lpProcessAttributes, lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory,
+                lpStartupInfo, lpProcessInformation);
+        Ret = CreateProcessAsUserW(hToken, lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
+                dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
+        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+    }
+    else
+    {
+        Ret = CreateProcessAsUserW(hToken, lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
+                dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
+    }
 
     return Ret;
 }
@@ -155,22 +154,22 @@ WtCreateRemoteThread(
   LPDWORD                lpThreadId
 )
 {
-    HANDLE		Ret;
+    HANDLE      Ret;
 
 
-	if (BeginTrace(E_CreateRemoteThread))
-	{
-		fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, 0x%p, 0x%p, %u, 0x%p)", hProcess, lpThreadAttributes, dwStackSize,
-				lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
-		Ret = CreateRemoteThread(hProcess, lpThreadAttributes, dwStackSize,
-				lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
-		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
-	}
-	else
-	{
-		Ret = CreateRemoteThread(hProcess, lpThreadAttributes, dwStackSize,
-				lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
-	}
+    if (BeginTrace(E_CreateRemoteThread))
+    {
+        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, 0x%p, 0x%p, %u, 0x%p)", hProcess, lpThreadAttributes, dwStackSize,
+                lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
+        Ret = CreateRemoteThread(hProcess, lpThreadAttributes, dwStackSize,
+                lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
+        fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+    }
+    else
+    {
+        Ret = CreateRemoteThread(hProcess, lpThreadAttributes, dwStackSize,
+                lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
+    }
 
     return Ret;
 }
@@ -187,22 +186,22 @@ WtCreateRemoteThreadEx(
   LPDWORD                      lpThreadId
 )
 {
-    HANDLE		Ret;
+    HANDLE      Ret;
 
 
-	if (BeginTrace(E_CreateRemoteThreadEx))
-	{
-		fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, 0x%p, 0x%p, %u, 0x%p, 0x%p)", hProcess, lpThreadAttributes, dwStackSize,
-				lpStartAddress, lpParameter, dwCreationFlags, lpAttributeList, lpThreadId);
-		Ret = CreateRemoteThreadEx(hProcess, lpThreadAttributes, dwStackSize,
-				lpStartAddress, lpParameter, dwCreationFlags, lpAttributeList, lpThreadId);
-		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
-	}
-	else
-	{
-		Ret = CreateRemoteThreadEx(hProcess, lpThreadAttributes, dwStackSize,
-				lpStartAddress, lpParameter, dwCreationFlags, lpAttributeList, lpThreadId);
-	}
+    if (BeginTrace(E_CreateRemoteThreadEx))
+    {
+        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, 0x%p, 0x%p, %u, 0x%p, 0x%p)", hProcess, lpThreadAttributes, dwStackSize,
+                lpStartAddress, lpParameter, dwCreationFlags, lpAttributeList, lpThreadId);
+        Ret = CreateRemoteThreadEx(hProcess, lpThreadAttributes, dwStackSize,
+                lpStartAddress, lpParameter, dwCreationFlags, lpAttributeList, lpThreadId);
+        fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+    }
+    else
+    {
+        Ret = CreateRemoteThreadEx(hProcess, lpThreadAttributes, dwStackSize,
+                lpStartAddress, lpParameter, dwCreationFlags, lpAttributeList, lpThreadId);
+    }
 
     return Ret;
 }
@@ -217,18 +216,18 @@ WtCreateThread(
   LPDWORD                 lpThreadId
 )
 {
-    HANDLE		Ret;
+    HANDLE      Ret;
 
 
-	if (BeginTrace(E_CreateThread))
-	{
-		fprintf(pOpts->OutputFile, "(0x%p, %u, 0x%p, 0x%p, %u, 0x%p)", lpThreadAttributes, dwStackSize, lpStartAddress,
-				lpParameter, dwCreationFlags, lpThreadId);
-		Ret = CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
-		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
-	}
-	else
-		Ret = CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
+    if (BeginTrace(E_CreateThread))
+    {
+        fprintf(pOpts->OutputFile, "(0x%p, %u, 0x%p, 0x%p, %u, 0x%p)", lpThreadAttributes, dwStackSize, lpStartAddress,
+                lpParameter, dwCreationFlags, lpThreadId);
+        Ret = CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
+        fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+    }
+    else
+        Ret = CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
 
     return Ret;
 }
@@ -238,9 +237,9 @@ WtDeleteProcThreadAttributeList(
   LPPROC_THREAD_ATTRIBUTE_LIST lpAttributeList
 )
 {
-	if (BeginTrace(E_DeleteProcThreadAttributeList))
-		fprintf(pOpts->OutputFile, "(0x%p) = VOID\n", lpAttributeList);
-	DeleteProcThreadAttributeList(lpAttributeList);
+    if (BeginTrace(E_DeleteProcThreadAttributeList))
+        fprintf(pOpts->OutputFile, "(0x%p) = VOID\n", lpAttributeList);
+    DeleteProcThreadAttributeList(lpAttributeList);
 }
 
 void
@@ -248,8 +247,8 @@ WtExitProcess(
   UINT uExitCode
 )
 {
-	if (BeginTrace(E_ExitProcess))
-    	fprintf(pOpts->OutputFile, "(%u) = VOID\n", uExitCode);
+    if (BeginTrace(E_ExitProcess))
+        fprintf(pOpts->OutputFile, "(%u) = VOID\n", uExitCode);
     ExitProcess(uExitCode);
 }
 
@@ -259,25 +258,25 @@ WtExitThread(
   DWORD dwExitCode
 )
 {
-	if (BeginTrace(E_ExitThread))
-    	fprintf(pOpts->OutputFile, "(%u) = VOID\n", dwExitCode);
+    if (BeginTrace(E_ExitThread))
+        fprintf(pOpts->OutputFile, "(%u) = VOID\n", dwExitCode);
     ExitThread(dwExitCode);
 }
 
 HANDLE
 WtGetCurrentProcess(void)
 {
-    HANDLE		Ret;
+    HANDLE      Ret;
 
 
-	if (BeginTrace(E_GetCurrentProcess))
-	{
-		fprintf(pOpts->OutputFile, "()");
-		Ret = GetCurrentProcess();
-		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
-	}
-	else
-		Ret = GetCurrentProcess();
+    if (BeginTrace(E_GetCurrentProcess))
+    {
+        fprintf(pOpts->OutputFile, "()");
+        Ret = GetCurrentProcess();
+        fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+    }
+    else
+        Ret = GetCurrentProcess();
 
     return Ret;
 }
@@ -285,17 +284,17 @@ WtGetCurrentProcess(void)
 DWORD
 WtGetCurrentProcessId(void)
 {
-    DWORD		Ret;
+    DWORD       Ret;
 
 
-	if (BeginTrace(E_GetCurrentProcessId))
-	{
-		fprintf(pOpts->OutputFile, "()");
-		Ret = GetCurrentProcessId();
-		fprintf(pOpts->OutputFile, " = %u\n", Ret);
-	}
-	else
-		Ret = GetCurrentProcessId();
+    if (BeginTrace(E_GetCurrentProcessId))
+    {
+        fprintf(pOpts->OutputFile, "()");
+        Ret = GetCurrentProcessId();
+        fprintf(pOpts->OutputFile, " = %u\n", Ret);
+    }
+    else
+        Ret = GetCurrentProcessId();
 
     return Ret;
 }
@@ -305,17 +304,17 @@ WtResumeThread(
   HANDLE hThread
 )
 {
-    DWORD		Ret;
+    DWORD       Ret;
 
 
-	if (BeginTrace(E_ResumeThread))
-	{
-		fprintf(pOpts->OutputFile, "(0x%p)", hThread);
-		Ret = ResumeThread(hThread);
-		fprintf(pOpts->OutputFile, " = %u\n", Ret);
-	}
-	else
-		Ret = ResumeThread(hThread);
+    if (BeginTrace(E_ResumeThread))
+    {
+        fprintf(pOpts->OutputFile, "(0x%p)", hThread);
+        Ret = ResumeThread(hThread);
+        fprintf(pOpts->OutputFile, " = %u\n", Ret);
+    }
+    else
+        Ret = ResumeThread(hThread);
 
     return Ret;
 }
@@ -325,17 +324,17 @@ WtSuspendThread(
   HANDLE hThread
 )
 {
-    DWORD		Ret;
+    DWORD       Ret;
 
 
-	if (BeginTrace(E_SuspendThread))
-	{
-		fprintf(pOpts->OutputFile, "(0x%p)", hThread);
-		Ret = SuspendThread(hThread);
-		fprintf(pOpts->OutputFile, " = %u\n", Ret);
-	}
-	else
-		Ret = SuspendThread(hThread);
+    if (BeginTrace(E_SuspendThread))
+    {
+        fprintf(pOpts->OutputFile, "(0x%p)", hThread);
+        Ret = SuspendThread(hThread);
+        fprintf(pOpts->OutputFile, " = %u\n", Ret);
+    }
+    else
+        Ret = SuspendThread(hThread);
 
     return Ret;
 }
@@ -346,17 +345,17 @@ WtTerminateProcess(
   UINT   uExitCode
 )
 {
-    BOOL		Ret;
+    BOOL        Ret;
 
 
-	if (BeginTrace(E_TerminateProcess))
-	{
-		fprintf(pOpts->OutputFile, "(0x%p, %u)", hProcess, uExitCode);
-		Ret = TerminateProcess(hProcess, uExitCode);
-		fprintf(pOpts->OutputFile, " = %d\n", Ret);
-	}
-	else
-		Ret = TerminateProcess(hProcess, uExitCode);
+    if (BeginTrace(E_TerminateProcess))
+    {
+        fprintf(pOpts->OutputFile, "(0x%p, %u)", hProcess, uExitCode);
+        Ret = TerminateProcess(hProcess, uExitCode);
+        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+    }
+    else
+        Ret = TerminateProcess(hProcess, uExitCode);
 
     return Ret;
 }
@@ -367,17 +366,17 @@ WtTerminateThread(
   DWORD  dwExitCode
 )
 {
-    BOOL		Ret;
+    BOOL        Ret;
 
 
-	if (BeginTrace(E_TerminateThread))
-	{
-		fprintf(pOpts->OutputFile, "(0x%p, %u)", hThread, dwExitCode);
-		Ret = TerminateThread(hThread, dwExitCode);
-		fprintf(pOpts->OutputFile, " = %d\n", Ret);
-	}
-	else
-		Ret = TerminateThread(hThread, dwExitCode);
+    if (BeginTrace(E_TerminateThread))
+    {
+        fprintf(pOpts->OutputFile, "(0x%p, %u)", hThread, dwExitCode);
+        Ret = TerminateThread(hThread, dwExitCode);
+        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+    }
+    else
+        Ret = TerminateThread(hThread, dwExitCode);
 
     return Ret;
 }

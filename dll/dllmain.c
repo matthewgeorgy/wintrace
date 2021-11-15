@@ -2,9 +2,8 @@
 #include "inc/dllmain.h"
 #include "inc/hashes.h"
 
-T_WintraceOpts		*pOpts;
+T_WintraceOpts      *pOpts;
 
-// Fix hook bugs (ie, GetMessage)
 BOOL APIENTRY
 DllMain(HMODULE hModule,
         DWORD fdwReason,
@@ -15,7 +14,7 @@ DllMain(HMODULE hModule,
     {
         case DLL_PROCESS_ATTACH:
         {
-            HANDLE		FileMap;
+            HANDLE      FileMap;
 
             FileMap = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, "WintraceOpts");
             if (FileMap)
@@ -34,7 +33,7 @@ DllMain(HMODULE hModule,
             else
                 printf("could not open file map!(%d)\n", GetLastError());
 
-			InitFuncRecs();
+            InitFuncRecs();
             PatchIAT();
         } break;
         case DLL_PROCESS_DETACH:

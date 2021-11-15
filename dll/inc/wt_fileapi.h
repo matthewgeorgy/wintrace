@@ -1,8 +1,6 @@
 #ifndef WT_FILEAPI_H
 #define WT_FILEAPI_H
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 #include "common.h"
 
 BOOL WtCreateDirectoryA(
