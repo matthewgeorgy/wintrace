@@ -1,12 +1,43 @@
 /*
     Version History
 
+		0.1.6	Added specific tracing
         0.1.5   Cleaned up warnings
         0.1.4   Added custom output file parsing
         0.1.3   Tidied up option parsing and usage printing
         0.1.2   Added plumbing for option/switch parsing
         0.1.1   Added VirtualFreeEx in the remote thread to free DllPath
         0.1.0   Initial creation
+*/
+
+// TODO: New features:
+/*
+	Error / Injection synopsis:
+
+	wintrace /e:HeapCreate ...			Fail ALL HeapCreate calls
+	wintrace /e:HeapCreate:4 ...	 	Fail the 4th HeapCreate call
+	wintrace /i:GetFileSize:25 ...		ALL GetFileSize calls return 25
+	wintrace /i:GetFileSize:25:3 ...	GetFileSize call #3 returns 25
+
+	wintrace {/i|/e}:HeapAlloc,HeapFree ...	Chain multiple funcs??
+*/
+
+/*
+	Organize nested calls:
+
+	GetMessage(0x0000000000BCF698, 0x00000000000A06A8, 0, 0) = 1
+	TranslateMessageA(0x0000000000BCF698) = 1
+	DispatchMessageA(0x0000000000BCF698) = 0
+	  DestroyWindow(0x00000000000A06A8) = 1
+	    PostQuitMessage(0) = VOID
+
+	__global DWORD CallLvl determines how many indents to print
+	CallLvl++ when entering function, CallLvl-- when leaving
+	Need a way to organize the string to print so it can be done in correct order (not a stack)
+
+	We can make it so that by default, DestroyWindow + PostQuitMessage are not printed,
+	but then specifying option /n WILL print them. No /n specified is easy: just
+	check that CallLvl == 1 before printing any output.
 */
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -21,6 +52,7 @@ typedef struct _tag_WINTRACE_OPTS
     BOOL        ShowFuncCount;
     CHAR        OutputFilename[64];
     FILE        *OutputFile;
+	CHAR		TraceList[32][32];
 } T_WINTRACE_OPTS;
 
 void PrintUsage(void);
@@ -49,7 +81,7 @@ main(int argc,
     Opts = ParseOpts(argc, argv);
 
     // Map shared memory
-    FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WINTRACE_OPTS), "wintraceOpts");
+    FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WINTRACE_OPTS), "WintraceOpts");
     if (!FileMap)
     {
         printf("could not create file map (%d)\n", GetLastError());
@@ -144,6 +176,7 @@ ParseOpts(int argc,
     T_WINTRACE_OPTS     Opts = {0};
 
 
+	ZeroMemory(&Opts, sizeof(Opts));
     if (argc < 2)
     {
         printf("\nUsage: wintrace [options] <exe>\n");
@@ -171,6 +204,19 @@ ParseOpts(int argc,
             {
                 strcpy(Opts.OutputFilename, argv[OptInd] + 3);
             } break;
+			case 'T':
+			{
+				CHAR *Token;
+				INT I = 0;
+
+				Token = strtok(argv[OptInd] + 3, ",");
+				while (Token != NULL && I < 32)
+				{
+					strcpy(Opts.TraceList[I], Token);
+					Token = strtok(NULL, ",");
+					I++;
+				}
+			} break;
             case '?':
             {
                 PrintUsage();

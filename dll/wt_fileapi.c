@@ -8,14 +8,17 @@ WtCreateDirectoryA(
   LPSECURITY_ATTRIBUTES lpSecurityAttributes
 )
 {
-    BOOL                Ret;
-    static DWORD        Cnt;
+    BOOL		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "CreateDirectoryA(\"%s\", 0x%p)", lpPathName, lpSecurityAttributes);
-    Ret = CreateDirectoryA(lpPathName, lpSecurityAttributes);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_CreateDirectoryA))
+	{
+		fprintf(pOpts->OutputFile, "(\"%s\", 0x%p)", lpPathName, lpSecurityAttributes);
+		Ret = CreateDirectoryA(lpPathName, lpSecurityAttributes);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = CreateDirectoryA(lpPathName, lpSecurityAttributes);
 
     return Ret;
 }
@@ -26,14 +29,17 @@ WtCreateDirectoryW(
   LPSECURITY_ATTRIBUTES lpSecurityAttributes
 )
 {
-    BOOL                Ret;
-    static DWORD        Cnt;
+    BOOL		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "CreateDirectoryW(\"%ws\", 0x%p)", lpPathName, lpSecurityAttributes);
-    Ret = CreateDirectoryW(lpPathName, lpSecurityAttributes);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_CreateDirectoryW))
+	{
+		fprintf(pOpts->OutputFile, "(\"%ws\", 0x%p)", lpPathName, lpSecurityAttributes);
+		Ret = CreateDirectoryW(lpPathName, lpSecurityAttributes);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = CreateDirectoryW(lpPathName, lpSecurityAttributes);
 
     return Ret;
 }
@@ -47,14 +53,17 @@ WtCreateFileA(LPCSTR lpFileName,
               DWORD dwFlagsAndAttributes,
               HANDLE hTemplateFile)
 {
-    HANDLE              Ret;
-    static DWORD        Cnt;
+    HANDLE		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "CreateFileA(\"%s\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-    Ret = CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	if (BeginTrace(E_CreateFileA))
+	{
+		fprintf(pOpts->OutputFile, "(\"%s\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+		Ret = CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	}
+	else
+		Ret = CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
 
     return Ret;
 }
@@ -68,14 +77,17 @@ WtCreateFileW(LPCWSTR lpFileName,
               DWORD dwFlagsAndAttributes,
               HANDLE hTemplateFile)
 {
-    HANDLE              Ret;
-    static DWORD        Cnt;
+    HANDLE 		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "CreateFileW(\"%ws\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-    Ret = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	if (BeginTrace(E_CreateFileW))
+	{
+		fprintf(pOpts->OutputFile, "(\"%ws\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+		Ret = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	}
+	else
+		Ret = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
 
     return Ret;
 }
@@ -85,14 +97,17 @@ WtDeleteFileA(
   LPCSTR lpFileName
 )
 {
-    BOOL                Ret;
-    static DWORD        Cnt;
+    BOOL		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "DeleteFileA(\"%s\")", lpFileName);
-    Ret = DeleteFileA(lpFileName);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_DeleteFileA))
+	{
+		fprintf(pOpts->OutputFile, "(\"%s\")", lpFileName);
+		Ret = DeleteFileA(lpFileName);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = DeleteFileA(lpFileName);
 
     return Ret;
 }
@@ -102,14 +117,17 @@ WtDeleteFileW(
   LPCWSTR lpFileName
 )
 {
-    BOOL                Ret;
-    static DWORD        Cnt;
+    BOOL 		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "DeleteFileW(\"%ws\")", lpFileName);
-    Ret = DeleteFileW(lpFileName);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_DeleteFileW))
+	{
+		fprintf(pOpts->OutputFile, "(\"%ws\")", lpFileName);
+		Ret = DeleteFileW(lpFileName);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = DeleteFileW(lpFileName);
 
     return Ret;
 }
@@ -120,14 +138,17 @@ WtGetFileSize(
   LPDWORD lpFileSizeHigh
 )
 {
-    DWORD               Ret;
-    static DWORD        Cnt;
+    DWORD 		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "GetFileSize(0x%p, 0x%p)", hFile, lpFileSizeHigh);
-    Ret = GetFileSize(hFile, lpFileSizeHigh);
-    fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	if (BeginTrace(E_GetFileSize))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hFile, lpFileSizeHigh);
+		Ret = GetFileSize(hFile, lpFileSizeHigh);
+		fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	}
+	else
+		Ret = GetFileSize(hFile, lpFileSizeHigh);
 
     return Ret;
 }
@@ -138,14 +159,17 @@ WtGetFileSizeEx(
   PLARGE_INTEGER lpFileSize
 )
 {
-    BOOL                Ret;
-    static DWORD        Cnt;
+    BOOL 		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "GetFileSizeEx(0x%p, 0x%p)", hFile, lpFileSize);
-    Ret = GetFileSizeEx(hFile, lpFileSize);
-    fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	if (BeginTrace(E_GetFileSizeEx))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hFile, lpFileSize);
+		Ret = GetFileSizeEx(hFile, lpFileSize);
+		fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	}
+	else
+		Ret = GetFileSizeEx(hFile, lpFileSize);
 
     return Ret;
 }
@@ -155,14 +179,17 @@ WtGetFileType(
   HANDLE hFile
 )
 {
-    DWORD               Ret;
-    static DWORD        Cnt;
+    DWORD 		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "GetFileType(0x%p)", hFile);
-    Ret = GetFileType(hFile);
-    fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	if (BeginTrace(E_GetFileType))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p)", hFile);
+		Ret = GetFileType(hFile);
+		fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	}
+	else
+		Ret = GetFileType(hFile);
 
     return Ret;
 }
@@ -176,16 +203,19 @@ WtReadFile(
   LPOVERLAPPED lpOverlapped
 )
 {
-    BOOL                Ret;
-    static DWORD        Cnt;
+    BOOL 		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "ReadFile(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
-            nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
-    Ret = ReadFile(hFile, lpBuffer,
-            nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_ReadFile))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
+				nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
+		Ret = ReadFile(hFile, lpBuffer,
+				nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
 
     return Ret;
 }
@@ -199,16 +229,19 @@ WtReadFileEx(
   LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
 )
 {
-    BOOL                Ret;
-    static DWORD        Cnt;
+    BOOL 		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "ReadFileEx(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
-            nNumberOfBytesToRead, lpOverlapped, lpCompletionRoutine);
-    Ret = ReadFileEx(hFile, lpBuffer,
-            nNumberOfBytesToRead, lpOverlapped, lpCompletionRoutine);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_ReadFileEx))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
+				nNumberOfBytesToRead, lpOverlapped, lpCompletionRoutine);
+		Ret = ReadFileEx(hFile, lpBuffer,
+				nNumberOfBytesToRead, lpOverlapped, lpCompletionRoutine);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = ReadFileEx(hFile, lpBuffer, nNumberOfBytesToRead, lpOverlapped, lpCompletionRoutine);
 
     return Ret;
 }
@@ -218,15 +251,18 @@ WtRemoveDirectoryA(
   LPCSTR lpPathName
 )
 {
-    BOOL                Ret;
-    static DWORD        Cnt;
+    BOOL 		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "RemoveDirectoryA(\"%s\")",
-            lpPathName);
-    Ret = RemoveDirectoryA(lpPathName);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_RemoveDirectoryA))
+	{
+		fprintf(pOpts->OutputFile, "(\"%s\")",
+				lpPathName);
+		Ret = RemoveDirectoryA(lpPathName);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = RemoveDirectoryA(lpPathName);
 
     return Ret;
 }
@@ -236,15 +272,18 @@ WtRemoveDirectoryW(
   LPCWSTR lpPathName
 )
 {
-    BOOL                Ret;
-    static DWORD        Cnt;
+    BOOL 		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "RemoveDirectoryW(\"%ws\")",
-            lpPathName);
-    Ret = RemoveDirectoryW(lpPathName);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_RemoveDirectoryW))
+	{
+		fprintf(pOpts->OutputFile, "(\"%ws\")",
+				lpPathName);
+		Ret = RemoveDirectoryW(lpPathName);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = RemoveDirectoryW(lpPathName);
 
     return Ret;
 }
@@ -254,14 +293,17 @@ WtSetEndOfFile(
   HANDLE hFile
 )
 {
-    BOOL                Ret;
-    static DWORD        Cnt;
+    BOOL 		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "SetEndOfFile(0x%p)", hFile);
-    Ret = SetEndOfFile(hFile);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_SetEndOfFile))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p)", hFile);
+		Ret = SetEndOfFile(hFile);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = SetEndOfFile(hFile);
 
     return Ret;
 }
@@ -274,16 +316,19 @@ WtSetFilePointer(
   DWORD  dwMoveMethod
 )
 {
-    DWORD               Ret;
-    static DWORD        Cnt;
+    DWORD 		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "SetFilePointer(0x%p, %d, 0x%p, %u)", hFile, lDistanceToMove,
-            lpDistanceToMoveHigh, dwMoveMethod);
-    Ret = SetFilePointer(hFile, lDistanceToMove,
-            lpDistanceToMoveHigh, dwMoveMethod);
-    fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	if (BeginTrace(E_SetFilePointer))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, %d, 0x%p, %u)", hFile, lDistanceToMove,
+				lpDistanceToMoveHigh, dwMoveMethod);
+		Ret = SetFilePointer(hFile, lDistanceToMove,
+				lpDistanceToMoveHigh, dwMoveMethod);
+		fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	}
+	else
+		Ret = SetFilePointer(hFile, lDistanceToMove, lpDistanceToMoveHigh, dwMoveMethod);
 
     return Ret;
 }
@@ -296,16 +341,19 @@ WtSetFilePointerEx(
   DWORD          dwMoveMethod
 )
 {
-    DWORD               Ret;
-    static DWORD        Cnt;
+    DWORD		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "SetFilePointerEx(0x%p, %d, 0x%p, %u)", hFile, liDistanceToMove,
-            lpNewFilePointer, dwMoveMethod);
-    Ret = SetFilePointerEx(hFile, liDistanceToMove,
-            lpNewFilePointer, dwMoveMethod);
-    fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	if (BeginTrace(E_SetFilePointerEx))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, %d, 0x%p, %u)", hFile, liDistanceToMove,
+				lpNewFilePointer, dwMoveMethod);
+		Ret = SetFilePointerEx(hFile, liDistanceToMove,
+				lpNewFilePointer, dwMoveMethod);
+		fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	}
+	else
+		Ret = SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, dwMoveMethod);
 
     return Ret;
 }
@@ -319,16 +367,19 @@ WtWriteFile(
   LPOVERLAPPED lpOverlapped
 )
 {
-    BOOL                Ret;
-    static DWORD        Cnt;
+    BOOL		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "WriteFile(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
-            nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
-    Ret = WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite,
-            lpNumberOfBytesWritten, lpOverlapped);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_WriteFile))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
+				nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
+		Ret = WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite,
+				lpNumberOfBytesWritten, lpOverlapped);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
 
     return Ret;
 }
@@ -342,16 +393,19 @@ WtWriteFileEx(
   LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
 )
 {
-    BOOL                Ret;
-    static DWORD        Cnt;
+    BOOL		Ret;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "WriteFileEx(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
-            nNumberOfBytesToWrite, lpOverlapped, lpCompletionRoutine);
-    Ret = WriteFileEx(hFile, lpBuffer, nNumberOfBytesToWrite,
-            lpOverlapped, lpCompletionRoutine);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_WriteFileEx))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
+				nNumberOfBytesToWrite, lpOverlapped, lpCompletionRoutine);
+		Ret = WriteFileEx(hFile, lpBuffer, nNumberOfBytesToWrite,
+				lpOverlapped, lpCompletionRoutine);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = WriteFileEx(hFile, lpBuffer, nNumberOfBytesToWrite, lpOverlapped, lpCompletionRoutine);
 
     return Ret;
 }

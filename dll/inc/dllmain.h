@@ -1,6 +1,7 @@
 /*
     Version History
 
+		0.4.1	Added specific tracing
         0.4.0   Fixed GetMessage
         0.3.9   Cleaned up warnings
         0.3.8   Added WtRemoveDirectoryA/W
@@ -51,6 +52,7 @@
 // investigate this later.
 // TODO: Check functions with 64bit params and see what format specifier to
 // use (ie, %u vs %lu vs %llu).
+// TODO: Create our own printf that does fprintf(pOpts->...) internally?
 
 #ifndef DLLMAIN_H
 #define DLLMAIN_H
@@ -67,6 +69,7 @@
 #include "wt_fileapi.h"
 #include "wt_debugapi.h"
 #include "wt_profileapi.h"
+#include "wt_memoryapi.h"
 
 void PatchIAT(void);
 void ReadIAT(void);

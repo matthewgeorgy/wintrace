@@ -11,13 +11,16 @@ WtAdjustWindowRect(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "AdjustWindowRect(0x%p, %u, %d)", lpRect, dwStyle, bMenu);
-    Ret = AdjustWindowRect(lpRect, dwStyle, bMenu);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_AdjustWindowRect))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, %u, %d)", lpRect, dwStyle, bMenu);
+		Ret = AdjustWindowRect(lpRect, dwStyle, bMenu);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = AdjustWindowRect(lpRect, dwStyle, bMenu);
 
     return Ret;
 }
@@ -31,13 +34,16 @@ WtAdjustWindowRectEx(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "AdjustWindowRectEx(0x%p, %u, %d, %u)", lpRect, dwStyle, bMenu, dwExStyle);
-    Ret = AdjustWindowRectEx(lpRect, dwStyle, bMenu, dwExStyle);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_AdjustWindowRectEx))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, %u, %d, %u)", lpRect, dwStyle, bMenu, dwExStyle);
+		Ret = AdjustWindowRectEx(lpRect, dwStyle, bMenu, dwExStyle);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = AdjustWindowRectEx(lpRect, dwStyle, bMenu, dwExStyle);
 
     return Ret;
 }
@@ -49,13 +55,16 @@ WtBeginPaint(
 )
 {
     HDC                 Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "BeginPaint(0x%p, 0x%p)", hWnd, lpPaint);
-    Ret = BeginPaint(hWnd, lpPaint);
-    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	if (BeginTrace(E_BeginPaint))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpPaint);
+		Ret = BeginPaint(hWnd, lpPaint);
+		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	}
+	else
+		Ret = BeginPaint(hWnd, lpPaint);
 
     return Ret;
 }
@@ -67,13 +76,16 @@ WtClientToScreen(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "ClientToScreen(0x%p, 0x%p)", hWnd, lpPoint);
-    Ret = ClientToScreen(hWnd, lpPoint);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_ClientToScreen))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpPoint);
+		Ret = ClientToScreen(hWnd, lpPoint);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = ClientToScreen(hWnd, lpPoint);
 
     return Ret;
 }
@@ -83,13 +95,16 @@ WtClipCursor( const RECT *lpRect
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "ClipCursor(0x%p)", lpRect);
-    Ret = ClipCursor(lpRect);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
 
+	if (BeginTrace(E_ClipCursor))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p)", lpRect);
+		Ret = ClipCursor(lpRect);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = ClipCursor(lpRect);
 
     return Ret;
 }
@@ -100,13 +115,16 @@ WtCloseWindow(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "CloseWindow(0x%p)", hWnd);
-    Ret = CloseWindow(hWnd);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_CloseWindow))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p)", hWnd);
+		Ret = CloseWindow(hWnd);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = CloseWindow(hWnd);
 
     return Ret;
 }
@@ -127,17 +145,22 @@ WtCreateWindowA(
 )
 {
     HWND                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "CreateWindowA(\"%s\", \"%s\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p",
-            lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent,
-            hMenu, hInstance, lpParam);
-    fprintf(pOpts->OutputFile, ")");
-    Ret = CreateWindowA(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight,
-            hWndParent, hMenu, hInstance, lpParam);
-    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	if (BeginTrace(E_CreateWindowA))
+    {
+		fprintf(pOpts->OutputFile, "(\"%s\", \"%s\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p)",
+				lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent,
+				hMenu, hInstance, lpParam);
+		Ret = CreateWindowA(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight,
+				hWndParent, hMenu, hInstance, lpParam);
+		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	}
+	else
+	{
+		Ret = CreateWindowA(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight,
+				hWndParent, hMenu, hInstance, lpParam);
+	}
 
     return Ret;
 }
@@ -158,17 +181,22 @@ WtCreateWindowW(
 )
 {
     HWND                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "CreateWindowW(\"%ws\", \"%ws\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p",
-            lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent,
-            hMenu, hInstance, lpParam);
-    fprintf(pOpts->OutputFile, ")");
-    Ret = CreateWindowW(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight,
-            hWndParent, hMenu, hInstance, lpParam);
-    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	if (BeginTrace(E_CreateWindowW))
+    {
+		fprintf(pOpts->OutputFile, "(\"%ws\", \"%ws\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p)",
+				lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent,
+				hMenu, hInstance, lpParam);
+		Ret = CreateWindowW(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight,
+				hWndParent, hMenu, hInstance, lpParam);
+		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	}
+	else
+	{
+		Ret = CreateWindowW(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight,
+				hWndParent, hMenu, hInstance, lpParam);
+	}
 
     return Ret;
 }
@@ -190,17 +218,22 @@ WtCreateWindowExA(
 )
 {
     HWND                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "CreateWindowExA(%u, \"%s\", \"%s\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p",
-            dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent,
-            hMenu, hInstance, lpParam);
-    fprintf(pOpts->OutputFile, ")");
-    Ret = CreateWindowA(lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight,
-            hWndParent, hMenu, hInstance, lpParam);
-    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	if (BeginTrace(E_CreateWindowExA))
+    {
+		fprintf(pOpts->OutputFile, "(%u, \"%s\", \"%s\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p)",
+				dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent,
+				hMenu, hInstance, lpParam);
+		Ret = CreateWindowA(lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight,
+				hWndParent, hMenu, hInstance, lpParam);
+		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	}
+	else
+	{
+		Ret = CreateWindowA(lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight,
+				hWndParent, hMenu, hInstance, lpParam);
+	}
 
     return Ret;
 }
@@ -222,17 +255,22 @@ WtCreateWindowExW(
 )
 {
     HWND                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "CreateWindowExW(%u, \"%ws\", \"%ws\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p",
-            dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent,
-            hMenu, hInstance, lpParam);
-    fprintf(pOpts->OutputFile, ")");
-    Ret = CreateWindowW(lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight,
-            hWndParent, hMenu, hInstance, lpParam);
-    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	if (BeginTrace(E_CreateWindowExW))
+    {
+		fprintf(pOpts->OutputFile, "(%u, \"%ws\", \"%ws\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p)",
+				dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent,
+				hMenu, hInstance, lpParam);
+		Ret = CreateWindowW(lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight,
+				hWndParent, hMenu, hInstance, lpParam);
+		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	}
+	else
+	{
+		Ret = CreateWindowW(lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight,
+				hWndParent, hMenu, hInstance, lpParam);
+	}
 
     return Ret;
 }
@@ -246,13 +284,16 @@ WtDefWindowProc(
 )
 {
     LRESULT             Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "DefWindowProc(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
-    Ret = DefWindowProc(hWnd, Msg, wParam, lParam);
-    fprintf(pOpts->OutputFile, " = %u", Ret);
+	if (BeginTrace(E_DefWindowProc))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
+		Ret = DefWindowProc(hWnd, Msg, wParam, lParam);
+		fprintf(pOpts->OutputFile, " = %u", Ret);
+	}
+	else
+		Ret = DefWindowProc(hWnd, Msg, wParam, lParam);
 
     return Ret;
 }
@@ -263,13 +304,16 @@ WtDestroyWindow(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "DestroyWindow(0x%p)", hWnd);
-    Ret = DestroyWindow(hWnd);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_DestroyWindow))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p)", hWnd);
+		Ret = DestroyWindow(hWnd);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = DestroyWindow(hWnd);
 
     return Ret;
 }
@@ -280,13 +324,16 @@ WtDispatchMessageA(
 )
 {
     LRESULT             Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "DispatchMessageA(0x%p)", lpMsg);
-    Ret = DispatchMessageA(lpMsg);
-    fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	if (BeginTrace(E_DispatchMessageA))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p)", lpMsg);
+		Ret = DispatchMessageA(lpMsg);
+		fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	}
+	else
+		Ret = DispatchMessageA(lpMsg);
 
     return Ret;
 }
@@ -297,13 +344,16 @@ WtDispatchMessageW(
 )
 {
     LRESULT             Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "DispatchMessageW(0x%p)", lpMsg);
-    Ret = DispatchMessageW(lpMsg);
-    fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	if (BeginTrace(E_DispatchMessageW))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p)", lpMsg);
+		Ret = DispatchMessageW(lpMsg);
+		fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	}
+	else
+		Ret = DispatchMessageW(lpMsg);
 
     return Ret;
 }
@@ -316,13 +366,16 @@ WtEndPaint(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "EndPaint(0x%p, 0x%p)", hWnd, lpPaint);
-    Ret = EndPaint(hWnd, lpPaint);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_EndPaint))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpPaint);
+		Ret = EndPaint(hWnd, lpPaint);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = EndPaint(hWnd, lpPaint);
 
     return Ret;
 }
@@ -335,13 +388,16 @@ WtFillRect(
 )
 {
     int                 Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "FillRect(0x%p, 0x%p, 0x%p)", hDC, lprc, hbr);
-    Ret = FillRect(hDC, lprc, hbr);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_FillRect))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p, 0x%p)", hDC, lprc, hbr);
+		Ret = FillRect(hDC, lprc, hbr);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = FillRect(hDC, lprc, hbr);
 
     return Ret;
 }
@@ -353,13 +409,16 @@ WtGetClientRect(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "GetClientRect(0x%p, 0x%p)", hWnd, lpRect);
-    Ret = GetClientRect(hWnd, lpRect);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_GetClientRect))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpRect);
+		Ret = GetClientRect(hWnd, lpRect);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = GetClientRect(hWnd, lpRect);
 
     return Ret;
 }
@@ -370,13 +429,16 @@ WtGetCursorPos(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "GetCursorPos(0x%p)", lpPoint);
-    Ret = GetCursorPos(lpPoint);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_GetCursorPos))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p)", lpPoint);
+		Ret = GetCursorPos(lpPoint);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = GetCursorPos(lpPoint);
 
     return Ret;
 }
@@ -387,19 +449,22 @@ WtGetDC(
 )
 {
     HDC                 Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "GetDC(0x%p)", hWnd);
-    Ret = GetDC(hWnd);
-    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	if (BeginTrace(E_GetDC))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p)", hWnd);
+		Ret = GetDC(hWnd);
+		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	}
+	else
+		Ret = GetDC(hWnd);
 
     return Ret;
 }
 
 BOOL
-WtGetMessage(
+WtGetMessageA(
   LPMSG lpMsg,
   HWND  hWnd,
   UINT  wMsgFilterMin,
@@ -407,13 +472,39 @@ WtGetMessage(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "GetMessage(0x%p, 0x%p, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
-    Ret = GetMessage(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_GetMessageA))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+		Ret = GetMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = GetMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+
+    return Ret;
+}
+
+BOOL
+WtGetMessageW(
+  LPMSG lpMsg,
+  HWND  hWnd,
+  UINT  wMsgFilterMin,
+  UINT  wMsgFilterMax
+)
+{
+    BOOL                Ret;
+
+
+	if (BeginTrace(E_GetMessageW))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+		Ret = GetMessageW(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = GetMessageW(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
 
     return Ret;
 }
@@ -425,43 +516,60 @@ WtGetWindowRect(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "GetWindowRect(0x%p, 0x%p)", hWnd, lpRect);
-    Ret = GetWindowRect(hWnd, lpRect);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
-
-    return Ret;
-}
-
-int WINAPI
-WtMessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)
-{
-    int                 Ret;
-    static DWORD        Cnt;
-
-
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "MessageBoxA(0x%p, \"%s\", \"%s\", %u)", hWnd, lpText, lpCaption, uType);
-    Ret = MessageBoxA(hWnd, lpText, lpCaption, uType);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_GetWindowRect))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpRect);
+		Ret = GetWindowRect(hWnd, lpRect);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = GetWindowRect(hWnd, lpRect);
 
     return Ret;
 }
 
 int WINAPI
-WtMessageBoxW(HWND hWnd, LPCWSTR lpText, LPCWSTR lpCaption, UINT uType)
+WtMessageBoxA(
+  HWND hWnd, 
+  LPCSTR lpText, 
+  LPCSTR lpCaption, 
+  UINT uType)
 {
     int                 Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "MessageBoxW(0x%p, \"%ws\", \"%ws\", %u)", hWnd, lpText, lpCaption, uType);
-    Ret = MessageBoxW(hWnd, lpText, lpCaption, uType);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_MessageBoxA))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, \"%s\", \"%s\", %u)", hWnd, lpText, lpCaption, uType);
+		Ret = MessageBoxA(hWnd, lpText, lpCaption, uType);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = MessageBoxA(hWnd, lpText, lpCaption, uType);
+
+    return Ret;
+}
+
+int WINAPI
+WtMessageBoxW(
+  HWND hWnd, 
+  LPCWSTR lpText, 
+  LPCWSTR lpCaption, 
+  UINT uType)
+{
+    int                 Ret;
+
+
+	if (BeginTrace(E_MessageBoxW))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, \"%ws\", \"%ws\", %u)", hWnd, lpText, lpCaption, uType);
+		Ret = MessageBoxW(hWnd, lpText, lpCaption, uType);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = MessageBoxW(hWnd, lpText, lpCaption, uType);
 
     return Ret;
 }
@@ -476,13 +584,16 @@ WtMessageBoxExA(
 )
 {
     int                 Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "MessageBoxExA(0x%p, \"%s\", \"%s\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
-    Ret = MessageBoxExA(hWnd, lpText, lpCaption, uType, wLanguageId);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_MessageBoxExA))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, \"%s\", \"%s\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
+		Ret = MessageBoxExA(hWnd, lpText, lpCaption, uType, wLanguageId);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = MessageBoxExA(hWnd, lpText, lpCaption, uType, wLanguageId);
 
     return Ret;
 }
@@ -497,13 +608,16 @@ WtMessageBoxExW(
 )
 {
     int                 Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "MessageBoxExW(0x%p, \"%ws\", \"%ws\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
-    Ret = MessageBoxExW(hWnd, lpText, lpCaption, uType, wLanguageId);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_MessageBoxExW))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, \"%ws\", \"%ws\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
+		Ret = MessageBoxExW(hWnd, lpText, lpCaption, uType, wLanguageId);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = MessageBoxExW(hWnd, lpText, lpCaption, uType, wLanguageId);
 
     return Ret;
 }
@@ -518,13 +632,16 @@ WtPeekMessageA(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "PeekMessageA(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
-    Ret = PeekMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_PeekMessageA))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
+		Ret = PeekMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = PeekMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
 
     return Ret;
 }
@@ -539,13 +656,16 @@ WtPeekMessageW(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "PeekMessageW(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
-    Ret = PeekMessageW(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_PeekMessageW))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
+		Ret = PeekMessageW(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = PeekMessageW(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
 
     return Ret;
 }
@@ -559,13 +679,16 @@ WtPostMessageA(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "PostMessageA(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
-    Ret = PostMessageA(hWnd, Msg, wParam, lParam);
-    fprintf(pOpts->OutputFile, " = %d", Ret);
+	if (BeginTrace(E_PostMessageA))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
+		Ret = PostMessageA(hWnd, Msg, wParam, lParam);
+		fprintf(pOpts->OutputFile, " = %d", Ret);
+	}
+	else
+		Ret = PostMessageA(hWnd, Msg, wParam, lParam);
 
     return Ret;
 }
@@ -579,13 +702,16 @@ WtPostMessageW(
 )
 {
     int                 Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "PostMessageW(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
-    Ret = PostMessageW(hWnd, Msg, wParam, lParam);
-    fprintf(pOpts->OutputFile, " = %d", Ret);
+	if (BeginTrace(E_PostMessageW))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
+		Ret = PostMessageW(hWnd, Msg, wParam, lParam);
+		fprintf(pOpts->OutputFile, " = %d", Ret);
+	}
+	else
+		Ret = PostMessageW(hWnd, Msg, wParam, lParam);
 
     return Ret;
 }
@@ -595,13 +721,9 @@ WtPostQuitMessage(
   int nExitCode
 )
 {
-    static DWORD        Cnt;
-
-
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "PostQuitMessage(%d)", nExitCode);
+	if (BeginTrace(E_PostQuitMessage))
+    	fprintf(pOpts->OutputFile, "(%d) = VOID\n", nExitCode);
     PostQuitMessage(nExitCode);
-    fprintf(pOpts->OutputFile, " = VOID\n");
 }
 
 ATOM
@@ -610,13 +732,16 @@ WtRegisterClassExA(
 )
 {
     ATOM                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "RegisterClassExA(0x%p)", unnamedParam1);
-    Ret = RegisterClassExA(unnamedParam1);
-    fprintf(pOpts->OutputFile, " = %hu\n", Ret);
+	if (BeginTrace(E_RegisterClassExA))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p)", unnamedParam1);
+		Ret = RegisterClassExA(unnamedParam1);
+		fprintf(pOpts->OutputFile, " = %hu\n", Ret);
+	}
+	else
+		Ret = RegisterClassExA(unnamedParam1);
 
     return Ret;
 }
@@ -627,13 +752,16 @@ WtRegisterClassExW(
 )
 {
     ATOM                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "RegisterClassExW(0x%p)", unnamedParam1);
-    Ret = RegisterClassExW(unnamedParam1);
-    fprintf(pOpts->OutputFile, " = %hu\n", Ret);
+	if (BeginTrace(E_RegisterClassExW))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p)", unnamedParam1);
+		Ret = RegisterClassExW(unnamedParam1);
+		fprintf(pOpts->OutputFile, " = %hu\n", Ret);
+	}
+	else
+		Ret = RegisterClassExW(unnamedParam1);
 
     return Ret;
 }
@@ -645,13 +773,16 @@ WtReleaseDC(
 )
 {
     int                 Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "ReleaseDC(0x%p, 0x%p)", hWnd, hDC);
-    Ret = ReleaseDC(hWnd, hDC);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_ReleaseDC))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, hDC);
+		Ret = ReleaseDC(hWnd, hDC);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = ReleaseDC(hWnd, hDC);
 
     return Ret;
 }
@@ -663,13 +794,16 @@ WtScreenToClient(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "ScreenToClient(0x%p, 0x%p)", hWnd, lpPoint);
-    Ret = ScreenToClient(hWnd, lpPoint);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_ScreenToClient))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpPoint);
+		Ret = ScreenToClient(hWnd, lpPoint);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = ScreenToClient(hWnd, lpPoint);
 
     return Ret;
 }
@@ -680,13 +814,16 @@ WtShowCursor(
 )
 {
     int                 Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "ShowCursor(%d)", bShow);
-    Ret = ShowCursor(bShow);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_ShowCursor))
+    {
+		fprintf(pOpts->OutputFile, "(%d)", bShow);
+		Ret = ShowCursor(bShow);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = ShowCursor(bShow);
 
     return Ret;
 }
@@ -698,13 +835,16 @@ WtShowWindow(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "ShowWindow(0x%p, %d)", hWnd, nCmdShow);
-    Ret = ShowWindow(hWnd, nCmdShow);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_ShowWindow))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p, %d)", hWnd, nCmdShow);
+		Ret = ShowWindow(hWnd, nCmdShow);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = ShowWindow(hWnd, nCmdShow);
 
     return Ret;
 }
@@ -715,13 +855,16 @@ WtTranslateMessage(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "TranslateMessage(0x%p)", lpMsg);
-    Ret = TranslateMessage(lpMsg);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_TranslateMessage))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p)", lpMsg);
+		Ret = TranslateMessage(lpMsg);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = TranslateMessage(lpMsg);
 
     return Ret;
 }
@@ -732,13 +875,16 @@ WtUpdateWindow(
 )
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "UpdateWindow(0x%p)", hWnd);
-    Ret = UpdateWindow(hWnd);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_UpdateWindow))
+    {
+		fprintf(pOpts->OutputFile, "(0x%p)", hWnd);
+		Ret = UpdateWindow(hWnd);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = UpdateWindow(hWnd);
 
     return Ret;
 }
