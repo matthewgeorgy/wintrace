@@ -91,7 +91,14 @@ HWND WtCreateWindowExW(
   LPVOID    lpParam
 );
 
-LRESULT WtDefWindowProc(
+LRESULT WtDefWindowProcA(
+  HWND   hWnd,
+  UINT   Msg,
+  WPARAM wParam,
+  LPARAM lParam
+);
+
+LRESULT WtDefWindowProcW(
   HWND   hWnd,
   UINT   Msg,
   WPARAM wParam,

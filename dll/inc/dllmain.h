@@ -1,6 +1,8 @@
 /*
     Version History
 
+        0.4.6   Tested printing with new system; still needs a slight fix
+                Fixed hooks for DefWindowProcA/W
         0.4.5   Added basic printing with Write/PrintFuncBuffer();
                 Need to test it with actual nested calls next
         0.4.4   Implemented EndTrace() in hooks; fixed misc bugs

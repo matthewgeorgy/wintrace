@@ -21,13 +21,13 @@ typedef struct _tag_WintraceOpts
 // Function string trace buffer
 typedef struct _tag_FuncBuffer
 {
-    CHAR        Buff[256];
+    CHAR        Buff[1024];
     SIZE_T      Pos;
 } T_FuncBuffer;
 
 typedef struct _tag_FuncList
 {
-    T_FuncBuffer        Buffers[32];
+    T_FuncBuffer        Buffers[64];
     SIZE_T              Index;
 } T_FuncList;
 

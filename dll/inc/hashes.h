@@ -8,7 +8,8 @@
 #define FUNC_CreateWindowW 1227009352
 #define FUNC_CreateWindowExA 478339695
 #define FUNC_CreateWindowExW 478339717
-#define FUNC_DefWindowProc 3176963584
+#define FUNC_DefWindowProcA 1760583233
+#define FUNC_DefWindowProcW 1760583255
 #define FUNC_DestroyWindow 344202887
 #define FUNC_DispatchMessageA 2879414363
 #define FUNC_DispatchMessageW 2879414385
