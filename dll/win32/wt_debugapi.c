@@ -1,4 +1,4 @@
-#include "inc/wt_debugapi.h"
+#include <win32/wt_debugapi.h>
 
 extern T_WintraceOpts *pOpts;
 

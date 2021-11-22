@@ -1,4 +1,4 @@
-#include "inc/wt_heapapi.h"
+#include <win32/wt_heapapi.h>
 
 extern T_WintraceOpts      *pOpts;
 

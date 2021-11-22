@@ -1,4 +1,4 @@
-#include "inc/func_records.h"
+#include <func_records.h>
 
 // Full list of supported function records
 T_FuncRec g_FuncRecs[] =

@@ -70,14 +70,14 @@
 #include <Dbghelp.h>
 #include <stdio.h>
 
-#include "common.h"
-#include "wt_winuser.h"
-#include "wt_heapapi.h"
-#include "wt_processthreadsapi.h"
-#include "wt_fileapi.h"
-#include "wt_debugapi.h"
-#include "wt_profileapi.h"
-#include "wt_memoryapi.h"
+#include <common.h>
+#include <win32/wt_winuser.h>
+#include <win32/wt_heapapi.h>
+#include <win32/wt_processthreadsapi.h>
+#include <win32/wt_fileapi.h>
+#include <win32/wt_debugapi.h>
+#include <win32/wt_profileapi.h>
+#include <win32/wt_memoryapi.h>
 
 // Goes through the IAT and patches the function addresses
 void PatchIAT(void);

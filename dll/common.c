@@ -1,5 +1,5 @@
-#include "inc/common.h"
-#include "inc/hashes.h"
+#include <common.h>
+#include <hashes.h>
 #include <stdio.h>
 
 // Globals

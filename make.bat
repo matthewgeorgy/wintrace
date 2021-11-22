@@ -1,28 +1,17 @@
 @echo off
 
-set wintrace=build\wintrace.exe
-
 if [%1]==[]         goto :install
 if "%1"=="clean"    goto :clean
 if "%1"=="test"     goto :test
-if "%1"=="all"      goto :all
-
-goto :EOF
 
 :install
     pushd build
-        cl /W4 /MP /LD /Fe"wintrace.dll" w:\wintrace\dll\*.c user32.lib kernel32.lib advapi32.lib
+		cl /W4 /c /I"w:\wintrace\dll\inc" w:\wintrace\dll\win32\*.c
+		cl /W4 /c /I"w:\wintrace\dll\inc" w:\wintrace\dll\*.c
+		link /DLL *.obj /OUT:wintrace.dll kernel32.lib user32.lib advapi32.lib
         cl /W4 /MP /Fe"wintrace.exe" w:\wintrace\core\*.c kernel32.lib
     popd
-goto :EOF
-
-:clean
-    pushd build
-        del /Q *.*
-		pushd tests
-			del /Q *.*
-		popd
-    popd
+if "%1"=="all"	goto :test
 goto :EOF
 
 :test
@@ -34,15 +23,14 @@ goto :EOF
     popd
 goto :EOF
 
-:all
+:clean
     pushd build
-        cl /W4 /MP /LD /Fe"wintrace.dll" w:\wintrace\dll\*.c user32.lib kernel32.lib advapi32.lib
-        cl /W4 /MP /Fe"wintrace.exe" w:\wintrace\core\*.c kernel32.lib
-        pushd tests
-			cl /W4 /MD w:\wintrace\tests\test_heapapi.c
-			cl /W4 /MD w:\wintrace\tests\test_fileapi.c
-			cl /W4 /MD w:\wintrace\tests\test_winuser.c user32.lib
-			cl /W4 /MD w:\wintrace\tests\test_memoryapi.c
-        popd
+        del /Q *.*
+		del /Q Foo\*
+		rmdir Foo
+		pushd tests
+			del /Q *.*
+		popd
     popd
 goto :EOF
+
