@@ -198,15 +198,16 @@ InitFuncRecs()
     }
 }
 
+// *could use this param to check for if a function can report GetLastError()
 void
-EndTrace(E_FuncEnum FunctionName,
+EndTrace(E_FuncEnum FunctionName, // reserved for now*
          BOOL bError)
 {
     g_CallLvl--;
 
     if (bError)
-        fprintf(pOpts->OutputFile, "(ERROR: %u)", GetLastError());
-    fprintf(pOpts->OutputFile, "\n", GetLastError());
+        fprintf(pOpts->OutputFile, "(ERROR: %u) ", GetLastError());
+    fprintf(pOpts->OutputFile, "\r\n");
 }
 
 void

@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.4.4   Implemented EndTrace() in hooks; fixed misc bugs
         0.4.3   Added EndTrace(), g_CallLvl, WriteFuncBuffer(), PrintFuncBuffer()
                 Need to actually implement/integrate these into the hooks
         0.4.2   Misc cleanups/fixes + added some comments/documentation

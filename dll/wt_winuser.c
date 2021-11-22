@@ -16,7 +16,8 @@ WtAdjustWindowRect(
     {
         fprintf(pOpts->OutputFile, "(0x%p, %u, %d)", lpRect, dwStyle, bMenu);
         Ret = AdjustWindowRect(lpRect, dwStyle, bMenu);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_AdjustWindowRect, Ret == FALSE);
     }
     else
         Ret = AdjustWindowRect(lpRect, dwStyle, bMenu);
@@ -39,7 +40,8 @@ WtAdjustWindowRectEx(
     {
         fprintf(pOpts->OutputFile, "(0x%p, %u, %d, %u)", lpRect, dwStyle, bMenu, dwExStyle);
         Ret = AdjustWindowRectEx(lpRect, dwStyle, bMenu, dwExStyle);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_AdjustWindowRectEx, Ret == FALSE);
     }
     else
         Ret = AdjustWindowRectEx(lpRect, dwStyle, bMenu, dwExStyle);
@@ -60,7 +62,8 @@ WtBeginPaint(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpPaint);
         Ret = BeginPaint(hWnd, lpPaint);
-        fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        EndTrace(E_BeginPaint, Ret == NULL);
     }
     else
         Ret = BeginPaint(hWnd, lpPaint);
@@ -81,7 +84,8 @@ WtClientToScreen(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpPoint);
         Ret = ClientToScreen(hWnd, lpPoint);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_ClientToScreen, Ret == FALSE);
     }
     else
         Ret = ClientToScreen(hWnd, lpPoint);
@@ -100,7 +104,8 @@ WtClipCursor( const RECT *lpRect
     {
         fprintf(pOpts->OutputFile, "(0x%p)", lpRect);
         Ret = ClipCursor(lpRect);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_ClipCursor, Ret == FALSE);
     }
     else
         Ret = ClipCursor(lpRect);
@@ -120,7 +125,8 @@ WtCloseWindow(
     {
         fprintf(pOpts->OutputFile, "(0x%p)", hWnd);
         Ret = CloseWindow(hWnd);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_CloseWindow, Ret == FALSE);
     }
     else
         Ret = CloseWindow(hWnd);
@@ -153,7 +159,8 @@ WtCreateWindowA(
                 hMenu, hInstance, lpParam);
         Ret = CreateWindowA(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight,
                 hWndParent, hMenu, hInstance, lpParam);
-        fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        EndTrace(E_CreateWindowA, Ret == NULL);
     }
     else
     {
@@ -189,7 +196,8 @@ WtCreateWindowW(
                 hMenu, hInstance, lpParam);
         Ret = CreateWindowW(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight,
                 hWndParent, hMenu, hInstance, lpParam);
-        fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        EndTrace(E_CreateWindowW, Ret == NULL);
     }
     else
     {
@@ -226,7 +234,8 @@ WtCreateWindowExA(
                 hMenu, hInstance, lpParam);
         Ret = CreateWindowA(lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight,
                 hWndParent, hMenu, hInstance, lpParam);
-        fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        EndTrace(E_CreateWindowExA, Ret == NULL);
     }
     else
     {
@@ -263,7 +272,8 @@ WtCreateWindowExW(
                 hMenu, hInstance, lpParam);
         Ret = CreateWindowW(lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight,
                 hWndParent, hMenu, hInstance, lpParam);
-        fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        EndTrace(E_CreateWindowExW, Ret == NULL);
     }
     else
     {
@@ -290,6 +300,7 @@ WtDefWindowProc(
         fprintf(pOpts->OutputFile, "(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
         Ret = DefWindowProc(hWnd, Msg, wParam, lParam);
         fprintf(pOpts->OutputFile, " = %u", Ret);
+        EndTrace(E_DefWindowProc, FALSE);
     }
     else
         Ret = DefWindowProc(hWnd, Msg, wParam, lParam);
@@ -309,7 +320,8 @@ WtDestroyWindow(
     {
         fprintf(pOpts->OutputFile, "(0x%p)", hWnd);
         Ret = DestroyWindow(hWnd);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_DestroyWindow, Ret == FALSE);
     }
     else
         Ret = DestroyWindow(hWnd);
@@ -329,7 +341,8 @@ WtDispatchMessageA(
     {
         fprintf(pOpts->OutputFile, "(0x%p)", lpMsg);
         Ret = DispatchMessageA(lpMsg);
-        fprintf(pOpts->OutputFile, " = %u\n", Ret);
+        fprintf(pOpts->OutputFile, " = %u", Ret);
+        EndTrace(E_DispatchMessageA, FALSE);
     }
     else
         Ret = DispatchMessageA(lpMsg);
@@ -349,7 +362,8 @@ WtDispatchMessageW(
     {
         fprintf(pOpts->OutputFile, "(0x%p)", lpMsg);
         Ret = DispatchMessageW(lpMsg);
-        fprintf(pOpts->OutputFile, " = %u\n", Ret);
+        fprintf(pOpts->OutputFile, " = %u", Ret);
+        EndTrace(E_DispatchMessageW, FALSE);
     }
     else
         Ret = DispatchMessageW(lpMsg);
@@ -371,7 +385,8 @@ WtEndPaint(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpPaint);
         Ret = EndPaint(hWnd, lpPaint);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_EndPaint, FALSE);
     }
     else
         Ret = EndPaint(hWnd, lpPaint);
@@ -393,7 +408,8 @@ WtFillRect(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p, 0x%p)", hDC, lprc, hbr);
         Ret = FillRect(hDC, lprc, hbr);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_FillRect, Ret == 0);
     }
     else
         Ret = FillRect(hDC, lprc, hbr);
@@ -414,7 +430,8 @@ WtGetClientRect(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpRect);
         Ret = GetClientRect(hWnd, lpRect);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_GetClientRect, Ret == FALSE);
     }
     else
         Ret = GetClientRect(hWnd, lpRect);
@@ -434,7 +451,8 @@ WtGetCursorPos(
     {
         fprintf(pOpts->OutputFile, "(0x%p)", lpPoint);
         Ret = GetCursorPos(lpPoint);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_GetCursorPos, Ret == FALSE);
     }
     else
         Ret = GetCursorPos(lpPoint);
@@ -454,7 +472,8 @@ WtGetDC(
     {
         fprintf(pOpts->OutputFile, "(0x%p)", hWnd);
         Ret = GetDC(hWnd);
-        fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        EndTrace(E_GetDC, Ret == NULL);
     }
     else
         Ret = GetDC(hWnd);
@@ -477,7 +496,8 @@ WtGetMessageA(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
         Ret = GetMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_GetMessageA, Ret == -1);
     }
     else
         Ret = GetMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
@@ -500,7 +520,8 @@ WtGetMessageW(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
         Ret = GetMessageW(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_GetMessageW, Ret == -1);
     }
     else
         Ret = GetMessageW(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
@@ -521,7 +542,8 @@ WtGetWindowRect(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpRect);
         Ret = GetWindowRect(hWnd, lpRect);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_GetWindowRect, Ret == FALSE);
     }
     else
         Ret = GetWindowRect(hWnd, lpRect);
@@ -543,7 +565,8 @@ WtMessageBoxA(
     {
         fprintf(pOpts->OutputFile, "(0x%p, \"%s\", \"%s\", %u)", hWnd, lpText, lpCaption, uType);
         Ret = MessageBoxA(hWnd, lpText, lpCaption, uType);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_MessageBoxA, Ret == 0);
     }
     else
         Ret = MessageBoxA(hWnd, lpText, lpCaption, uType);
@@ -565,7 +588,8 @@ WtMessageBoxW(
     {
         fprintf(pOpts->OutputFile, "(0x%p, \"%ws\", \"%ws\", %u)", hWnd, lpText, lpCaption, uType);
         Ret = MessageBoxW(hWnd, lpText, lpCaption, uType);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_MessageBoxW, Ret == 0);
     }
     else
         Ret = MessageBoxW(hWnd, lpText, lpCaption, uType);
@@ -589,7 +613,8 @@ WtMessageBoxExA(
     {
         fprintf(pOpts->OutputFile, "(0x%p, \"%s\", \"%s\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
         Ret = MessageBoxExA(hWnd, lpText, lpCaption, uType, wLanguageId);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_MessageBoxExA, Ret == 0);
     }
     else
         Ret = MessageBoxExA(hWnd, lpText, lpCaption, uType, wLanguageId);
@@ -613,7 +638,8 @@ WtMessageBoxExW(
     {
         fprintf(pOpts->OutputFile, "(0x%p, \"%ws\", \"%ws\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
         Ret = MessageBoxExW(hWnd, lpText, lpCaption, uType, wLanguageId);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_MessageBoxExW, Ret == 0);
     }
     else
         Ret = MessageBoxExW(hWnd, lpText, lpCaption, uType, wLanguageId);
@@ -637,7 +663,8 @@ WtPeekMessageA(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
         Ret = PeekMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_PeekMessageA, FALSE);
     }
     else
         Ret = PeekMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
@@ -661,7 +688,8 @@ WtPeekMessageW(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
         Ret = PeekMessageW(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_PeekMessageW, FALSE);
     }
     else
         Ret = PeekMessageW(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
@@ -685,6 +713,7 @@ WtPostMessageA(
         fprintf(pOpts->OutputFile, "(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
         Ret = PostMessageA(hWnd, Msg, wParam, lParam);
         fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_PostMessageA, Ret == FALSE);
     }
     else
         Ret = PostMessageA(hWnd, Msg, wParam, lParam);
@@ -708,6 +737,7 @@ WtPostMessageW(
         fprintf(pOpts->OutputFile, "(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
         Ret = PostMessageW(hWnd, Msg, wParam, lParam);
         fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_PostMessageW, Ret == FALSE);
     }
     else
         Ret = PostMessageW(hWnd, Msg, wParam, lParam);
@@ -721,7 +751,10 @@ WtPostQuitMessage(
 )
 {
     if (BeginTrace(E_PostQuitMessage))
-        fprintf(pOpts->OutputFile, "(%d) = VOID\n", nExitCode);
+    {
+        fprintf(pOpts->OutputFile, "(%d) = VOID", nExitCode);
+        EndTrace(E_PostQuitMessage, FALSE);
+    }
     PostQuitMessage(nExitCode);
 }
 
@@ -737,7 +770,8 @@ WtRegisterClassExA(
     {
         fprintf(pOpts->OutputFile, "(0x%p)", unnamedParam1);
         Ret = RegisterClassExA(unnamedParam1);
-        fprintf(pOpts->OutputFile, " = %hu\n", Ret);
+        fprintf(pOpts->OutputFile, " = %hu", Ret);
+        EndTrace(E_RegisterClassExA, Ret == 0);
     }
     else
         Ret = RegisterClassExA(unnamedParam1);
@@ -757,7 +791,8 @@ WtRegisterClassExW(
     {
         fprintf(pOpts->OutputFile, "(0x%p)", unnamedParam1);
         Ret = RegisterClassExW(unnamedParam1);
-        fprintf(pOpts->OutputFile, " = %hu\n", Ret);
+        fprintf(pOpts->OutputFile, " = %hu", Ret);
+        EndTrace(E_RegisterClassExW, Ret == 0);
     }
     else
         Ret = RegisterClassExW(unnamedParam1);
@@ -778,7 +813,8 @@ WtReleaseDC(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, hDC);
         Ret = ReleaseDC(hWnd, hDC);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_ReleaseDC, FALSE);
     }
     else
         Ret = ReleaseDC(hWnd, hDC);
@@ -799,7 +835,8 @@ WtScreenToClient(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpPoint);
         Ret = ScreenToClient(hWnd, lpPoint);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_ScreenToClient, Ret == FALSE);
     }
     else
         Ret = ScreenToClient(hWnd, lpPoint);
@@ -819,7 +856,8 @@ WtShowCursor(
     {
         fprintf(pOpts->OutputFile, "(%d)", bShow);
         Ret = ShowCursor(bShow);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_ShowCursor, FALSE);
     }
     else
         Ret = ShowCursor(bShow);
@@ -840,7 +878,8 @@ WtShowWindow(
     {
         fprintf(pOpts->OutputFile, "(0x%p, %d)", hWnd, nCmdShow);
         Ret = ShowWindow(hWnd, nCmdShow);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_ShowWindow, FALSE);
     }
     else
         Ret = ShowWindow(hWnd, nCmdShow);
@@ -860,7 +899,8 @@ WtTranslateMessage(
     {
         fprintf(pOpts->OutputFile, "(0x%p)", lpMsg);
         Ret = TranslateMessage(lpMsg);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_TranslateMessage, FALSE);
     }
     else
         Ret = TranslateMessage(lpMsg);
@@ -880,7 +920,8 @@ WtUpdateWindow(
     {
         fprintf(pOpts->OutputFile, "(0x%p)", hWnd);
         Ret = UpdateWindow(hWnd);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_UpdateWindow, FALSE);
     }
     else
         Ret = UpdateWindow(hWnd);

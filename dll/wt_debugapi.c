@@ -15,7 +15,8 @@ WtCheckRemoteDebuggerPresent(
     {
         fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hProcess, pbDebuggerPresent);
         Ret = CheckRemoteDebuggerPresent(hProcess, pbDebuggerPresent);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_CheckRemoteDebuggerPresent, Ret == FALSE);
     }
     else
         Ret = CheckRemoteDebuggerPresent(hProcess, pbDebuggerPresent);
@@ -37,7 +38,8 @@ WtContinueDebugEvent(
     {
         fprintf(pOpts->OutputFile, "(%u, %u, %u)", dwProcessId, dwThreadId, dwContinueStatus);
         Ret = ContinueDebugEvent(dwProcessId, dwThreadId, dwContinueStatus);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_ContinueDebugEvent, Ret == FALSE);
     }
     else
         Ret = ContinueDebugEvent(dwProcessId, dwThreadId, dwContinueStatus);
@@ -57,7 +59,8 @@ WtDebugActiveProcess(
     {
         fprintf(pOpts->OutputFile, "(%u)", dwProcessId);
         Ret = DebugActiveProcess(dwProcessId);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_DebugActiveProcess, Ret == FALSE);
     }
     else
         Ret = DebugActiveProcess(dwProcessId);
@@ -77,7 +80,8 @@ WtDebugActiveProcessStop(
     {
         fprintf(pOpts->OutputFile, "(%u)", dwProcessId);
         Ret = DebugActiveProcessStop(dwProcessId);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_DebugActiveProcessStop, Ret == FALSE);
     }
     else
         Ret = DebugActiveProcessStop(dwProcessId);
@@ -89,7 +93,10 @@ void
 WtDebugBreak()
 {
     if (BeginTrace(E_DebugBreak))
-        fprintf(pOpts->OutputFile, "() = VOID\n");
+    {
+        fprintf(pOpts->OutputFile, "() = VOID");
+        EndTrace(E_DebugBreak, FALSE);
+    }
     DebugBreak();
 }
 
@@ -103,7 +110,8 @@ WtIsDebuggerPresent()
     {
         fprintf(pOpts->OutputFile, "()");
         Ret = IsDebuggerPresent();
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_IsDebuggerPresent, FALSE);
     }
     else
         Ret = IsDebuggerPresent();
@@ -117,7 +125,10 @@ WtOutputDebugStringA(
 )
 {
     if (BeginTrace(E_OutputDebugStringA))
-        fprintf(pOpts->OutputFile, "(\"%s\") = VOID\n", lpOutputString);
+    {
+        fprintf(pOpts->OutputFile, "(\"%s\") = VOID", lpOutputString);
+        EndTrace(E_OutputDebugStringA, FALSE);
+    }
     OutputDebugStringA(lpOutputString);
 }
 
@@ -127,7 +138,10 @@ WtOutputDebugStringW(
 )
 {
     if (BeginTrace(E_OutputDebugStringW))
-        fprintf(pOpts->OutputFile, "(\"%ws\") = VOID\n", lpOutputString);
+    {
+        fprintf(pOpts->OutputFile, "(\"%ws\") = VOID", lpOutputString);
+        EndTrace(E_OutputDebugStringW, FALSE);
+    }
     OutputDebugStringW(lpOutputString);
 }
 
@@ -144,7 +158,8 @@ WtWaitForDebugEvent(
     {
         fprintf(pOpts->OutputFile, "(0x%p, %u)", lpDebugEvent, dwMilliseconds);
         Ret = WaitForDebugEvent(lpDebugEvent, dwMilliseconds);
-        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+        fprintf(pOpts->OutputFile, " = %d", Ret);
+        EndTrace(E_WaitForDebugEvent, Ret == FALSE);
     }
     else
         Ret = WaitForDebugEvent(lpDebugEvent, dwMilliseconds);
@@ -166,7 +181,7 @@ WtWaitForDebugEvent(
 /*     ShowDetails(pOpts, ++Cnt); */
 /*     fprintf(pOpts->OutputFile, "WaitForDebugEventEx(0x%p, %u)", lpDebugEvent, dwMilliseconds); */
 /*     Ret = WaitForDebugEventEx(lpDebugEvent, dwMilliseconds); */
-/*     fprintf(pOpts->OutputFile, " = %d\n", Ret); */
+/*     fprintf(pOpts->OutputFile, " = %d", Ret); */
 
 /*     return Ret; */
 /* } */
