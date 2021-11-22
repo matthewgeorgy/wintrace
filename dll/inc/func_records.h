@@ -138,6 +138,10 @@ typedef enum _tag_FuncEnum
 	E_ShowWindow,
 	E_TranslateMessage,
 	E_UpdateWindow,
+	// stdio.h
+	E_fopen,
+	E__wfopen,
+	E_fclose,
 	E_Count
 } E_FuncEnum;
 

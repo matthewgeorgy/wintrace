@@ -127,6 +127,10 @@ T_FuncRec g_FuncRecs[] =
 	{"ShowCursor", 0, FALSE},
 	{"ShowWindow", 0, FALSE},
 	{"TranslateMessage", 0, FALSE},
-	{"UpdateWindow", 0, FALSE}
+	{"UpdateWindow", 0, FALSE},
+	// stdio.h
+	{"fopen", 0, FALSE},
+	{"_wfopen", 0, FALSE},
+	{"fclose", 0, FALSE},
 };
 

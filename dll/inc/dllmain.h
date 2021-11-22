@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.4.7   Beginning to add CRT support; currently a few stdio.h functions
         0.4.6   Tested printing with new system; still needs a slight fix
                 Fixed hooks for DefWindowProcA/W
         0.4.5   Added basic printing with Write/PrintFuncBuffer();
@@ -71,6 +72,7 @@
 #include <stdio.h>
 
 #include <common.h>
+
 #include <win32/wt_winuser.h>
 #include <win32/wt_heapapi.h>
 #include <win32/wt_processthreadsapi.h>
@@ -78,6 +80,8 @@
 #include <win32/wt_debugapi.h>
 #include <win32/wt_profileapi.h>
 #include <win32/wt_memoryapi.h>
+
+#include <crt/wt_stdio.h>
 
 // Goes through the IAT and patches the function addresses
 void PatchIAT(void);

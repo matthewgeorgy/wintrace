@@ -195,6 +195,10 @@ InitFuncRecs()
                 case FUNC_VirtualQuery:                     { g_FuncRecs[E_VirtualQuery].bTrace = TRUE; } break;
                 case FUNC_VirtualQueryEx:                   { g_FuncRecs[E_VirtualQueryEx].bTrace = TRUE; } break;
                 case FUNC_VirtualUnlock:                    { g_FuncRecs[E_VirtualUnlock].bTrace = TRUE; } break;
+				// stdio.h
+				case FUNC_fopen:							{ g_FuncRecs[E_fopen].bTrace = TRUE; } break;
+				case FUNC__wfopen:							{ g_FuncRecs[E__wfopen].bTrace = TRUE; } break;
+				case FUNC_fclose:							{ g_FuncRecs[E_fclose].bTrace = TRUE; } break;
             }
         }
     }
@@ -206,7 +210,7 @@ EndTrace(E_FuncEnum FunctionName, // reserved for now*
          BOOL bError)
 {
     if (bError)
-        WriteFuncBuffer("(ERROR: %u) ", GetLastError());
+        WriteFuncBuffer(" (ERROR: %u) ", GetLastError());
     WriteFuncBuffer("\r\n");
     PrintFuncBuffer(&g_FuncList.Buffers[g_CallLvl--]);
 }
