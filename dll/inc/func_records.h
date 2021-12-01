@@ -142,6 +142,9 @@ typedef enum _tag_FuncEnum
 	E_fopen,
 	E__wfopen,
 	E_fclose,
+	// stdlib.h
+	E_malloc,
+	E_free,
 	E_Count
 } E_FuncEnum;
 

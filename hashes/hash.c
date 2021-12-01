@@ -135,7 +135,10 @@ LPSTR Funcs[] =
 	// stdio.h
 	"fopen",
 	"_wfopen",
-	"fclose"
+	"fclose",
+	// stdlib.h
+	"malloc",
+	"free"
 };
 
 

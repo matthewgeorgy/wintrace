@@ -119,4 +119,6 @@
 #define FUNC_fopen 259230589
 #define FUNC__wfopen 2980484915
 #define FUNC_fclose 4245278497
+#define FUNC_malloc 221883709
+#define FUNC_free 2090266759
 

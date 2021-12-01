@@ -22,6 +22,7 @@ goto :EOF
         cl /W4 /MD w:\wintrace\tests\test_winuser.c user32.lib
         cl /W4 /MD w:\wintrace\tests\test_memoryapi.c
         cl /W4 /MD w:\wintrace\tests\test_stdio.c
+        cl /W4 /MD w:\wintrace\tests\test_stdlib.c
     popd
 goto :EOF
 

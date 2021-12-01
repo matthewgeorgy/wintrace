@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.4.8   Added wt_stdlib.h with a few function hooks
         0.4.7   Beginning to add CRT support; currently a few stdio.h functions
         0.4.6   Tested printing with new system; still needs a slight fix
                 Fixed hooks for DefWindowProcA/W
@@ -82,6 +83,7 @@
 #include <win32/wt_memoryapi.h>
 
 #include <crt/wt_stdio.h>
+#include <crt/wt_stdlib.h>
 
 // Goes through the IAT and patches the function addresses
 void PatchIAT(void);
