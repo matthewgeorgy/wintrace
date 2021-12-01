@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.1.8   Cleanups
         0.1.7   Misc cleanups/fixes + added some comments/documentation
         0.1.6   Added specific tracing
         0.1.5   Cleaned up warnings
@@ -70,8 +71,8 @@ main(int argc,
 {
     LPCSTR                      DllPath = "wintrace.dll";
     LPCSTR                      ProgramName = argv[argc - 1];
-    STARTUPINFO                 si = {0};
-    PROCESS_INFORMATION         pi = {0};
+    STARTUPINFO                 StartupInfo = {0};
+    PROCESS_INFORMATION         ProcessInfo = {0};
     LPVOID                      pDllPath;
     HANDLE                      LoadThread;
     SIZE_T                      Len = strlen(DllPath) + 1;
@@ -90,74 +91,74 @@ main(int argc,
     FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WintraceOpts), "WintraceOpts");
     if (!FileMap)
     {
-        printf("could not create file map (%d)\n", GetLastError());
+        fprintf(stderr, "Could not create file map (%d)\n", GetLastError());
         return -1;
     }
     pOpts = (T_WintraceOpts *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WintraceOpts));
     if (!pOpts)
     {
-        printf("could not create map view (%d)\n", GetLastError());
+        fprintf(stderr, "Could not create map view (%d)\n", GetLastError());
         CloseHandle(FileMap);
         return -1;
     }
     CopyMemory((LPVOID)pOpts, &Opts, sizeof(T_WintraceOpts));
 
     // Inject DLL
-    si.cb = sizeof(STARTUPINFO);
-    Status = CreateProcess(ProgramName, NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi);
+    StartupInfo.cb = sizeof(STARTUPINFO);
+    Status = CreateProcess(ProgramName, NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &StartupInfo, &ProcessInfo);
     if (!Status)
     {
-        printf("failed to create process!\n");
+        fprintf(stderr, "Failed to create process!\n");
         return -1;
     }
 
     lpfnLoadLibA = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "LoadLibraryA");
     if (!lpfnLoadLibA)
     {
-        printf("could no locate loadliba\n");
+        fprintf(stderr, "Could no locate LoadLibraryA\n");
         return -1;
     }
 
     lpfnFreeLib = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "FreeLibrary");
     if (!lpfnFreeLib)
     {
-        printf("could no locate FreeLib\n");
+        fprintf(stderr, "Could no locate FreeLibrary\n");
         return -1;
     }
 
-    pDllPath = VirtualAllocEx(pi.hProcess, 0, Len, MEM_COMMIT, PAGE_READWRITE);
+    pDllPath = VirtualAllocEx(ProcessInfo.hProcess, 0, Len, MEM_COMMIT, PAGE_READWRITE);
     if (!pDllPath)
     {
-        printf("failed to allocate!\n");
+        fprintf(stderr, "Failed to allocate DLL path!\n");
         return -1;
     }
 
-    Status = WriteProcessMemory(pi.hProcess, pDllPath, (LPVOID)DllPath, Len, 0);
+    Status = WriteProcessMemory(ProcessInfo.hProcess, pDllPath, (LPVOID)DllPath, Len, 0);
     if (!Status)
     {
-        printf("failed to write memory!\n");
+        fprintf(stderr, "Failed to write target memory!\n");
         return -1;
     }
 
-    LoadThread = CreateRemoteThread(pi.hProcess, NULL, 0, lpfnLoadLibA, pDllPath, 0, NULL);
+    // LoadLibrary thread
+    LoadThread = CreateRemoteThread(ProcessInfo.hProcess, NULL, 0, lpfnLoadLibA, pDllPath, 0, NULL);
     if (!LoadThread)
     {
-        printf("failed to load thread\n");
+        fprintf(stderr, "Failed to load thread\n");
         return -1;
     }
-
     WaitForSingleObject(LoadThread, INFINITE);
 
-    ResumeThread(pi.hThread);
+    // Main thread
+    ResumeThread(ProcessInfo.hThread);
+    WaitForSingleObject(ProcessInfo.hThread, INFINITE);
 
-    WaitForSingleObject(pi.hThread, INFINITE);
-
-    LoadThread = CreateRemoteThread(pi.hProcess, NULL, 0, lpfnFreeLib, pDllPath, 0, NULL);
-
-    WaitForSingleObject(pi.hThread, INFINITE);
+    // FreeLibrary thread
+    LoadThread = CreateRemoteThread(ProcessInfo.hProcess, NULL, 0, lpfnFreeLib, pDllPath, 0, NULL);
+    WaitForSingleObject(ProcessInfo.hThread, INFINITE);
 
     // Cleanup
-    VirtualFreeEx(pi.hProcess, pDllPath, Len, MEM_RELEASE);
+    VirtualFreeEx(ProcessInfo.hProcess, pDllPath, Len, MEM_RELEASE);
     UnmapViewOfFile(FileMap);
     CloseHandle(FileMap);
 
@@ -167,7 +168,7 @@ main(int argc,
 void
 PrintUsage(void)
 {
-    printf( CRLF
+    fprintf(stderr,  CRLF
             "Usage: wintrace [options] <exe>" CRLF CRLF
             "Options:" CRLF
             "  /c            Show function call count" CRLF
@@ -187,8 +188,8 @@ ParseOpts(int argc,
 
     if (argc < 2)
     {
-        printf("\nUsage: wintrace [options] <exe>\n");
-        printf("Use /? for more info\n\n");
+        fprintf(stderr, "\nUsage: wintrace [options] <exe>\n");
+        fprintf(stderr, "Use /? for more info\n\n");
         exit(-1);
     }
 
@@ -233,8 +234,8 @@ ParseOpts(int argc,
 
             default:
             {
-                printf("\nUsage: wintrace [options] <exe>\n");
-                printf("Use /? for more info\n");
+                fprintf(stderr, "\nUsage: wintrace [options] <exe>\n");
+                fprintf(stderr, "Use /? for more info\n");
                 exit(-1);
             } break;
         }
