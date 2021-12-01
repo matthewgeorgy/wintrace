@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.1.9   Added cmdline argument parsing for the target EXE
         0.1.8   Cleanups
         0.1.7   Misc cleanups/fixes + added some comments/documentation
         0.1.6   Added specific tracing
@@ -49,6 +50,10 @@
 
 #define CRLF "\r\n"
 
+// Extra options here that aren't used by the DLL (ProgramName and CmdArgs)
+// Might rename this to T_WintraceOptsEx or something to specify this, or
+// might just update the DLL struct.
+// dunno yet, not currently important :/
 typedef struct _tag_WintraceOpts
 {
     BOOL        ShowThreadID;
@@ -57,6 +62,8 @@ typedef struct _tag_WintraceOpts
     CHAR        OutputFilename[64];
     FILE        *OutputFile;
     CHAR        TraceList[32][32];
+    CHAR        *ProgramName,
+                CmdArgs[128];
 } T_WintraceOpts;
 
 // Show full list of options/switches
@@ -70,7 +77,6 @@ main(int argc,
      char **argv)
 {
     LPCSTR                      DllPath = "wintrace.dll";
-    LPCSTR                      ProgramName = argv[argc - 1];
     STARTUPINFO                 StartupInfo = {0};
     PROCESS_INFORMATION         ProcessInfo = {0};
     LPVOID                      pDllPath;
@@ -105,7 +111,7 @@ main(int argc,
 
     // Inject DLL
     StartupInfo.cb = sizeof(STARTUPINFO);
-    Status = CreateProcess(ProgramName, NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &StartupInfo, &ProcessInfo);
+    Status = CreateProcess(Opts.ProgramName, Opts.CmdArgs, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &StartupInfo, &ProcessInfo);
     if (!Status)
     {
         fprintf(stderr, "Failed to create process!\n");
@@ -238,6 +244,21 @@ ParseOpts(int argc,
                 fprintf(stderr, "Use /? for more info\n");
                 exit(-1);
             } break;
+        }
+    }
+
+    // Fill out EXE name
+    Opts.ProgramName = argv[OptInd++];
+
+    // Fill out the cmdline args, if any
+    if (OptInd < argc)
+    {
+        // Put program name as argv[0] because documentation says so
+        strcpy(Opts.CmdArgs, Opts.ProgramName);
+        for (OptInd; OptInd < argc; OptInd++)
+        {
+            strcat(Opts.CmdArgs, " ");
+            strcat(Opts.CmdArgs, argv[OptInd]);
         }
     }
 
