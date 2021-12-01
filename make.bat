@@ -23,6 +23,7 @@ goto :EOF
         cl /W4 /MD w:\wintrace\tests\test_memoryapi.c
         cl /W4 /MD w:\wintrace\tests\test_stdio.c
         cl /W4 /MD w:\wintrace\tests\test_stdlib.c
+		del /Q *.obj
     popd
 goto :EOF
 
