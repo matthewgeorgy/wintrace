@@ -1,7 +1,9 @@
 /*
     Version History
 
-		0.2.0	Fixed more CRLF's + added some TODO's
+        0.2.1   Changed help/usage display to look nicer and to accommodate
+				wintrace being able to receive program args
+        0.2.0   Fixed more CRLF's + added some TODO's
         0.1.9   Added cmdline argument parsing for the target EXE
         0.1.8   Cleanups
         0.1.7   Misc cleanups/fixes + added some comments/documentation
@@ -196,13 +198,14 @@ void
 PrintUsage(void)
 {
     fprintf(stderr,  CRLF
-            "Usage: wintrace [options] <exe>" CRLF CRLF
+            "Usage: wintrace [options...] <exe> [args...]" CRLF CRLF
             "Options:" CRLF
             "  /c            Show function call count" CRLF
             "  /p            Show process ID" CRLF
             "  /t            Show thread ID" CRLF
             "  /T:fns        Trace only fns, a comma separated list of function names" CRLF
-            "  /o:file       Output to file" CRLF);
+            "  /o:file       Output to file" CRLF
+            "  /?            Show available options" CRLF);
 }
 
 T_WintraceOpts
@@ -215,7 +218,7 @@ ParseOpts(int argc,
 
     if (argc < 2)
     {
-        fprintf(stderr, CRLF "Usage: wintrace [options] <exe>" CRLF);
+        fprintf(stderr, CRLF "Usage: wintrace [options...] <exe> [args...]" CRLF);
         fprintf(stderr, "Use /? for more info" CRLF CRLF);
         exit(-1);
     }
@@ -261,7 +264,7 @@ ParseOpts(int argc,
 
             default:
             {
-                fprintf(stderr, CRLF "Usage: wintrace [options] <exe>" CRLF);
+                fprintf(stderr, CRLF "Usage: wintrace [options...] <exe> [args...]" CRLF);
                 fprintf(stderr, "Use /? for more info" CRLF);
                 exit(-1);
             } break;
