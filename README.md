@@ -1,3 +1,18 @@
+# wintrace
+
+`wintrace` is a simple tracing utility for Windows programs. \
+It's essentially an `strace`/`ltrace` equivalent like on Linux, but for Windows.
+
+It currently supports a wide range of Win32 functions, as well as some functions from the CRT. See \
+below for a complete list of supported functions (COMING SOON...).
+
+## Usage
+
+`wintrace` is a CLI tool, so it's very simple to start using.
+
+The following is an available list of options for use with `wintrace`, \
+which can be obtained by running `wintrace /?`.
+
 ```
 Usage: wintrace [options...] <exe> [args...]
 
