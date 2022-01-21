@@ -111,6 +111,7 @@ which I'll discuss below.
 huge security hole!", and you'd be right; except, you can only create a remote thread for a process that *your program created*, such as with `CreateProcess` :) ).
 
 The process for doing DLL injection on a targeted .exe then looks something like this:
+
 0. Get the program name and DLL name you wish to target.
 1. Create a process with the program (.exe) name, with the `CREATE_SUSPENDED` flag so that the main thread does not immediately begin executing.
 2. Create a remote thread in the process, setting the thread's entry function is `LoadLibrary`, and passing it the name of DLL you want.
