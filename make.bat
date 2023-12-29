@@ -6,9 +6,9 @@ if "%1"=="test"     goto :test
 
 :install
     pushd build
-		cl /W4 /c /I"w:\wintrace\dll\inc" w:\wintrace\dll\crt\*.c
-		cl /W4 /c /I"w:\wintrace\dll\inc" w:\wintrace\dll\win32\*.c
-		cl /W4 /c /I"w:\wintrace\dll\inc" w:\wintrace\dll\*.c
+		cl /W4 /MP /c /I"w:\wintrace\dll\inc" w:\wintrace\dll\crt\*.c
+		cl /W4 /MP /c /I"w:\wintrace\dll\inc" w:\wintrace\dll\win32\*.c
+		cl /W4 /MP /c /I"w:\wintrace\dll\inc" w:\wintrace\dll\*.c
 		link /DLL *.obj /OUT:wintrace.dll kernel32.lib user32.lib advapi32.lib
         cl /W4 /MP /Fe"wintrace.exe" w:\wintrace\core\*.c kernel32.lib
     popd
@@ -23,6 +23,7 @@ goto :EOF
         cl /W4 /MD w:\wintrace\tests\test_memoryapi.c
         cl /W4 /MD w:\wintrace\tests\test_stdio.c
         cl /W4 /MD w:\wintrace\tests\test_stdlib.c
+        cl /W4 /MD w:\wintrace\tests\test_threads.c
 		del /Q *.obj
     popd
 goto :EOF

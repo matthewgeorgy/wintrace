@@ -1,0 +1,2 @@
+BOOL QueryPerformanceCounter(PLARGE_INTEGER lpPerformanceCount);
+BOOL QueryPerformanceFrequency(PLARGE_INTEGER lpFrequency);
