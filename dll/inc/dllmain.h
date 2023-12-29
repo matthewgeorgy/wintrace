@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.4.10  Added function for getting wintrace.dll version
         0.4.9   Added ~ specifier to the /T switch to specify functions that
                 are not to be traced
                 Needs a bit of bulletproofing
@@ -84,15 +85,18 @@
 #include <win32/wt_debugapi.h>
 #include <win32/wt_profileapi.h>
 #include <win32/wt_memoryapi.h>
-
 #include <crt/wt_stdio.h>
 #include <crt/wt_stdlib.h>
+
+#define WINTRACE_DLL_VERSION "0.4.10"
 
 // Goes through the IAT and patches the function addresses
 void PatchIAT(void);
 
 // 'Dummy' function for printing the IAT (function names + addresses)
 void ReadIAT(void);
+
+__declspec(dllexport) LPSTR __stdcall GetWintraceDllVersion(void);
 
 // Simpe macro for patching a functions address in the IAT
 #define PatchEntry(__Func) \

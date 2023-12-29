@@ -1,8 +1,9 @@
 /*
     Version History
 
+		0.2.2	/? now shows the core and dll version
         0.2.1   Changed help/usage display to look nicer and to accommodate
-				wintrace being able to receive program args
+                wintrace being able to receive program args
         0.2.0   Fixed more CRLF's + added some TODO's
         0.1.9   Added cmdline argument parsing for the target EXE
         0.1.8   Cleanups
@@ -73,6 +74,9 @@
 
 #define CRLF "\r\n"
 
+// Version
+#define WINTRACE_CORE_VERSION "0.2.2"
+
 // Extra options here that aren't used by the DLL (ProgramName and CmdArgs)
 // Might rename this to T_WintraceOptsEx or something to specify this, or
 // might just update the DLL struct.
@@ -94,6 +98,8 @@ void            PrintUsage(void);
 
 // Read cmdline arguments
 T_WintraceOpts  ParseOpts(int argc, char **argv);
+
+typedef LPSTR (__stdcall *MYPROC)(void);
 
 int
 main(int argc,
@@ -197,7 +203,16 @@ main(int argc,
 void
 PrintUsage(void)
 {
+	HMODULE		WintraceDll;
+	MYPROC		GetDllVersion;
+
+
+	WintraceDll = LoadLibraryExA("wintrace.dll", NULL, DONT_RESOLVE_DLL_REFERENCES);
+	GetDllVersion = (MYPROC)GetProcAddress(WintraceDll, "GetWintraceDllVersion");
+
     fprintf(stderr,  CRLF
+			"core version: %s" CRLF
+			"dll version: %s" CRLF CRLF
             "Usage: wintrace [options...] <exe> [args...]" CRLF CRLF
             "Options:" CRLF
             "  /c            Show function call count" CRLF
@@ -205,7 +220,8 @@ PrintUsage(void)
             "  /t            Show thread ID" CRLF
             "  /T:fns        Trace only fns, a comma separated list of function names" CRLF
             "  /o:file       Output to file" CRLF
-            "  /?            Show available options" CRLF);
+            "  /?            Show available options" CRLF,
+			WINTRACE_CORE_VERSION, GetDllVersion());
 }
 
 T_WintraceOpts
