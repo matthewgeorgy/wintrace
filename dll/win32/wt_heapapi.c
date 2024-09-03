@@ -1,312 +1,355 @@
 #include <win32/wt_heapapi.h>
 
-extern T_WintraceOpts      *pOpts;
+extern T_WintraceOpts		*pOpts;
 
 HANDLE
 WtGetProcessHeap()
 {
-    HANDLE              Ret;
+	HANDLE Ret;
 
+	if (BeginTrace(E_GetProcessHeap))
+	{
+		WriteFuncBuffer("()");
+		Ret = GetProcessHeap();
+		WriteFuncBuffer(" = 0x%p", Ret);
+		EndTrace(E_GetProcessHeap, FALSE);
+	}
+	else
+	{
+		Ret = GetProcessHeap();
+	}
 
-    if (BeginTrace(E_GetProcessHeap))
-    {
-        WriteFuncBuffer("()");
-        Ret = GetProcessHeap();
-        WriteFuncBuffer(" = 0x%p", Ret);
-        EndTrace(E_GetProcessHeap, Ret == NULL);
-    }
-    else
-        Ret = GetProcessHeap();
-
-    return Ret;
+	return (Ret);
 }
 
 DWORD
-WtGetProcessHeaps(DWORD NumberOfHeaps,
-                  PHANDLE ProcessHeaps)
+WtGetProcessHeaps(
+	DWORD NumberOfHeaps,
+	PHANDLE ProcessHeaps
+)
 {
-    DWORD               Ret;
+	DWORD Ret;
 
+	if (BeginTrace(E_GetProcessHeaps))
+	{
+		WriteFuncBuffer("(%u, 0x%p)", NumberOfHeaps, ProcessHeaps);
+		Ret = GetProcessHeaps(NumberOfHeaps, ProcessHeaps);
+		WriteFuncBuffer(" = %u", Ret);
+		EndTrace(E_GetProcessHeaps, FALSE);
+	}
+	else
+	{
+		Ret = GetProcessHeaps(NumberOfHeaps, ProcessHeaps);
+	}
 
-    if (BeginTrace(E_GetProcessHeaps))
-    {
-        WriteFuncBuffer("(%u, 0x%p)", NumberOfHeaps, ProcessHeaps);
-        Ret = GetProcessHeaps(NumberOfHeaps, ProcessHeaps);
-        WriteFuncBuffer(" = %u", Ret);
-        EndTrace(E_GetProcessHeaps, Ret == 0);
-    }
-    else
-        Ret = GetProcessHeaps(NumberOfHeaps, ProcessHeaps);
-
-    return Ret;
+	return (Ret);
 }
 
 LPVOID
-WtHeapAlloc(HANDLE hHeap,
-            DWORD dwFlags,
-            SIZE_T dwBytes)
+WtHeapAlloc(
+	HANDLE hHeap,
+	DWORD dwFlags,
+	SIZE_T dwBytes
+)
 {
-    LPVOID              Ret;
+	LPVOID Ret;
 
+	if (BeginTrace(E_HeapAlloc))
+	{
+		WriteFuncBuffer("(0x%p, %u, %llu)", hHeap, dwFlags, dwBytes);
+		Ret = HeapAlloc(hHeap, dwFlags, dwBytes);
+		WriteFuncBuffer(" = 0x%p", Ret);
+		EndTrace(E_HeapAlloc, FALSE);
+	}
+	else
+	{
+		Ret = HeapAlloc(hHeap, dwFlags, dwBytes);
+	}
 
-    if (BeginTrace(E_HeapAlloc))
-    {
-        WriteFuncBuffer("(0x%p, %u, %llu)", hHeap, dwFlags, dwBytes);
-        Ret = HeapAlloc(hHeap, dwFlags, dwBytes);
-        WriteFuncBuffer(" = 0x%p", Ret);
-        EndTrace(E_HeapAlloc, Ret == NULL);
-    }
-    else
-        Ret = HeapAlloc(hHeap, dwFlags, dwBytes);
-
-    return Ret;
+	return (Ret);
 }
 
 SIZE_T
-WtHeapCompact(HANDLE hHeap,
-              DWORD dwFlags)
+WtHeapCompact(
+	HANDLE hHeap,
+	DWORD dwFlags
+)
 {
-    SIZE_T              Ret;
+	SIZE_T Ret;
 
+	if (BeginTrace(E_HeapCompact))
+	{
+		WriteFuncBuffer("(0x%p, %u)", hHeap, dwFlags);
+		Ret = HeapCompact(hHeap, dwFlags);
+		WriteFuncBuffer(" = %llu", Ret);
+		EndTrace(E_HeapCompact, FALSE);
+	}
+	else
+	{
+		Ret = HeapCompact(hHeap, dwFlags);
+	}
 
-    if (BeginTrace(E_HeapCompact))
-    {
-        WriteFuncBuffer("(0x%p, %u)", hHeap, dwFlags);
-        Ret = HeapCompact(hHeap, dwFlags);
-        WriteFuncBuffer(" = %u", Ret);
-        EndTrace(E_HeapCompact, Ret == 0);
-    }
-    else
-        Ret = HeapCompact(hHeap, dwFlags);
-
-    return Ret;
+	return (Ret);
 }
 
 HANDLE
-WtHeapCreate(DWORD flOptions,
-             SIZE_T dwInitialSize,
-             SIZE_T dwMaximumSize)
+WtHeapCreate(
+	DWORD flOptions,
+	SIZE_T dwInitialSize,
+	SIZE_T dwMaximumSize
+)
 {
-    HANDLE              Ret;
+	HANDLE Ret;
 
+	if (BeginTrace(E_HeapCreate))
+	{
+		WriteFuncBuffer("(%u, %llu, %llu)", flOptions, dwInitialSize, dwMaximumSize);
+		Ret = HeapCreate(flOptions, dwInitialSize, dwMaximumSize);
+		WriteFuncBuffer(" = 0x%p", Ret);
+		EndTrace(E_HeapCreate, FALSE);
+	}
+	else
+	{
+		Ret = HeapCreate(flOptions, dwInitialSize, dwMaximumSize);
+	}
 
-    if (BeginTrace(E_HeapCreate))
-    {
-        WriteFuncBuffer("(%u, %llu, %llu)", flOptions, dwInitialSize, dwMaximumSize);
-        Ret = HeapCreate(flOptions, dwInitialSize, dwMaximumSize);
-        WriteFuncBuffer(" = 0x%p", Ret);
-        EndTrace(E_HeapCreate, Ret == NULL);
-    }
-    else
-        Ret = HeapCreate(flOptions, dwInitialSize, dwMaximumSize);
-
-    return Ret;
+	return (Ret);
 }
 
 BOOL
-WtHeapDestroy(HANDLE hHeap)
+WtHeapDestroy(
+	HANDLE hHeap
+)
 {
-    BOOL                Ret;
+	BOOL Ret;
 
+	if (BeginTrace(E_HeapDestroy))
+	{
+		WriteFuncBuffer("(0x%p)", hHeap);
+		Ret = HeapDestroy(hHeap);
+		WriteFuncBuffer(" = %d", Ret);
+		EndTrace(E_HeapDestroy, FALSE);
+	}
+	else
+	{
+		Ret = HeapDestroy(hHeap);
+	}
 
-    if (BeginTrace(E_HeapDestroy))
-    {
-        WriteFuncBuffer("(0x%p)", hHeap);
-        Ret = HeapDestroy(hHeap);
-        WriteFuncBuffer(" = %d", Ret);
-        EndTrace(E_HeapDestroy, Ret == FALSE);
-    }
-    else
-        Ret = HeapDestroy(hHeap);
-
-    return Ret;
+	return (Ret);
 }
 
 BOOL
-WtHeapFree(HANDLE hHeap,
-           DWORD dwFlags,
-           LPVOID lpMem)
+WtHeapFree(
+	HANDLE hHeap,
+	DWORD dwFlags,
+	LPVOID lpMem
+)
 {
-    BOOL                Ret;
+	BOOL Ret;
 
+	if (BeginTrace(E_HeapFree))
+	{
+		WriteFuncBuffer("(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
+		Ret = HeapFree(hHeap, dwFlags, lpMem);
+		WriteFuncBuffer(" = %d", Ret);
+		EndTrace(E_HeapFree, FALSE);
+	}
+	else
+	{
+		Ret = HeapFree(hHeap, dwFlags, lpMem);
+	}
 
-    if (BeginTrace(E_HeapFree))
-    {
-        WriteFuncBuffer("(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
-        Ret = HeapFree(hHeap, dwFlags, lpMem);
-        WriteFuncBuffer(" = %d", Ret);
-        EndTrace(E_HeapFree, Ret == FALSE);
-    }
-    else
-        Ret = HeapFree(hHeap, dwFlags, lpMem);
-
-    return Ret;
+	return (Ret);
 }
 
 BOOL
-WtHeapLock(HANDLE hHeap)
+WtHeapLock(
+	HANDLE hHeap
+)
 {
-    BOOL                Ret;
+	BOOL Ret;
 
+	if (BeginTrace(E_HeapLock))
+	{
+		WriteFuncBuffer("(0x%p)", hHeap);
+		Ret = HeapLock(hHeap);
+		WriteFuncBuffer(" = %d", Ret);
+		EndTrace(E_HeapLock, FALSE);
+	}
+	else
+	{
+		Ret = HeapLock(hHeap);
+	}
 
-    if (BeginTrace(E_HeapLock))
-    {
-        WriteFuncBuffer("(0x%p)", hHeap);
-        Ret = HeapLock(hHeap);
-        WriteFuncBuffer(" = %d", Ret);
-        EndTrace(E_HeapLock, Ret == FALSE);
-    }
-    else
-        Ret = HeapLock(hHeap);
-
-    return Ret;
+	return (Ret);
 }
 
 BOOL
-WtHeapQueryInformation(HANDLE HeapHandle,
-                       HEAP_INFORMATION_CLASS HeapInformationClass,
-                       PVOID HeapInformation,
-                       SIZE_T HeapInformationLength,
-                       PSIZE_T ReturnLength)
+WtHeapQueryInformation(
+	HANDLE HeapHandle,
+	HEAP_INFORMATION_CLASS HeapInformationClass,
+	PVOID HeapInformation,
+	SIZE_T HeapInformationLength,
+	PSIZE_T  ReturnLength
+)
 {
-    BOOL                Ret;
+	BOOL Ret;
 
+	if (BeginTrace(E_HeapQueryInformation))
+	{
+		WriteFuncBuffer("(0x%p, %d, 0x%p, %llu, 0x%p)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength,  ReturnLength);
+		Ret = HeapQueryInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength,  ReturnLength);
+		WriteFuncBuffer(" = %d", Ret);
+		EndTrace(E_HeapQueryInformation, FALSE);
+	}
+	else
+	{
+		Ret = HeapQueryInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength,  ReturnLength);
+	}
 
-    if (BeginTrace(E_HeapQueryInformation))
-    {
-        WriteFuncBuffer("(0x%p, %d, 0x%p, %u, 0x%p)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
-        Ret = HeapQueryInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
-        WriteFuncBuffer(" = %d", Ret);
-        EndTrace(E_HeapQueryInformation, Ret == FALSE);
-    }
-    else
-        Ret = HeapQueryInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
-
-    return Ret;
+	return (Ret);
 }
 
 LPVOID
-WtHeapReAlloc(HANDLE hHeap,
-              DWORD dwFlags,
-              LPVOID lpMem,
-              SIZE_T dwBytes)
+WtHeapReAlloc(
+	HANDLE hHeap,
+	DWORD dwFlags,
+	LPVOID lpMem,
+	SIZE_T dwBytes
+)
 {
-    LPVOID              Ret;
+	LPVOID Ret;
 
+	if (BeginTrace(E_HeapReAlloc))
+	{
+		WriteFuncBuffer("(0x%p, %u, 0x%p, %llu)", hHeap, dwFlags, lpMem, dwBytes);
+		Ret = HeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
+		WriteFuncBuffer(" = 0x%p", Ret);
+		EndTrace(E_HeapReAlloc, FALSE);
+	}
+	else
+	{
+		Ret = HeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
+	}
 
-    if (BeginTrace(E_HeapReAlloc))
-    {
-        WriteFuncBuffer("(0x%p, %u, 0x%p, %u)", hHeap, dwFlags, lpMem, dwBytes);
-        Ret = HeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
-        WriteFuncBuffer(" = 0x%p", Ret);
-        EndTrace(E_HeapReAlloc, Ret == NULL);
-    }
-    else
-        Ret = HeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
-
-    return Ret;
+	return (Ret);
 }
 
 BOOL
-WtHeapSetInformation(HANDLE HeapHandle,
-                     HEAP_INFORMATION_CLASS HeapInformationClass,
-                     PVOID  HeapInformation,
-                     SIZE_T HeapInformationLength)
+WtHeapSetInformation(
+	HANDLE HeapHandle,
+	HEAP_INFORMATION_CLASS HeapInformationClass,
+	PVOID HeapInformation,
+	SIZE_T HeapInformationLength
+)
 {
-    BOOL                Ret;
+	BOOL Ret;
 
+	if (BeginTrace(E_HeapSetInformation))
+	{
+		WriteFuncBuffer("(0x%p, %d, 0x%p, %llu)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
+		Ret = HeapSetInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
+		WriteFuncBuffer(" = %d", Ret);
+		EndTrace(E_HeapSetInformation, FALSE);
+	}
+	else
+	{
+		Ret = HeapSetInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
+	}
 
-    if (BeginTrace(E_HeapSetInformation))
-    {
-        WriteFuncBuffer("(0x%p, %d, 0x%p, %u)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
-        Ret = HeapSetInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
-        WriteFuncBuffer(" = %d", Ret);
-        EndTrace(E_HeapSetInformation, Ret == FALSE);
-    }
-    else
-        Ret = HeapSetInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
-
-    return Ret;
+	return (Ret);
 }
 
 SIZE_T
-WtHeapSize(HANDLE hHeap,
-           DWORD dwFlags,
-           LPCVOID lpMem)
+WtHeapSize(
+	HANDLE hHeap,
+	DWORD dwFlags,
+	LPCVOID lpMem
+)
 {
-    SIZE_T              Ret;
+	SIZE_T Ret;
 
+	if (BeginTrace(E_HeapSize))
+	{
+		WriteFuncBuffer("(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
+		Ret = HeapSize(hHeap, dwFlags, lpMem);
+		WriteFuncBuffer(" = %llu", Ret);
+		EndTrace(E_HeapSize, FALSE);
+	}
+	else
+	{
+		Ret = HeapSize(hHeap, dwFlags, lpMem);
+	}
 
-    if (BeginTrace(E_HeapSize))
-    {
-        WriteFuncBuffer("(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
-        Ret = HeapSize(hHeap, dwFlags, lpMem);
-        WriteFuncBuffer(" = %u", Ret);
-        EndTrace(E_HeapSize, Ret == (SIZE_T)-1);
-    }
-    else
-        Ret = HeapSize(hHeap, dwFlags, lpMem);
-
-    return Ret;
+	return (Ret);
 }
 
 BOOL
-WtHeapUnlock(HANDLE hHeap)
+WtHeapUnlock(
+	HANDLE hHeap
+)
 {
-    BOOL                Ret;
+	BOOL Ret;
 
+	if (BeginTrace(E_HeapUnlock))
+	{
+		WriteFuncBuffer("(0x%p)", hHeap);
+		Ret = HeapUnlock(hHeap);
+		WriteFuncBuffer(" = %d", Ret);
+		EndTrace(E_HeapUnlock, FALSE);
+	}
+	else
+	{
+		Ret = HeapUnlock(hHeap);
+	}
 
-    if (BeginTrace(E_HeapUnlock))
-    {
-        WriteFuncBuffer("(0x%p)", hHeap);
-        Ret = HeapUnlock(hHeap);
-        WriteFuncBuffer(" = %d", Ret);
-        EndTrace(E_HeapUnlock, Ret == FALSE);
-    }
-    else
-        Ret = HeapUnlock(hHeap);
-
-    return Ret;
+	return (Ret);
 }
 
 BOOL
-WtHeapValidate(HANDLE hHeap,
-               DWORD dwFlags,
-               LPCVOID lpMem)
+WtHeapValidate(
+	HANDLE  hHeap,
+	DWORD dwFlags,
+	LPCVOID lpMem
+)
 {
-    BOOL                Ret;
+	BOOL Ret;
 
+	if (BeginTrace(E_HeapValidate))
+	{
+		WriteFuncBuffer("(0x%p, %u, 0x%p)",  hHeap, dwFlags, lpMem);
+		Ret = HeapValidate( hHeap, dwFlags, lpMem);
+		WriteFuncBuffer(" = %d", Ret);
+		EndTrace(E_HeapValidate, FALSE);
+	}
+	else
+	{
+		Ret = HeapValidate( hHeap, dwFlags, lpMem);
+	}
 
-    if (BeginTrace(E_HeapValidate))
-    {
-        WriteFuncBuffer("(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
-        Ret = HeapValidate(hHeap, dwFlags, lpMem);
-        WriteFuncBuffer(" = %d", Ret);
-        EndTrace(E_HeapValidate, Ret == FALSE);
-    }
-    else
-        Ret = HeapValidate(hHeap, dwFlags, lpMem);
-
-    return Ret;
+	return (Ret);
 }
 
 BOOL
-WtHeapWalk(HANDLE hHeap,
-           LPPROCESS_HEAP_ENTRY lpEntry)
+WtHeapWalk(
+	HANDLE hHeap,
+	LPPROCESS_HEAP_ENTRY lpEntry
+)
 {
-    BOOL                Ret;
+	BOOL Ret;
 
+	if (BeginTrace(E_HeapWalk))
+	{
+		WriteFuncBuffer("(0x%p, 0x%p)", hHeap, lpEntry);
+		Ret = HeapWalk(hHeap, lpEntry);
+		WriteFuncBuffer(" = %d", Ret);
+		EndTrace(E_HeapWalk, FALSE);
+	}
+	else
+	{
+		Ret = HeapWalk(hHeap, lpEntry);
+	}
 
-    if (BeginTrace(E_HeapWalk))
-    {
-        WriteFuncBuffer("(0x%p, 0x%p)", hHeap, lpEntry);
-        Ret = HeapWalk(hHeap, lpEntry);
-        WriteFuncBuffer(" = %d", Ret);
-        EndTrace(E_HeapWalk, Ret == FALSE);
-    }
-    else
-        Ret = HeapWalk(hHeap, lpEntry);
-
-    return Ret;
+	return (Ret);
 }
 

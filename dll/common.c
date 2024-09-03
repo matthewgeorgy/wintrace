@@ -220,7 +220,7 @@ InitFuncRecs()
     }
     else
     {
-        printf("here\n");
+        /* printf("here\n"); */
         for (I = 0; I < E_Count; I++)
         {
             g_FuncRecs[I].bTrace = TRUE;
