@@ -58,7 +58,7 @@ InitFuncRecs()
 	INT			I;
 
 
-	if (pOpts->TraceList[0])
+	if (pOpts->TraceList[0][0])
 	{
 		g_TraceAll = FALSE;
 
@@ -194,5 +194,6 @@ InitFuncRecs()
 			}
 		}
 	}
+	printf("%d\n", g_TraceAll);
 }
 
