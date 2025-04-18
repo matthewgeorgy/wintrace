@@ -1,5 +1,5 @@
 @echo off
 
-cl /Zi /W4 /MP /LD w:\wintrace\dll\*.c user32.lib kernel32.lib /Fe"wintrace.dll"
+cl /W4 /MP /LD /Fe"wintrace.dll" w:\wintrace\dll\*.c user32.lib kernel32.lib
 
-cl /Zi /W4 /MP w:\wintrace\core\*.c user32.lib dbghelp.lib /Fe"wintrace.exe"
+cl /W4 /MP /Fe"wintrace.exe" w:\wintrace\core\*.c kernel32.lib
