@@ -398,7 +398,7 @@ WtVirtualQuery(
 		fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %llu)",
 				lpAddress, lpBuffer, dwLength);
 		Ret = VirtualQuery(lpAddress, lpBuffer, dwLength);
-		fprintf(pOpts->OutputFile, " = %llu", Ret);
+		fprintf(pOpts->OutputFile, " = %llu\n", Ret);
 	}
 	else
 		Ret = VirtualQuery(lpAddress, lpBuffer, dwLength);
