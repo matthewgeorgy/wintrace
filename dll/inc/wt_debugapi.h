@@ -48,3 +48,4 @@ BOOL WtWaitForDebugEvent(
 /* ); */
 
 #endif // WT_DEBUGAPI_H
+

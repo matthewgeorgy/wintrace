@@ -12,3 +12,4 @@ ShowDetails(T_WINTRACE_OPTS *pOpts,
     if (pOpts->ShowFuncCount)
         fprintf(pOpts->OutputFile, "(%u) ", Cnt);
 }
+

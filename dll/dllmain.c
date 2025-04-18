@@ -285,3 +285,4 @@ Djb2(LPSTR String)
 
     return Hash;
 }
+
