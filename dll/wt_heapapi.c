@@ -7,13 +7,16 @@ HANDLE
 WtGetProcessHeap()
 {
     HANDLE              Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "GetProcessHeap()");
-    Ret = GetProcessHeap();
-    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	if (BeginTrace(E_GetProcessHeap))
+	{
+		fprintf(pOpts->OutputFile, "()");
+		Ret = GetProcessHeap();
+		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	}
+	else
+		Ret = GetProcessHeap();
 
     return Ret;
 }
@@ -23,13 +26,16 @@ WtGetProcessHeaps(DWORD NumberOfHeaps,
                   PHANDLE ProcessHeaps)
 {
     DWORD               Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "GetProcessHeaps(%u, 0x%p)", NumberOfHeaps, ProcessHeaps);
-    Ret = GetProcessHeaps(NumberOfHeaps, ProcessHeaps);
-    fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	if (BeginTrace(E_GetProcessHeaps))
+	{
+		fprintf(pOpts->OutputFile, "(%u, 0x%p)", NumberOfHeaps, ProcessHeaps);
+		Ret = GetProcessHeaps(NumberOfHeaps, ProcessHeaps);
+		fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	}
+	else
+		Ret = GetProcessHeaps(NumberOfHeaps, ProcessHeaps);
 
     return Ret;
 }
@@ -40,13 +46,16 @@ WtHeapAlloc(HANDLE hHeap,
             SIZE_T dwBytes)
 {
     LPVOID              Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapAlloc(0x%p, %u, %llu)", hHeap, dwFlags, dwBytes);
-    Ret = HeapAlloc(hHeap, dwFlags, dwBytes);
-    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	if (BeginTrace(E_HeapAlloc))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, %u, %llu)", hHeap, dwFlags, dwBytes);
+		Ret = HeapAlloc(hHeap, dwFlags, dwBytes);
+		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	}
+	else
+		Ret = HeapAlloc(hHeap, dwFlags, dwBytes);
 
     return Ret;
 }
@@ -56,13 +65,16 @@ WtHeapCompact(HANDLE hHeap,
               DWORD dwFlags)
 {
     SIZE_T              Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapCompact(0x%p, %u)", hHeap, dwFlags);
-    Ret = HeapCompact(hHeap, dwFlags);
-    fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	if (BeginTrace(E_HeapCompact))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, %u)", hHeap, dwFlags);
+		Ret = HeapCompact(hHeap, dwFlags);
+		fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	}
+	else
+		Ret = HeapCompact(hHeap, dwFlags);
 
     return Ret;
 }
@@ -91,13 +103,16 @@ BOOL
 WtHeapDestroy(HANDLE hHeap)
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapDestroy(0x%p)", hHeap);
-    Ret = HeapDestroy(hHeap);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+    if (BeginTrace(E_HeapDestroy))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p)", hHeap);
+		Ret = HeapDestroy(hHeap);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+    	Ret = HeapDestroy(hHeap);
 
     return Ret;
 }
@@ -108,13 +123,16 @@ WtHeapFree(HANDLE hHeap,
            LPVOID lpMem)
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapFree(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
-    Ret = HeapFree(hHeap, dwFlags, lpMem);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_HeapFree))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
+		Ret = HeapFree(hHeap, dwFlags, lpMem);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = HeapFree(hHeap, dwFlags, lpMem);
 
     return Ret;
 }
@@ -123,13 +141,16 @@ BOOL
 WtHeapLock(HANDLE hHeap)
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapLock(0x%p)", hHeap);
-    Ret = HeapLock(hHeap);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_HeapLock))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p)", hHeap);
+		Ret = HeapLock(hHeap);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = HeapLock(hHeap);
 
     return Ret;
 }
@@ -142,13 +163,16 @@ WtHeapQueryInformation(HANDLE HeapHandle,
                        PSIZE_T ReturnLength)
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapQueryInformation(0x%p, %d, 0x%p, %u, 0x%p)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
-    Ret = HeapQueryInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_HeapQueryInformation))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, %d, 0x%p, %u, 0x%p)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
+		Ret = HeapQueryInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = HeapQueryInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
 
     return Ret;
 }
@@ -160,13 +184,16 @@ WtHeapReAlloc(HANDLE hHeap,
               SIZE_T dwBytes)
 {
     LPVOID              Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapReAlloc(0x%p, %u, 0x%p, %u)", hHeap, dwFlags, lpMem, dwBytes);
-    Ret = HeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
-    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	if (BeginTrace(E_HeapReAlloc))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, %u, 0x%p, %u)", hHeap, dwFlags, lpMem, dwBytes);
+		Ret = HeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
+		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	}
+	else
+		Ret = HeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
 
     return Ret;
 }
@@ -178,13 +205,16 @@ WtHeapSetInformation(HANDLE HeapHandle,
                      SIZE_T HeapInformationLength)
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapSetInformation(0x%p, %d, 0x%p, %u)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
-    Ret = HeapSetInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_HeapSetInformation))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, %d, 0x%p, %u)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
+		Ret = HeapSetInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = HeapSetInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
 
     return Ret;
 }
@@ -195,13 +225,16 @@ WtHeapSize(HANDLE hHeap,
            LPCVOID lpMem)
 {
     SIZE_T              Ret;
-    static DWORD        Cnt;
 
-
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapSize(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
-    Ret = HeapSize(hHeap, dwFlags, lpMem);
-    fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	
+	if (BeginTrace(E_HeapSize))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
+		Ret = HeapSize(hHeap, dwFlags, lpMem);
+		fprintf(pOpts->OutputFile, " = %u\n", Ret);
+	}
+	else
+		Ret = HeapSize(hHeap, dwFlags, lpMem);
 
     return Ret;
 }
@@ -210,13 +243,16 @@ BOOL
 WtHeapUnlock(HANDLE hHeap)
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapUnlock(0x%p)", hHeap);
-    Ret = HeapUnlock(hHeap);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_HeapUnlock))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p)", hHeap);
+		Ret = HeapUnlock(hHeap);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = HeapUnlock(hHeap);
 
     return Ret;
 }
@@ -227,13 +263,16 @@ WtHeapValidate(HANDLE hHeap,
                LPCVOID lpMem)
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapValidate(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
-    Ret = HeapValidate(hHeap, dwFlags, lpMem);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_HeapValidate))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
+		Ret = HeapValidate(hHeap, dwFlags, lpMem);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = HeapValidate(hHeap, dwFlags, lpMem);
 
     return Ret;
 }
@@ -243,13 +282,16 @@ WtHeapWalk(HANDLE hHeap,
            LPPROCESS_HEAP_ENTRY lpEntry)
 {
     BOOL                Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapWalk(0x%p, 0x%p)", hHeap, lpEntry);
-    Ret = HeapWalk(hHeap, lpEntry);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	if (BeginTrace(E_HeapWalk))
+	{
+		fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hHeap, lpEntry);
+		Ret = HeapWalk(hHeap, lpEntry);
+		fprintf(pOpts->OutputFile, " = %d\n", Ret);
+	}
+	else
+		Ret = HeapWalk(hHeap, lpEntry);
 
     return Ret;
 }

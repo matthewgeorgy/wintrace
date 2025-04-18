@@ -38,13 +38,13 @@ Djb2(LPSTR String)
 BOOL 
 BeginTrace(E_FuncEnum FunctionName)
 {
-	T_FuncRec		Func = g_FuncRecs[FunctionName];
+	T_FuncRec		*Func = &g_FuncRecs[FunctionName];
 
 
-	if (Func.bTrace || g_TraceAll)
+	if (Func->bTrace || g_TraceAll)
 	{
-		ShowDetails(pOpts, ++(Func.Cnt));
-		fprintf(pOpts->OutputFile, "%s", Func.Name);
+		ShowDetails(pOpts, ++(Func->Cnt));
+		fprintf(pOpts->OutputFile, "%s", Func->Name);
 		return TRUE;
 	}
 
@@ -57,14 +57,12 @@ InitFuncRecs()
 	DWORD		Hash;
 	INT			I;
 
-	for (I = 0; I < 32; I++)
-			printf("%s %d\n", pOpts->TraceList[I], I);
 
-	if (!pOpts->TraceList[0])
+	if (pOpts->TraceList[0])
 	{
 		g_TraceAll = FALSE;
 
-		for (I = 0; pOpts->TraceList[I]; I++)
+		for (I = 0; I < 32 && pOpts->TraceList[I]; I++)
 		{
 			Hash = Djb2(pOpts->TraceList[I]);
 
