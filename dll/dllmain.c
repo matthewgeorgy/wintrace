@@ -79,7 +79,45 @@ PatchIAT(void)
                 FunctionName = (PIMAGE_IMPORT_BY_NAME)((DWORD_PTR)ImageBase + OriginalFirstThunk->u1.AddressOfData);
 
 #pragma warning(disable: 4127)
+                // winuser.h
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "AdjustWindowRect") == 0) PatchEntry(WtAdjustWindowRect);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "AdjustWindowRectEx") == 0) PatchEntry(WtAdjustWindowRectEx);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "BeginPaint") == 0) PatchEntry(WtBeginPaint);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ClientToScreen") == 0) PatchEntry(WtClientToScreen);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ClipCursor") == 0) PatchEntry(WtClipCursor);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CloseWindow") == 0) PatchEntry(WtCloseWindow);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateWindowA") == 0) PatchEntry(WtCreateWindowA);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateWindowW") == 0) PatchEntry(WtCreateWindowW);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateWindowExA") == 0) PatchEntry(WtCreateWindowExA);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateWindowExW") == 0) PatchEntry(WtCreateWindowExW);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "DefWindowProc") == 0) PatchEntry(WtDefWindowProc);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "DestroyWindow") == 0) PatchEntry(WtDestroyWindow);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "DispatchMessageA") == 0) PatchEntry(WtDispatchMessageA);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "DispatchMessageW") == 0) PatchEntry(WtDispatchMessageW);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "EndPaint") == 0) PatchEntry(WtEndPaint);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "FillRect") == 0) PatchEntry(WtFillRect);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetClientRect") == 0) PatchEntry(WtGetClientRect);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetCursorPos") == 0) PatchEntry(WtGetCursorPos);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetDC") == 0) PatchEntry(WtGetDC);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetMessage") == 0) PatchEntry(WtGetMessage);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetWindowRect") == 0) PatchEntry(WtGetWindowRect);
                 if (lstrcmpiA((LPCSTR)FunctionName->Name, "MessageBoxA") == 0) PatchEntry(WtMessageBoxA);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "MessageBoxW") == 0) PatchEntry(WtMessageBoxW);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "MessageBoxExA") == 0) PatchEntry(WtMessageBoxExA);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "MessageBoxExW") == 0) PatchEntry(WtMessageBoxExW);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "PeekMessageA") == 0) PatchEntry(WtPeekMessageA);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "PeekMessageW") == 0) PatchEntry(WtPeekMessageW);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "PostMessageA") == 0) PatchEntry(WtPostMessageA);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "PostMessageW") == 0) PatchEntry(WtPostMessageW);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "PostQuitMessage") == 0) PatchEntry(WtPostQuitMessage);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "RegisterClassExA") == 0) PatchEntry(WtRegisterClassExA);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "RegisterClassExW") == 0) PatchEntry(WtRegisterClassExW);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ReleaseDC") == 0) PatchEntry(WtReleaseDC);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ScreenToClient") == 0) PatchEntry(WtScreenToClient);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ShowCursor") == 0) PatchEntry(WtShowCursor);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ShowWindow") == 0) PatchEntry(WtShowWindow);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "TranslateMessage") == 0) PatchEntry(WtTranslateMessage);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "UpdateWindow") == 0) PatchEntry(WtUpdateWindow);
 #ifdef _WIN64
                 // heapapi.h
                 if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetProcessHeap") == 0)       PatchEntry(WtGetProcessHeap);
