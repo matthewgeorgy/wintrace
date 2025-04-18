@@ -30,6 +30,7 @@ goto :EOF
         cl /W4 /MD ..\..\tests\test_heapapi.c
         cl /W4 /MD ..\..\tests\test_fileapi.c
         cl /W4 /MD ..\..\tests\test_winuser.c user32.lib
+        cl /W4 /MD ..\..\tests\test_memoryapi.c
     popd
 goto :EOF
 
@@ -41,6 +42,7 @@ goto :EOF
 			cl /W4 /MD ..\..\tests\test_heapapi.c
 			cl /W4 /MD ..\..\tests\test_fileapi.c
         	cl /W4 /MD ..\..\tests\test_winuser.c user32.lib
+        	cl /W4 /MD ..\..\tests\test_memoryapi.c
         popd
     popd
 goto :EOF
