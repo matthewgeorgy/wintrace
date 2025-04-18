@@ -7,6 +7,7 @@ extern      T_FuncRec g_FuncRecs[];
 extern      T_WintraceOpts *pOpts;
 BOOL        g_TraceAll = TRUE;
 INT         g_CallLvl = 0;
+T_FuncList  g_FuncList;
 
 void
 ShowDetails(T_WintraceOpts *Opts,
@@ -206,5 +207,28 @@ EndTrace(E_FuncEnum FunctionName,
     if (bError)
         fprintf(pOpts->OutputFile, "(ERROR: %u)", GetLastError());
     fprintf(pOpts->OutputFile, "\n", GetLastError());
+}
+
+void
+WriteFuncBuffer(char *Format,
+                ...)
+{
+    T_FuncBuffer        *Buffer = &g_FuncList.Buffers[g_CallLvl];
+    SIZE_T              Bytes;
+    va_list             VarArgs;
+
+    va_start(VarArgs, Format);
+
+    Bytes = vsprintf(Buffer->Buff + Buffer->Pos, Format, VarArgs);
+    Buffer->Pos += Bytes;
+
+    va_end(VarArgs);
+}
+
+void
+PrintFuncBuffer(T_FuncBuffer *Buffer)
+{
+    fprintf(pOpts->OutputFile, "%s", Buffer->Buff);
+    Buffer->Pos = 0;
 }
 

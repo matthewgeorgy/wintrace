@@ -1,6 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#define _CRT_SECURE_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdio.h>
@@ -16,6 +17,19 @@ typedef struct _tag_WintraceOpts
     FILE        *OutputFile;
     CHAR        TraceList[32][32];
 } T_WintraceOpts;
+
+// Function string trace buffer
+typedef struct _tag_FuncBuffer
+{
+    CHAR        Buff[256];
+    SIZE_T      Pos;
+} T_FuncBuffer;
+
+typedef struct _tag_FuncList
+{
+    T_FuncBuffer        Buffers[32];
+    SIZE_T              Index;
+} T_FuncList;
 
 // See djb2 hash function online
 DWORD Djb2(LPSTR String);
@@ -34,6 +48,12 @@ void InitFuncRecs();
 
 // End the trace for a function
 void EndTrace(E_FuncEnum FunctionName, BOOL bError);
+
+// Write to the current global function buffer
+void WriteFuncBuffer(char *Format, ...);
+
+// Print the specified function buffer
+void PrintFuncBuffer(T_FuncBuffer *Buffer);
 
 #endif // COMMON_H
 
