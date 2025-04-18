@@ -98,7 +98,8 @@ PatchIAT(void)
                     case FUNC_CreateWindowW:                    { PatchEntry(WtCreateWindowW); } break;
                     case FUNC_CreateWindowExA:                  { PatchEntry(WtCreateWindowExA); } break;
                     case FUNC_CreateWindowExW:                  { PatchEntry(WtCreateWindowExW); } break;
-                    case FUNC_DefWindowProc:                    { PatchEntry(WtDefWindowProc); } break;
+                    case FUNC_DefWindowProcA:                   { PatchEntry(WtDefWindowProcA); } break;
+                    case FUNC_DefWindowProcW:                   { PatchEntry(WtDefWindowProcW); } break;
                     case FUNC_DestroyWindow:                    { PatchEntry(WtDestroyWindow); } break;
                     case FUNC_DispatchMessageA:                 { PatchEntry(WtDispatchMessageA); } break;
                     case FUNC_DispatchMessageW:                 { PatchEntry(WtDispatchMessageW); } break;

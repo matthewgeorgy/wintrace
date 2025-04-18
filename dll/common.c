@@ -81,7 +81,8 @@ InitFuncRecs()
                 case FUNC_CreateWindowW:                    { g_FuncRecs[E_CreateWindowW].bTrace = TRUE; } break;
                 case FUNC_CreateWindowExA:                  { g_FuncRecs[E_CreateWindowExA].bTrace = TRUE; } break;
                 case FUNC_CreateWindowExW:                  { g_FuncRecs[E_CreateWindowExW].bTrace = TRUE; } break;
-                case FUNC_DefWindowProc:                    { g_FuncRecs[E_DefWindowProc].bTrace = TRUE; } break;
+                case FUNC_DefWindowProcA:                   { g_FuncRecs[E_DefWindowProcA].bTrace = TRUE; } break;
+                case FUNC_DefWindowProcW:                   { g_FuncRecs[E_DefWindowProcW].bTrace = TRUE; } break;
                 case FUNC_DestroyWindow:                    { g_FuncRecs[E_DestroyWindow].bTrace = TRUE; } break;
                 case FUNC_DispatchMessageA:                 { g_FuncRecs[E_DispatchMessageA].bTrace = TRUE; } break;
                 case FUNC_DispatchMessageW:                 { g_FuncRecs[E_DispatchMessageW].bTrace = TRUE; } break;

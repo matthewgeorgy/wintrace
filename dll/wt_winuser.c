@@ -285,7 +285,7 @@ WtCreateWindowExW(
 }
 
 LRESULT
-WtDefWindowProc(
+WtDefWindowProcA(
   HWND   hWnd,
   UINT   Msg,
   WPARAM wParam,
@@ -295,15 +295,39 @@ WtDefWindowProc(
     LRESULT             Ret;
 
 
-    if (BeginTrace(E_DefWindowProc))
+    if (BeginTrace(E_DefWindowProcA))
     {
         WriteFuncBuffer("(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
-        Ret = DefWindowProc(hWnd, Msg, wParam, lParam);
+        Ret = DefWindowProcA(hWnd, Msg, wParam, lParam);
         WriteFuncBuffer(" = %u", Ret);
-        EndTrace(E_DefWindowProc, FALSE);
+        EndTrace(E_DefWindowProcA, FALSE);
     }
     else
-        Ret = DefWindowProc(hWnd, Msg, wParam, lParam);
+        Ret = DefWindowProcA(hWnd, Msg, wParam, lParam);
+
+    return Ret;
+}
+
+LRESULT
+WtDefWindowProcW(
+  HWND   hWnd,
+  UINT   Msg,
+  WPARAM wParam,
+  LPARAM lParam
+)
+{
+    LRESULT             Ret;
+
+
+    if (BeginTrace(E_DefWindowProcW))
+    {
+        WriteFuncBuffer("(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
+        Ret = DefWindowProcW(hWnd, Msg, wParam, lParam);
+        WriteFuncBuffer(" = %u", Ret);
+        EndTrace(E_DefWindowProcW, FALSE);
+    }
+    else
+        Ret = DefWindowProcW(hWnd, Msg, wParam, lParam);
 
     return Ret;
 }
