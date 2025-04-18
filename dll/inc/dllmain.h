@@ -1,7 +1,8 @@
 /*
     Version History
 
-		0.4.1	Added specific tracing
+        0.4.2   Misc cleanups/fixes + added some comments/documentation
+        0.4.1   Added specific tracing
         0.4.0   Fixed GetMessage
         0.3.9   Cleaned up warnings
         0.3.8   Added WtRemoveDirectoryA/W
@@ -71,9 +72,13 @@
 #include "wt_profileapi.h"
 #include "wt_memoryapi.h"
 
+// Goes through the IAT and patches the function addresses
 void PatchIAT(void);
+
+// 'Dummy' function for printing the IAT (function names + addresses)
 void ReadIAT(void);
 
+// Simpe macro for patching a functions address in the IAT
 #define PatchEntry(__Func) \
     do \
     { \

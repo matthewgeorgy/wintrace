@@ -7,17 +7,17 @@ WtQueryPerformanceCounter(
   LARGE_INTEGER *lpPerformanceCount
 )
 {
-    BOOL		Ret;
+    BOOL        Ret;
 
 
-	if (BeginTrace(E_QueryPerformanceCounter))
-	{
-		fprintf(pOpts->OutputFile, "(0x%p)", lpPerformanceCount);
-		Ret = QueryPerformanceCounter(lpPerformanceCount);
-		fprintf(pOpts->OutputFile, " = %d\n", Ret);
-	}
-	else
-		Ret = QueryPerformanceCounter(lpPerformanceCount);
+    if (BeginTrace(E_QueryPerformanceCounter))
+    {
+        fprintf(pOpts->OutputFile, "(0x%p)", lpPerformanceCount);
+        Ret = QueryPerformanceCounter(lpPerformanceCount);
+        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+    }
+    else
+        Ret = QueryPerformanceCounter(lpPerformanceCount);
 
     return Ret;
 }
@@ -27,17 +27,17 @@ WtQueryPerformanceFrequency(
   LARGE_INTEGER *lpFrequency
 )
 {
-    BOOL		Ret;
+    BOOL        Ret;
 
 
-	if (BeginTrace(E_QueryPerformanceFrequency))
-	{
-		fprintf(pOpts->OutputFile, "(0x%p)", lpFrequency);
-		Ret = QueryPerformanceFrequency(lpFrequency);
-		fprintf(pOpts->OutputFile, " = %d\n", Ret);
-	}
-	else
-		Ret = QueryPerformanceFrequency(lpFrequency);
+    if (BeginTrace(E_QueryPerformanceFrequency))
+    {
+        fprintf(pOpts->OutputFile, "(0x%p)", lpFrequency);
+        Ret = QueryPerformanceFrequency(lpFrequency);
+        fprintf(pOpts->OutputFile, " = %d\n", Ret);
+    }
+    else
+        Ret = QueryPerformanceFrequency(lpFrequency);
 
     return Ret;
 }

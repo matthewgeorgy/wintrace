@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include "func_records.h"
 
+// Options structure that mirrors the core executable's
 typedef struct _tag_WintraceOpts
 {
     BOOL        ShowThreadID;
@@ -13,12 +14,22 @@ typedef struct _tag_WintraceOpts
     BOOL        ShowFuncCount;
     CHAR        OutputFilename[64];
     FILE        *OutputFile;
-	CHAR		TraceList[32][32];
+    CHAR        TraceList[32][32];
 } T_WintraceOpts;
 
+// See djb2 hash function online
 DWORD Djb2(LPSTR String);
+
+// Prints info about thread ID, proc ID, and call count
 void ShowDetails(T_WintraceOpts *pOpts, DWORD Cnt);
+
+// Begin the trace for a function; obtain the func record through the passed
+// enum, then conditionally print info and return a bool to the hook that
+// tells whether or not to trace the function (ie, print info)
 BOOL BeginTrace(E_FuncEnum FunctionName);
+
+// Initialize the function records array, specifically setting the conditional
+// tracing flag (will add more later)
 void InitFuncRecs();
 
 #endif // COMMON_H

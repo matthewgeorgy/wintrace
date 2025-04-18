@@ -1,7 +1,8 @@
 /*
     Version History
 
-		0.1.6	Added specific tracing
+        0.1.7   Misc cleanups/fixes + added some comments/documentation
+        0.1.6   Added specific tracing
         0.1.5   Cleaned up warnings
         0.1.4   Added custom output file parsing
         0.1.3   Tidied up option parsing and usage printing
@@ -12,41 +13,40 @@
 
 // TODO: New features:
 /*
-	Error / Injection synopsis:
+    Error / Injection synopsis:
 
-	wintrace /e:HeapCreate ...			Fail ALL HeapCreate calls
-	wintrace /e:HeapCreate:4 ...	 	Fail the 4th HeapCreate call
-	wintrace /i:GetFileSize:25 ...		ALL GetFileSize calls return 25
-	wintrace /i:GetFileSize:25:3 ...	GetFileSize call #3 returns 25
+    wintrace /e:HeapCreate ...          Fail ALL HeapCreate calls
+    wintrace /e:HeapCreate:4 ...        Fail the 4th HeapCreate call
+    wintrace /i:GetFileSize:25 ...      ALL GetFileSize calls return 25
+    wintrace /i:GetFileSize:25:3 ...    GetFileSize call #3 returns 25
 
-	wintrace {/i|/e}:HeapAlloc,HeapFree ...	Chain multiple funcs??
+    wintrace {/i|/e}:HeapAlloc,HeapFree ... Chain multiple funcs??
 */
 
 /*
-	Organize nested calls:
+    Organize nested calls:
 
-	GetMessage(0x0000000000BCF698, 0x00000000000A06A8, 0, 0) = 1
-	TranslateMessageA(0x0000000000BCF698) = 1
-	DispatchMessageA(0x0000000000BCF698) = 0
-	  DestroyWindow(0x00000000000A06A8) = 1
-	    PostQuitMessage(0) = VOID
+    GetMessage(0x0000000000BCF698, 0x00000000000A06A8, 0, 0) = 1
+    TranslateMessageA(0x0000000000BCF698) = 1
+    DispatchMessageA(0x0000000000BCF698) = 0
+      DestroyWindow(0x00000000000A06A8) = 1
+        PostQuitMessage(0) = VOID
 
-	__global DWORD CallLvl determines how many indents to print
-	CallLvl++ when entering function, CallLvl-- when leaving
-	Need a way to organize the string to print so it can be done in correct order (not a stack)
+    __global DWORD CallLvl determines how many indents to print
+    CallLvl++ when entering function, CallLvl-- when leaving
+    Need a way to organize the string to print so it can be done in correct order (not a stack)
 
-	We can make it so that by default, DestroyWindow + PostQuitMessage are not printed,
-	but then specifying option /n WILL print them. No /n specified is easy: just
-	check that CallLvl == 1 before printing any output.
+    We can make it so that by default, DestroyWindow + PostQuitMessage are not printed,
+    but then specifying option /n WILL print them. No /n specified is easy: just
+    check that CallLvl == 1 before printing any output.
 */
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 #include <stdio.h>
 #include <string.h>
-/* #define __cplusplus */
-/* #include <Logger.h> */
-/* #undef __cplusplus */
+
+#define CRLF "\r\n"
 
 typedef struct _tag_WintraceOpts
 {
@@ -55,11 +55,14 @@ typedef struct _tag_WintraceOpts
     BOOL        ShowFuncCount;
     CHAR        OutputFilename[64];
     FILE        *OutputFile;
-	CHAR		TraceList[32][32];
+    CHAR        TraceList[32][32];
 } T_WintraceOpts;
 
-void PrintUsage(void);
-T_WintraceOpts ParseOpts(int argc, char **argv);
+// Show full list of options/switches
+void            PrintUsage(void);
+
+// Read cmdline arguments
+T_WintraceOpts  ParseOpts(int argc, char **argv);
 
 int
 main(int argc,
@@ -75,7 +78,7 @@ main(int argc,
     BOOL                        Status;
     LPTHREAD_START_ROUTINE      lpfnLoadLibA;
     LPTHREAD_START_ROUTINE      lpfnFreeLib;
-    T_WintraceOpts             Opts;
+    T_WintraceOpts              Opts;
     LPVOID                      pOpts;
     HANDLE                      FileMap;
 
@@ -118,7 +121,7 @@ main(int argc,
     lpfnFreeLib = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "FreeLibrary");
     if (!lpfnFreeLib)
     {
-        printf("could no locate freeliba\n");
+        printf("could no locate FreeLib\n");
         return -1;
     }
 
@@ -160,17 +163,18 @@ main(int argc,
 
     return 0;
 }
-#define CRLF "\r\n"
+
 void
 PrintUsage(void)
 {
-    printf(	CRLF
-			"Options:" CRLF
-    	 	"  /c            Show function call count" CRLF
-			"  /p            Show process ID" CRLF
-			"  /t            Show thread ID" CRLF
-			"  /T:fns        Trace only fns, a comma separated list of function names" CRLF
-			"  /o:file       Output to file" CRLF);
+    printf( CRLF
+            "Usage: wintrace [options] <exe>" CRLF CRLF
+            "Options:" CRLF
+            "  /c            Show function call count" CRLF
+            "  /p            Show process ID" CRLF
+            "  /t            Show thread ID" CRLF
+            "  /T:fns        Trace only fns, a comma separated list of function names" CRLF
+            "  /o:file       Output to file" CRLF);
 }
 
 T_WintraceOpts
@@ -178,10 +182,9 @@ ParseOpts(int argc,
           char **argv)
 {
     INT                 OptInd;
-    T_WintraceOpts     Opts = {0};
+    T_WintraceOpts      Opts = {0};
 
 
-	ZeroMemory(&Opts, sizeof(Opts));
     if (argc < 2)
     {
         printf("\nUsage: wintrace [options] <exe>\n");
@@ -209,19 +212,19 @@ ParseOpts(int argc,
             {
                 strcpy(Opts.OutputFilename, argv[OptInd] + 3);
             } break;
-			case 'T':
-			{
-				CHAR *Token;
-				INT I = 0;
+            case 'T':
+            {
+                CHAR *Token;
+                INT I = 0;
 
-				Token = strtok(argv[OptInd] + 3, ",");
-				while (Token != NULL && I < 32)
-				{
-					strcpy(Opts.TraceList[I], Token);
-					Token = strtok(NULL, ",");
-					I++;
-				}
-			} break;
+                Token = strtok(argv[OptInd] + 3, ",");
+                while (Token != NULL && I < 32)
+                {
+                    strcpy(Opts.TraceList[I], Token);
+                    Token = strtok(NULL, ",");
+                    I++;
+                }
+            } break;
             case '?':
             {
                 PrintUsage();

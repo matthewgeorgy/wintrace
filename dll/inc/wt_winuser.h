@@ -1,7 +1,6 @@
 #ifndef WT_WINUSER_H
 #define WT_WINUSER_H
 
-#include <windows.h>
 #include "common.h"
 
 BOOL WtAdjustWindowRect(
