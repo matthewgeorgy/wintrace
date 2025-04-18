@@ -1,6 +1,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 typedef struct _tag_WINTRACEOPTS
 {
     BOOL        ShowThreadID;
@@ -9,5 +12,7 @@ typedef struct _tag_WINTRACEOPTS
 } T_WINTRACEOPTS;
 
 typedef HANDLE	T_HFILEMAP;
+
+void ShowDetails(T_WINTRACEOPTS *pOpts, DWORD Cnt);
 
 #endif // COMMON_H

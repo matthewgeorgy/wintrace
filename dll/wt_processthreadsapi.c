@@ -10,12 +10,7 @@ WtGetCurrentProcess(void)
     static DWORD        Cnt;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     printf("GetCurrentProcess()");
     Ret = GetCurrentProcess();
     printf(" = 0x%p\n", Ret);
@@ -30,12 +25,7 @@ WtGetCurrentProcessId(void)
     static DWORD        Cnt;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     printf("GetCurrentProcessId()");
     Ret = GetCurrentProcessId();
     printf(" = %u\n", Ret);

@@ -11,12 +11,7 @@ WtGetProcessHeap()
     FARPROC             lpfnGetProcessHeap;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnGetProcessHeap = GetProcAddress(GetModuleHandle("Kernel32.dll"), "GetProcessHeap");
     printf("GetProcessHeap()");
     Ret = lpfnGetProcessHeap();
@@ -34,12 +29,7 @@ WtGetProcessHeaps(DWORD NumberOfHeaps,
     FARPROC             lpfnGetProcessHeaps;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnGetProcessHeaps = GetProcAddress(GetModuleHandle("Kernel32.dll"), "GetProcessHeaps");
     printf("GetProcessHeaps(%u, 0x%p)", NumberOfHeaps, ProcessHeaps);
     Ret = lpfnGetProcessHeaps(NumberOfHeaps, ProcessHeaps);
@@ -58,12 +48,7 @@ WtHeapAlloc(HANDLE hHeap,
     FARPROC             lpfnHeapAlloc;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapAlloc = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapAlloc");
     printf("HeapAlloc(0x%p, %u, %llu)", hHeap, dwFlags, dwBytes);
     Ret = lpfnHeapAlloc(hHeap, dwFlags, dwBytes);
@@ -81,12 +66,7 @@ WtHeapCompact(HANDLE hHeap,
     FARPROC             lpfnHeapCompact;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapCompact = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapCompact");
     printf("HeapCompact(0x%p, %u) = %ul\n", hHeap, dwFlags);
     Ret = lpfnHeapCompact(hHeap, dwFlags);
@@ -105,12 +85,7 @@ WtHeapCreate(DWORD flOptions,
     FARPROC             lpfnHeapCreate;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapCreate = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapCreate");
     printf("HeapCreate(%u, %llu, %llu)", flOptions, dwInitialSize, dwMaximumSize);
     Ret = lpfnHeapCreate(flOptions, dwInitialSize, dwMaximumSize);
@@ -127,12 +102,7 @@ WtHeapDestroy(HANDLE hHeap)
     FARPROC             lpfnHeapDestroy;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapDestroy = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapDestroy");
     printf("HeapDestroy(0x%p)", hHeap);
     Ret = lpfnHeapDestroy(hHeap);
@@ -151,12 +121,7 @@ WtHeapFree(HANDLE hHeap,
     FARPROC             lpfnHeapFree;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapFree = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapFree");
     printf("HeapFree(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
     Ret = lpfnHeapFree(hHeap, dwFlags, lpMem);
@@ -173,12 +138,7 @@ WtHeapLock(HANDLE hHeap)
     FARPROC             lpfnHeapLock;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapLock = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapLock");
     printf("HeapLock(0x%p)", hHeap);
     Ret = lpfnHeapLock(hHeap);
@@ -199,12 +159,7 @@ WtHeapQueryInformation(HANDLE HeapHandle,
     FARPROC             lpfnHeapQueryInformation;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapQueryInformation = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapQueryInformation");
     printf("HeapQueryInformation(0x%p, %d, 0x%p, %u, 0x%p)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
     Ret = lpfnHeapQueryInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength, ReturnLength);
@@ -224,12 +179,7 @@ WtHeapReAlloc(HANDLE hHeap,
     FARPROC             lpfnHeapReAlloc;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapReAlloc = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapReAlloc");
     printf("HeapReAlloc(0x%p, %u, 0x%p, %u)", hHeap, dwFlags, lpMem, dwBytes);
     Ret = lpfnHeapReAlloc(hHeap, dwFlags, lpMem, dwBytes);
@@ -249,12 +199,7 @@ WtHeapSetInformation(HANDLE HeapHandle,
     FARPROC             lpfnHeapSetInformation;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapSetInformation = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapSetInformation");
     printf("HeapSetInformation(0x%p, %d, 0x%p, %u)", HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
     Ret = lpfnHeapSetInformation(HeapHandle, HeapInformationClass, HeapInformation, HeapInformationLength);
@@ -273,12 +218,7 @@ WtHeapSize(HANDLE hHeap,
     FARPROC             lpfnHeapSize;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapSize = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapSize");
     printf("HeapSize(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
     Ret = lpfnHeapSize(hHeap, dwFlags, lpMem);
@@ -295,12 +235,7 @@ WtHeapUnlock(HANDLE hHeap)
     FARPROC             lpfnHeapUnlock;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapUnlock = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapUnlock");
     printf("HeapUnlock(0x%p)", hHeap);
     Ret = lpfnHeapUnlock(hHeap);
@@ -319,12 +254,7 @@ WtHeapValidate(HANDLE hHeap,
     FARPROC             lpfnHeapValidate;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapValidate = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapValidate");
     printf("HeapValidate(0x%p, %u, 0x%p)", hHeap, dwFlags, lpMem);
     Ret = lpfnHeapValidate(hHeap, dwFlags, lpMem);
@@ -342,12 +272,7 @@ WtHeapWalk(HANDLE hHeap,
     FARPROC             lpfnHeapWalk;
 
 
-    if (pOpts->ShowProcessID)
-        printf("[%u] ", GetCurrentProcessId());
-    if (pOpts->ShowThreadID)
-        printf("<%u> ", GetCurrentThreadId());
-    if (pOpts->ShowFuncCount)
-        printf("(%u) ", ++Cnt);
+    ShowDetails(pOpts, ++Cnt);
     lpfnHeapWalk = GetProcAddress(GetModuleHandle("Kernel32.dll"), "HeapWalk");
     printf("HeapWalk(0x%p, 0x%p)", hHeap, lpEntry);
     Ret = lpfnHeapWalk(hHeap, lpEntry);
