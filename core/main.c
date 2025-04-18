@@ -1,6 +1,7 @@
 /*
     Version History
 
+		0.2.0	Fixed more CRLF's + added some TODO's
         0.1.9   Added cmdline argument parsing for the target EXE
         0.1.8   Cleanups
         0.1.7   Misc cleanups/fixes + added some comments/documentation
@@ -41,6 +42,26 @@
     We can make it so that by default, DestroyWindow + PostQuitMessage are not printed,
     but then specifying option /n WILL print them. No /n specified is easy: just
     check that CallLvl == 1 before printing any output.
+*/
+
+/*
+    Specific non-tracing:
+
+    Sometimes you don't care about tracing certain functions
+    (ie GetCurrentProcessId() or QueryPerformanceCounter() at the beginning of
+    each program).
+
+    We can modify how the /T entries are parsed to exclude functions from being
+    traced, while still tracing all the others.
+    Syntax proposal: add a ~ to the start of the name
+
+    Example:
+    wintrace /T:~GetCurrentProcessId test_blah.exe
+
+    Will trace ALL functions EXCEPT GetCurrentProcessId.
+    This will likely be a DLL only change, since that's where we actually parse
+    the function trace list. Putting it here since the rest of the TODO's are
+    here.
 */
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -194,8 +215,8 @@ ParseOpts(int argc,
 
     if (argc < 2)
     {
-        fprintf(stderr, "\nUsage: wintrace [options] <exe>\n");
-        fprintf(stderr, "Use /? for more info\n\n");
+        fprintf(stderr, CRLF "Usage: wintrace [options] <exe>" CRLF);
+        fprintf(stderr, "Use /? for more info" CRLF CRLF);
         exit(-1);
     }
 
@@ -240,8 +261,8 @@ ParseOpts(int argc,
 
             default:
             {
-                fprintf(stderr, "\nUsage: wintrace [options] <exe>\n");
-                fprintf(stderr, "Use /? for more info\n");
+                fprintf(stderr, CRLF "Usage: wintrace [options] <exe>" CRLF);
+                fprintf(stderr, "Use /? for more info" CRLF);
                 exit(-1);
             } break;
         }
