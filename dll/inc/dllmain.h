@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.3.7   Added wt_memoryapi.c/h
         0.3.6   Added wt_profileapi.c/h
         0.3.5   Added wt_debugapi.c/h + filled functions + updated hashes
         0.3.4   General cleanup + fixes after testing with ppmview
