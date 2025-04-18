@@ -51,6 +51,7 @@
 // investigate this later.
 // TODO: Check functions with 64bit params and see what format specifier to
 // use (ie, %u vs %lu vs %llu).
+// TODO: Create our own printf that does fprintf(pOpts->...) internally?
 
 #ifndef DLLMAIN_H
 #define DLLMAIN_H

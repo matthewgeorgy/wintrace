@@ -194,6 +194,5 @@ InitFuncRecs()
 			}
 		}
 	}
-	printf("%d\n", g_TraceAll);
 }
 
