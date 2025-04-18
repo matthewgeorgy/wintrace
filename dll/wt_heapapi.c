@@ -60,7 +60,7 @@ WtHeapCompact(HANDLE hHeap,
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("HeapCompact(0x%p, %u) = %ul\n", hHeap, dwFlags);
+    printf("HeapCompact(0x%p, %u)", hHeap, dwFlags);
     Ret = HeapCompact(hHeap, dwFlags);
     printf(" = %u\n", Ret);
 
