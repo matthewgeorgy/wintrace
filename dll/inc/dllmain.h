@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.3.5   Added wt_debugapi.c/h + filled functions + updated hashes
         0.3.4   General cleanup + fixes after testing with ppmview
                 Removed _WIN64 requirement for Heap functions
         0.3.3   Added custom output file parsing
@@ -59,6 +60,7 @@
 #include "wt_heapapi.h"
 #include "wt_processthreadsapi.h"
 #include "wt_fileapi.h"
+#include "wt_debugapi.h"
 
 void PatchIAT(void);
 void ReadIAT(void);

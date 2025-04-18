@@ -83,3 +83,12 @@
 #define FUNC_SetFilePointerEx 226113999
 #define FUNC_WriteFile 1715268784
 #define FUNC_WriteFileEx 3911901709
+#define FUNC_CheckRemoteDebuggerPresent 107187221
+#define FUNC_ContinueDebugEvent 2549675251
+#define FUNC_DebugActiveProcess 3798885479
+#define FUNC_DebugActiveProcessStop 2188885901
+#define FUNC_DebugBreak 3528731537
+#define FUNC_IsDebuggerPresent 3869395015
+#define FUNC_OutputDebugStringA 2037555093
+#define FUNC_OutputDebugStringW 2037555115
+#define FUNC_WaitForDebugEvent 3195682730
