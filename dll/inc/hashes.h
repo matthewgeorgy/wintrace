@@ -92,3 +92,5 @@
 #define FUNC_OutputDebugStringA 2037555093
 #define FUNC_OutputDebugStringW 2037555115
 #define FUNC_WaitForDebugEvent 3195682730
+#define FUNC_QueryPerformanceCounter 3679327501
+#define FUNC_QueryPerformanceFrequency 1087381631

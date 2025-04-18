@@ -103,8 +103,11 @@ LPSTR Funcs[] =
     "IsDebuggerPresent",
     "OutputDebugStringA",
     "OutputDebugStringW",
-    "WaitForDebugEvent"
+    "WaitForDebugEvent",
     /* ,"WaitForDebugEventEx" */ // WIN10 ONLY
+    // profileapi.h
+    "QueryPerformanceCounter",
+    "QueryPerformanceFrequency"
 };
 
 
