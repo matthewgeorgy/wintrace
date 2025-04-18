@@ -1,9 +1,0 @@
-BOOL CheckRemoteDebuggerPresent(HANDLE hProcess, PBOOL pbDebuggerPresent);
-BOOL ContinueDebugEvent(DWORD dwProcessId, DWORD dwThreadId, DWORD dwContinueStatus);
-BOOL DebugActiveProcess(DWORD dwProcessId);
-BOOL DebugActiveProcessStop(DWORD dwProcessId);
-void DebugBreak();
-BOOL IsDebuggerPresent();
-void OutputDebugStringA(LPCSTR lpOutputString);
-void OutputDebugStringW(LPCWSTR lpOutputString);
-BOOL WaitForDebugEvent(LPDEBUG_EVENT lpDebugEvent, DWORD dwMilliseconds);
