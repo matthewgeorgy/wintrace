@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.2.4   Added more functions to wt_processthreadsapi
         0.2.3   Added common.c and ShowDetails() to display trace opts
         0.2.2   Added procID/threadID tracing
         0.2.1   Function call counts starts at 1 and enclosed in ()
