@@ -13,9 +13,9 @@ WtCreateDirectoryA(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("CreateDirectoryA(\"%s\", 0x%p)", lpPathName, lpSecurityAttributes);
+    fprintf(stderr, "CreateDirectoryA(\"%s\", 0x%p)", lpPathName, lpSecurityAttributes);
     Ret = CreateDirectoryA(lpPathName, lpSecurityAttributes);
-    printf(" = %d\n", Ret);
+    fprintf(stderr, " = %d\n", Ret);
 
     return Ret;
 }
@@ -31,9 +31,9 @@ WtCreateDirectoryW(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("CreateDirectoryW(\"%ws\", 0x%p)", lpPathName, lpSecurityAttributes);
+    fprintf(stderr, "CreateDirectoryW(\"%ws\", 0x%p)", lpPathName, lpSecurityAttributes);
     Ret = CreateDirectoryW(lpPathName, lpSecurityAttributes);
-    printf(" = %d\n", Ret);
+    fprintf(stderr, " = %d\n", Ret);
 
     return Ret;
 }
@@ -52,9 +52,9 @@ WtCreateFileA(LPCSTR lpFileName,
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("CreateFileA(\"%s\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+    fprintf(stderr, "CreateFileA(\"%s\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
     Ret = CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-    printf(" = 0x%p\n", Ret);
+    fprintf(stderr, " = 0x%p\n", Ret);
 
     return Ret;
 }
@@ -73,9 +73,9 @@ WtCreateFileW(LPCWSTR lpFileName,
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("CreateFileW(\"%ws\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+    fprintf(stderr, "CreateFileW(\"%ws\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
     Ret = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-    printf(" = 0x%p\n", Ret);
+    fprintf(stderr, " = 0x%p\n", Ret);
 
     return Ret;
 }
@@ -90,9 +90,9 @@ WtDeleteFileA(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("DeleteFileA(\"%s\")", lpFileName);
+    fprintf(stderr, "DeleteFileA(\"%s\")", lpFileName);
     Ret = DeleteFileA(lpFileName);
-    printf(" = %d\n", Ret);
+    fprintf(stderr, " = %d\n", Ret);
 
     return Ret;
 }
@@ -107,9 +107,9 @@ WtDeleteFileW(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("DeleteFileW(\"%ws\")", lpFileName);
+    fprintf(stderr, "DeleteFileW(\"%ws\")", lpFileName);
     Ret = DeleteFileW(lpFileName);
-    printf(" = %d\n", Ret);
+    fprintf(stderr, " = %d\n", Ret);
 
     return Ret;
 }
@@ -125,9 +125,9 @@ WtGetFileSize(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("GetFileSize(0x%p, 0x%p)", hFile, lpFileSizeHigh);
+    fprintf(stderr, "GetFileSize(0x%p, 0x%p)", hFile, lpFileSizeHigh);
     Ret = GetFileSize(hFile, lpFileSizeHigh);
-    printf(" = %u\n", Ret);
+    fprintf(stderr, " = %u\n", Ret);
 
     return Ret;
 }
@@ -143,9 +143,9 @@ WtGetFileSizeEx(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("GetFileSizeEx(0x%p, 0x%p)", hFile, lpFileSize);
+    fprintf(stderr, "GetFileSizeEx(0x%p, 0x%p)", hFile, lpFileSize);
     Ret = GetFileSizeEx(hFile, lpFileSize);
-    printf(" = %u\n", Ret);
+    fprintf(stderr, " = %u\n", Ret);
 
     return Ret;
 }
@@ -160,9 +160,9 @@ WtGetFileType(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("GetFileType(0x%p)", hFile);
+    fprintf(stderr, "GetFileType(0x%p)", hFile);
     Ret = GetFileType(hFile);
-    printf(" = %u\n", Ret);
+    fprintf(stderr, " = %u\n", Ret);
 
     return Ret;
 }
@@ -181,11 +181,11 @@ WtReadFile(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("ReadFile(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
+    fprintf(stderr, "ReadFile(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
             nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
     Ret = ReadFile(hFile, lpBuffer,
             nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
-    printf(" = %d\n", Ret);
+    fprintf(stderr, " = %d\n", Ret);
 
     return Ret;
 }
@@ -204,11 +204,11 @@ WtReadFileEx(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("ReadFileEx(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
+    fprintf(stderr, "ReadFileEx(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
             nNumberOfBytesToRead, lpOverlapped, lpCompletionRoutine);
     Ret = ReadFileEx(hFile, lpBuffer,
             nNumberOfBytesToRead, lpOverlapped, lpCompletionRoutine);
-    printf(" = %d\n", Ret);
+    fprintf(stderr, " = %d\n", Ret);
 
     return Ret;
 }
@@ -223,9 +223,9 @@ WtSetEndOfFile(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("SetEndOfFile(0x%p)", hFile);
+    fprintf(stderr, "SetEndOfFile(0x%p)", hFile);
     Ret = SetEndOfFile(hFile);
-    printf(" = %d\n", Ret);
+    fprintf(stderr, " = %d\n", Ret);
 
     return Ret;
 }
@@ -243,11 +243,11 @@ WtSetFilePointer(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("SetFilePointer(0x%p, %d, 0x%p, %u)", hFile, lDistanceToMove,
+    fprintf(stderr, "SetFilePointer(0x%p, %d, 0x%p, %u)", hFile, lDistanceToMove,
             lpDistanceToMoveHigh, dwMoveMethod);
     Ret = SetFilePointer(hFile, lDistanceToMove,
             lpDistanceToMoveHigh, dwMoveMethod);
-    printf(" = %u\n", Ret);
+    fprintf(stderr, " = %u\n", Ret);
 
     return Ret;
 }
@@ -265,11 +265,11 @@ WtSetFilePointerEx(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("SetFilePointerEx(0x%p, %d, 0x%p, %u)", hFile, liDistanceToMove,
+    fprintf(stderr, "SetFilePointerEx(0x%p, %d, 0x%p, %u)", hFile, liDistanceToMove,
             lpNewFilePointer, dwMoveMethod);
     Ret = SetFilePointerEx(hFile, liDistanceToMove,
             lpNewFilePointer, dwMoveMethod);
-    printf(" = %u\n", Ret);
+    fprintf(stderr, " = %u\n", Ret);
 
     return Ret;
 }
@@ -288,11 +288,11 @@ WtWriteFile(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("WriteFile(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
+    fprintf(stderr, "WriteFile(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
             nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
     Ret = WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite,
             lpNumberOfBytesWritten, lpOverlapped);
-    printf(" = %d\n", Ret);
+    fprintf(stderr, " = %d\n", Ret);
 
     return Ret;
 }
@@ -311,11 +311,11 @@ WtWriteFileEx(
 
 
     ShowDetails(pOpts, ++Cnt);
-    printf("WriteFileEx(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
+    fprintf(stderr, "WriteFileEx(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
             nNumberOfBytesToWrite, lpOverlapped, lpCompletionRoutine);
     Ret = WriteFileEx(hFile, lpBuffer, nNumberOfBytesToWrite,
             lpOverlapped, lpCompletionRoutine);
-    printf(" = %d\n", Ret);
+    fprintf(stderr, " = %d\n", Ret);
 
     return Ret;
 }
