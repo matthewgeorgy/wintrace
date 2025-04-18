@@ -12,13 +12,11 @@ WtAdjustWindowRect(
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnAdjustWindowRect;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnAdjustWindowRect = GetProcAddress(GetModuleHandle("User32.dll"), "AdjustWindowRect");
     printf("AdjustWindowRect(0x%p, %u, %d)", lpRect, dwStyle, bMenu);
-    Ret = lpfnAdjustWindowRect(lpRect, dwStyle, bMenu);
+    Ret = AdjustWindowRect(lpRect, dwStyle, bMenu);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -34,13 +32,11 @@ WtAdjustWindowRectEx(
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnAdjustWindowRectEx;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnAdjustWindowRectEx = GetProcAddress(GetModuleHandle("User32.dll"), "AdjustWindowRectEx");
     printf("AdjustWindowRectEx(0x%p, %u, %d, %u)", lpRect, dwStyle, bMenu, dwExStyle);
-    Ret = lpfnAdjustWindowRectEx(lpRect, dwStyle, bMenu, dwExStyle);
+    Ret = AdjustWindowRectEx(lpRect, dwStyle, bMenu, dwExStyle);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -54,13 +50,11 @@ WtBeginPaint(
 {
     HDC                 Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnBeginPaint;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnBeginPaint = GetProcAddress(GetModuleHandle("User32.dll"), "BeginPaint");
     printf("BeginPaint(0x%p, 0x%p)", hWnd, lpPaint);
-    Ret = lpfnBeginPaint(hWnd, lpPaint);
+    Ret = BeginPaint(hWnd, lpPaint);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -74,13 +68,11 @@ WtClientToScreen(
 {
     BOOL                Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnClientToScreen;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnClientToScreen = GetProcAddress(GetModuleHandle("User32.dll"), "ClientToScreen");
     printf("ClientToScreen(0x%p, 0x%p)", hWnd, lpPoint);
-    Ret = lpfnClientToScreen(hWnd, lpPoint);
+    Ret = ClientToScreen(hWnd, lpPoint);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -297,13 +289,11 @@ WtMessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)
 {
     int                 Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnMessageBoxA;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnMessageBoxA = GetProcAddress(GetModuleHandle("User32.dll"), "MessageBoxA");
     printf("MessageBoxA(0x%p, \"%s\", \"%s\", %u)", hWnd, lpText, lpCaption, uType);
-    Ret = lpfnMessageBoxA(hWnd, lpText, lpCaption, uType);
+    Ret = MessageBoxA(hWnd, lpText, lpCaption, uType);
     printf(" = %d\n", Ret);
 
     return Ret;
@@ -314,13 +304,11 @@ WtMessageBoxW(HWND hWnd, LPCWSTR lpText, LPCWSTR lpCaption, UINT uType)
 {
     int                 Ret;
     static DWORD        Cnt;
-    FARPROC             lpfnMessageBoxW;
 
 
     ShowDetails(pOpts, ++Cnt);
-    lpfnMessageBoxW = GetProcAddress(GetModuleHandle("User32.dll"), "MessageBoxW");
     printf("MessageBoxW(0x%p, \"%ws\", \"%ws\", %u)", hWnd, lpText, lpCaption, uType);
-    Ret = lpfnMessageBoxW(hWnd, lpText, lpCaption, uType);
+    Ret = MessageBoxW(hWnd, lpText, lpCaption, uType);
     printf(" = %d\n", Ret);
 
     return Ret;
