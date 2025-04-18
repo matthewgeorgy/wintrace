@@ -1,4 +1,5 @@
 #include "wt_processthreadsapi.h"
+#include <stdio.h>
 
 HANDLE
 WtGetCurrentProcess(void)
