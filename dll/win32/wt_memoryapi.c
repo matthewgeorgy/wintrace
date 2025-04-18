@@ -1,4 +1,4 @@
-#include "inc/wt_memoryapi.h"
+#include <win32/wt_memoryapi.h>
 
 extern T_WintraceOpts      *pOpts;
 

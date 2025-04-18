@@ -1,4 +1,4 @@
-#include "inc/wt_processthreadsapi.h"
+#include <win32/wt_processthreadsapi.h>
 
 extern T_WintraceOpts      *pOpts;
 

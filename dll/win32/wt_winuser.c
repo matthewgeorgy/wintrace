@@ -1,4 +1,4 @@
-#include "inc/wt_winuser.h"
+#include <win32/wt_winuser.h>
 
 extern T_WintraceOpts      *pOpts;
 

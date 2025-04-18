@@ -1,4 +1,4 @@
-#include "inc/wt_profileapi.h"
+#include <win32/wt_profileapi.h>
 
 extern T_WintraceOpts *pOpts;
 
