@@ -1,6 +1,9 @@
 #include "inc/dllmain.h"
+#include "inc/hashes.h"
 
 T_WINTRACEOPTS      *pOpts;
+
+DWORD Djb2(LPSTR String);
 
 BOOL APIENTRY
 DllMain(HMODULE hModule,
@@ -55,6 +58,7 @@ PatchIAT(void)
     DWORD                           OldProtect;
     PIMAGE_THUNK_DATA               OriginalFirstThunk,
                                     FirstThunk;
+    DWORD                           FuncHash;
 
 
     ImageBase = GetModuleHandle(NULL);
@@ -77,83 +81,87 @@ PatchIAT(void)
             while (OriginalFirstThunk->u1.AddressOfData != 0)
             {
                 FunctionName = (PIMAGE_IMPORT_BY_NAME)((DWORD_PTR)ImageBase + OriginalFirstThunk->u1.AddressOfData);
+                FuncHash = Djb2(FunctionName->Name);
 
+                switch (FuncHash)
+                {
 #pragma warning(disable: 4127)
-                // winuser.h
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "AdjustWindowRect") == 0) PatchEntry(WtAdjustWindowRect);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "AdjustWindowRectEx") == 0) PatchEntry(WtAdjustWindowRectEx);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "BeginPaint") == 0) PatchEntry(WtBeginPaint);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ClientToScreen") == 0) PatchEntry(WtClientToScreen);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ClipCursor") == 0) PatchEntry(WtClipCursor);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CloseWindow") == 0) PatchEntry(WtCloseWindow);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateWindowA") == 0) PatchEntry(WtCreateWindowA);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateWindowW") == 0) PatchEntry(WtCreateWindowW);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateWindowExA") == 0) PatchEntry(WtCreateWindowExA);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateWindowExW") == 0) PatchEntry(WtCreateWindowExW);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "DefWindowProc") == 0) PatchEntry(WtDefWindowProc);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "DestroyWindow") == 0) PatchEntry(WtDestroyWindow);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "DispatchMessageA") == 0) PatchEntry(WtDispatchMessageA);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "DispatchMessageW") == 0) PatchEntry(WtDispatchMessageW);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "EndPaint") == 0) PatchEntry(WtEndPaint);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "FillRect") == 0) PatchEntry(WtFillRect);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetClientRect") == 0) PatchEntry(WtGetClientRect);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetCursorPos") == 0) PatchEntry(WtGetCursorPos);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetDC") == 0) PatchEntry(WtGetDC);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetMessage") == 0) PatchEntry(WtGetMessage);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetWindowRect") == 0) PatchEntry(WtGetWindowRect);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "MessageBoxA") == 0) PatchEntry(WtMessageBoxA);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "MessageBoxW") == 0) PatchEntry(WtMessageBoxW);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "MessageBoxExA") == 0) PatchEntry(WtMessageBoxExA);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "MessageBoxExW") == 0) PatchEntry(WtMessageBoxExW);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "PeekMessageA") == 0) PatchEntry(WtPeekMessageA);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "PeekMessageW") == 0) PatchEntry(WtPeekMessageW);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "PostMessageA") == 0) PatchEntry(WtPostMessageA);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "PostMessageW") == 0) PatchEntry(WtPostMessageW);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "PostQuitMessage") == 0) PatchEntry(WtPostQuitMessage);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "RegisterClassExA") == 0) PatchEntry(WtRegisterClassExA);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "RegisterClassExW") == 0) PatchEntry(WtRegisterClassExW);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ReleaseDC") == 0) PatchEntry(WtReleaseDC);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ScreenToClient") == 0) PatchEntry(WtScreenToClient);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ShowCursor") == 0) PatchEntry(WtShowCursor);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ShowWindow") == 0) PatchEntry(WtShowWindow);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "TranslateMessage") == 0) PatchEntry(WtTranslateMessage);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "UpdateWindow") == 0) PatchEntry(WtUpdateWindow);
+                    // winuser.h
+                    case FUNC_AdjustWindowRect:     { PatchEntry(WtAdjustWindowRect); } break;
+                    case FUNC_AdjustWindowRectEx:   { PatchEntry(WtAdjustWindowRectEx); } break;
+                    case FUNC_BeginPaint:           { PatchEntry(WtBeginPaint); } break;
+                    case FUNC_ClientToScreen:       { PatchEntry(WtClientToScreen); } break;
+                    case FUNC_ClipCursor:           { PatchEntry(WtClipCursor); } break;
+                    case FUNC_CloseWindow:          { PatchEntry(WtCloseWindow); } break;
+                    case FUNC_CreateWindowA:        { PatchEntry(WtCreateWindowA); } break;
+                    case FUNC_CreateWindowW:        { PatchEntry(WtCreateWindowW); } break;
+                    case FUNC_CreateWindowExA:      { PatchEntry(WtCreateWindowExA); } break;
+                    case FUNC_CreateWindowExW:      { PatchEntry(WtCreateWindowExW); } break;
+                    case FUNC_DefWindowProc:        { PatchEntry(WtDefWindowProc); } break;
+                    case FUNC_DestroyWindow:        { PatchEntry(WtDestroyWindow); } break;
+                    case FUNC_DispatchMessageA:     { PatchEntry(WtDispatchMessageA); } break;
+                    case FUNC_DispatchMessageW:     { PatchEntry(WtDispatchMessageW); } break;
+                    case FUNC_EndPaint:             { PatchEntry(WtEndPaint); } break;
+                    case FUNC_FillRect:             { PatchEntry(WtFillRect); } break;
+                    case FUNC_GetClientRect:        { PatchEntry(WtGetClientRect); } break;
+                    case FUNC_GetCursorPos:         { PatchEntry(WtGetCursorPos); } break;
+                    case FUNC_GetDC:                { PatchEntry(WtGetDC); } break;
+                    case FUNC_GetMessage:           { PatchEntry(WtGetMessage); } break;
+                    case FUNC_GetWindowRect:        { PatchEntry(WtGetWindowRect); } break;
+                    case FUNC_MessageBoxA:          { PatchEntry(WtMessageBoxA); } break;
+                    case FUNC_MessageBoxW:          { PatchEntry(WtMessageBoxW); } break;
+                    case FUNC_MessageBoxExA:        { PatchEntry(WtMessageBoxExA); } break;
+                    case FUNC_MessageBoxExW:        { PatchEntry(WtMessageBoxExW); } break;
+                    case FUNC_PeekMessageA:         { PatchEntry(WtPeekMessageA); } break;
+                    case FUNC_PeekMessageW:         { PatchEntry(WtPeekMessageW); } break;
+                    case FUNC_PostMessageA:         { PatchEntry(WtPostMessageA); } break;
+                    case FUNC_PostMessageW:         { PatchEntry(WtPostMessageW); } break;
+                    case FUNC_PostQuitMessage:      { PatchEntry(WtPostQuitMessage); } break;
+                    case FUNC_RegisterClassExA:     { PatchEntry(WtRegisterClassExA); } break;
+                    case FUNC_RegisterClassExW:     { PatchEntry(WtRegisterClassExW); } break;
+                    case FUNC_ReleaseDC:            { PatchEntry(WtReleaseDC); } break;
+                    case FUNC_ScreenToClient:       { PatchEntry(WtScreenToClient); } break;
+                    case FUNC_ShowCursor:           { PatchEntry(WtShowCursor); } break;
+                    case FUNC_ShowWindow:           { PatchEntry(WtShowWindow); } break;
+                    case FUNC_TranslateMessage:     { PatchEntry(WtTranslateMessage); } break;
+                    case FUNC_UpdateWindow:         { PatchEntry(WtUpdateWindow); } break;
 #ifdef _WIN64
-                // heapapi.h
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetProcessHeap") == 0)       PatchEntry(WtGetProcessHeap);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetProcessHeaps") == 0)      PatchEntry(WtGetProcessHeaps);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapAlloc") == 0)            PatchEntry(WtHeapAlloc);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapCompact") == 0)          PatchEntry(WtHeapCompact);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapCreate") == 0)           PatchEntry(WtHeapCreate);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapDestroy") == 0)          PatchEntry(WtHeapDestroy);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapFree") == 0)             PatchEntry(WtHeapFree);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapLock") == 0)             PatchEntry(WtHeapLock);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapQueryInformation") == 0) PatchEntry(WtHeapQueryInformation);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapReAlloc") == 0)          PatchEntry(WtHeapReAlloc);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapSetInformation") == 0)   PatchEntry(WtHeapSetInformation);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapSize") == 0)             PatchEntry(WtHeapSize);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapUnlock") == 0)           PatchEntry(WtHeapUnlock);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapValidate") == 0)         PatchEntry(WtHeapValidate);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapWalk") == 0)             PatchEntry(WtHeapWalk);
+                    // heapapi.h
+                    case FUNC_GetProcessHeap:       { PatchEntry(WtGetProcessHeap); } break;
+                    case FUNC_GetProcessHeaps:      { PatchEntry(WtGetProcessHeaps); } break;
+                    case FUNC_HeapAlloc:            { PatchEntry(WtHeapAlloc); } break;
+                    case FUNC_HeapCompact:          { PatchEntry(WtHeapCompact); } break;
+                    case FUNC_HeapCreate:           { PatchEntry(WtHeapCreate); } break;
+                    case FUNC_HeapDestroy:          { PatchEntry(WtHeapDestroy); } break;
+                    case FUNC_HeapFree:             { PatchEntry(WtHeapFree); } break;
+                    case FUNC_HeapLock:             { PatchEntry(WtHeapLock); } break;
+                    case FUNC_HeapQueryInformation: { PatchEntry(WtHeapQueryInformation); } break;
+                    case FUNC_HeapReAlloc:          { PatchEntry(WtHeapReAlloc); } break;
+                    case FUNC_HeapSetInformation:   { PatchEntry(WtHeapSetInformation); } break;
+                    case FUNC_HeapSize:             { PatchEntry(WtHeapSize); } break;
+                    case FUNC_HeapUnlock:           { PatchEntry(WtHeapUnlock); } break;
+                    case FUNC_HeapValidate:         { PatchEntry(WtHeapValidate); } break;
+                    case FUNC_HeapWalk:             { PatchEntry(WtHeapWalk); } break;
 #endif // _WIN64
-                // processthreadspi.h
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateProcessA") == 0)                   PatchEntry(WtCreateProcessA);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateProcessW") == 0)                   PatchEntry(WtCreateProcessW);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateProcessAsUserA") == 0)             PatchEntry(WtCreateProcessAsUserA);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateProcessAsUserW") == 0)             PatchEntry(WtCreateProcessAsUserW);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateRemoteThread") == 0)               PatchEntry(WtCreateRemoteThread);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateRemoteThreadEx") == 0)             PatchEntry(WtCreateRemoteThreadEx);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateThread") == 0)                     PatchEntry(WtCreateThread);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "DeleteProcThreadAttributeList") == 0)    PatchEntry(WtDeleteProcThreadAttributeList);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ExitProcess") == 0)                      PatchEntry(WtExitProcess);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ExitThread") == 0)                       PatchEntry(WtExitThread);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetCurrentProcess") == 0)                PatchEntry(WtGetCurrentProcess);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetCurrentProcessId") == 0)              PatchEntry(WtGetCurrentProcessId);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ResumeThread") == 0)                     PatchEntry(WtResumeThread);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "SuspendThread") == 0)                    PatchEntry(WtSuspendThread);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "TerminateProcess") == 0)                 PatchEntry(WtTerminateProcess);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "TerminateThread") == 0)                  PatchEntry(WtTerminateThread);
+                    // processthreadspi.h
+                    case FUNC_CreateProcessA:                   { PatchEntry(WtCreateProcessA); } break;
+                    case FUNC_CreateProcessW:                   { PatchEntry(WtCreateProcessW); } break;
+                    case FUNC_CreateProcessAsUserA:             { PatchEntry(WtCreateProcessAsUserA); } break;
+                    case FUNC_CreateProcessAsUserW:             { PatchEntry(WtCreateProcessAsUserW); } break;
+                    case FUNC_CreateRemoteThread:               { PatchEntry(WtCreateRemoteThread); } break;
+                    case FUNC_CreateRemoteThreadEx:             { PatchEntry(WtCreateRemoteThreadEx); } break;
+                    case FUNC_CreateThread:                     { PatchEntry(WtCreateThread); } break;
+                    case FUNC_DeleteProcThreadAttributeList:    { PatchEntry(WtDeleteProcThreadAttributeList); } break;
+                    case FUNC_ExitProcess:                      { PatchEntry(WtExitProcess); } break;
+                    case FUNC_ExitThread:                       { PatchEntry(WtExitThread); } break;
+                    case FUNC_GetCurrentProcess:                { PatchEntry(WtGetCurrentProcess); } break;
+                    case FUNC_GetCurrentProcessId:              { PatchEntry(WtGetCurrentProcessId); } break;
+                    case FUNC_ResumeThread:                     { PatchEntry(WtResumeThread); } break;
+                    case FUNC_SuspendThread:                    { PatchEntry(WtSuspendThread); } break;
+                    case FUNC_TerminateProcess:                 { PatchEntry(WtTerminateProcess); } break;
+                    case FUNC_TerminateThread:                  { PatchEntry(WtTerminateThread); } break;
 #pragma warning(default: 4127)
+                }
 
                 OriginalFirstThunk++;
                 FirstThunk++;
@@ -211,4 +219,17 @@ ReadIAT(void)
 
         ImportDesc++;
     }
+}
+
+DWORD
+Djb2(LPSTR String)
+{
+    DWORD       Hash = 5381;
+    INT         C;
+
+
+    while (C = *String++)
+        Hash = ((Hash << 5) + Hash) + C;
+
+    return Hash;
 }
