@@ -132,5 +132,8 @@ T_FuncRec g_FuncRecs[] =
 	{"fopen", 0, FALSE},
 	{"_wfopen", 0, FALSE},
 	{"fclose", 0, FALSE},
+	// stdlib.h
+	{"malloc", 0, FALSE},
+	{"free", 0, FALSE}
 };
 
