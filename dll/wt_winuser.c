@@ -14,9 +14,9 @@ WtAdjustWindowRect(
 
     if (BeginTrace(E_AdjustWindowRect))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %u, %d)", lpRect, dwStyle, bMenu);
+        WriteFuncBuffer("(0x%p, %u, %d)", lpRect, dwStyle, bMenu);
         Ret = AdjustWindowRect(lpRect, dwStyle, bMenu);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_AdjustWindowRect, Ret == FALSE);
     }
     else
@@ -38,9 +38,9 @@ WtAdjustWindowRectEx(
 
     if (BeginTrace(E_AdjustWindowRectEx))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %u, %d, %u)", lpRect, dwStyle, bMenu, dwExStyle);
+        WriteFuncBuffer("(0x%p, %u, %d, %u)", lpRect, dwStyle, bMenu, dwExStyle);
         Ret = AdjustWindowRectEx(lpRect, dwStyle, bMenu, dwExStyle);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_AdjustWindowRectEx, Ret == FALSE);
     }
     else
@@ -60,9 +60,9 @@ WtBeginPaint(
 
     if (BeginTrace(E_BeginPaint))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpPaint);
+        WriteFuncBuffer("(0x%p, 0x%p)", hWnd, lpPaint);
         Ret = BeginPaint(hWnd, lpPaint);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_BeginPaint, Ret == NULL);
     }
     else
@@ -82,9 +82,9 @@ WtClientToScreen(
 
     if (BeginTrace(E_ClientToScreen))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpPoint);
+        WriteFuncBuffer("(0x%p, 0x%p)", hWnd, lpPoint);
         Ret = ClientToScreen(hWnd, lpPoint);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_ClientToScreen, Ret == FALSE);
     }
     else
@@ -102,9 +102,9 @@ WtClipCursor( const RECT *lpRect
 
     if (BeginTrace(E_ClipCursor))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", lpRect);
+        WriteFuncBuffer("(0x%p)", lpRect);
         Ret = ClipCursor(lpRect);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_ClipCursor, Ret == FALSE);
     }
     else
@@ -123,9 +123,9 @@ WtCloseWindow(
 
     if (BeginTrace(E_CloseWindow))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", hWnd);
+        WriteFuncBuffer("(0x%p)", hWnd);
         Ret = CloseWindow(hWnd);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_CloseWindow, Ret == FALSE);
     }
     else
@@ -154,12 +154,12 @@ WtCreateWindowA(
 
     if (BeginTrace(E_CreateWindowA))
     {
-        fprintf(pOpts->OutputFile, "(\"%s\", \"%s\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p)",
+        WriteFuncBuffer("(\"%s\", \"%s\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p)",
                 lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent,
                 hMenu, hInstance, lpParam);
         Ret = CreateWindowA(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight,
                 hWndParent, hMenu, hInstance, lpParam);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_CreateWindowA, Ret == NULL);
     }
     else
@@ -191,12 +191,12 @@ WtCreateWindowW(
 
     if (BeginTrace(E_CreateWindowW))
     {
-        fprintf(pOpts->OutputFile, "(\"%ws\", \"%ws\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p)",
+        WriteFuncBuffer("(\"%ws\", \"%ws\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p)",
                 lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent,
                 hMenu, hInstance, lpParam);
         Ret = CreateWindowW(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight,
                 hWndParent, hMenu, hInstance, lpParam);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_CreateWindowW, Ret == NULL);
     }
     else
@@ -229,12 +229,12 @@ WtCreateWindowExA(
 
     if (BeginTrace(E_CreateWindowExA))
     {
-        fprintf(pOpts->OutputFile, "(%u, \"%s\", \"%s\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p)",
+        WriteFuncBuffer("(%u, \"%s\", \"%s\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p)",
                 dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent,
                 hMenu, hInstance, lpParam);
         Ret = CreateWindowA(lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight,
                 hWndParent, hMenu, hInstance, lpParam);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_CreateWindowExA, Ret == NULL);
     }
     else
@@ -267,12 +267,12 @@ WtCreateWindowExW(
 
     if (BeginTrace(E_CreateWindowExW))
     {
-        fprintf(pOpts->OutputFile, "(%u, \"%ws\", \"%ws\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p)",
+        WriteFuncBuffer("(%u, \"%ws\", \"%ws\", %u, %d, %d, %d, %d, 0x%p, 0x%p, 0x%p, 0x%p)",
                 dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent,
                 hMenu, hInstance, lpParam);
         Ret = CreateWindowW(lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight,
                 hWndParent, hMenu, hInstance, lpParam);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_CreateWindowExW, Ret == NULL);
     }
     else
@@ -297,9 +297,9 @@ WtDefWindowProc(
 
     if (BeginTrace(E_DefWindowProc))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
+        WriteFuncBuffer("(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
         Ret = DefWindowProc(hWnd, Msg, wParam, lParam);
-        fprintf(pOpts->OutputFile, " = %u", Ret);
+        WriteFuncBuffer(" = %u", Ret);
         EndTrace(E_DefWindowProc, FALSE);
     }
     else
@@ -318,9 +318,9 @@ WtDestroyWindow(
 
     if (BeginTrace(E_DestroyWindow))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", hWnd);
+        WriteFuncBuffer("(0x%p)", hWnd);
         Ret = DestroyWindow(hWnd);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_DestroyWindow, Ret == FALSE);
     }
     else
@@ -339,9 +339,9 @@ WtDispatchMessageA(
 
     if (BeginTrace(E_DispatchMessageA))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", lpMsg);
+        WriteFuncBuffer("(0x%p)", lpMsg);
         Ret = DispatchMessageA(lpMsg);
-        fprintf(pOpts->OutputFile, " = %u", Ret);
+        WriteFuncBuffer(" = %u", Ret);
         EndTrace(E_DispatchMessageA, FALSE);
     }
     else
@@ -360,9 +360,9 @@ WtDispatchMessageW(
 
     if (BeginTrace(E_DispatchMessageW))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", lpMsg);
+        WriteFuncBuffer("(0x%p)", lpMsg);
         Ret = DispatchMessageW(lpMsg);
-        fprintf(pOpts->OutputFile, " = %u", Ret);
+        WriteFuncBuffer(" = %u", Ret);
         EndTrace(E_DispatchMessageW, FALSE);
     }
     else
@@ -383,9 +383,9 @@ WtEndPaint(
 
     if (BeginTrace(E_EndPaint))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpPaint);
+        WriteFuncBuffer("(0x%p, 0x%p)", hWnd, lpPaint);
         Ret = EndPaint(hWnd, lpPaint);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_EndPaint, FALSE);
     }
     else
@@ -406,9 +406,9 @@ WtFillRect(
 
     if (BeginTrace(E_FillRect))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, 0x%p)", hDC, lprc, hbr);
+        WriteFuncBuffer("(0x%p, 0x%p, 0x%p)", hDC, lprc, hbr);
         Ret = FillRect(hDC, lprc, hbr);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_FillRect, Ret == 0);
     }
     else
@@ -428,9 +428,9 @@ WtGetClientRect(
 
     if (BeginTrace(E_GetClientRect))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpRect);
+        WriteFuncBuffer("(0x%p, 0x%p)", hWnd, lpRect);
         Ret = GetClientRect(hWnd, lpRect);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_GetClientRect, Ret == FALSE);
     }
     else
@@ -449,9 +449,9 @@ WtGetCursorPos(
 
     if (BeginTrace(E_GetCursorPos))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", lpPoint);
+        WriteFuncBuffer("(0x%p)", lpPoint);
         Ret = GetCursorPos(lpPoint);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_GetCursorPos, Ret == FALSE);
     }
     else
@@ -470,9 +470,9 @@ WtGetDC(
 
     if (BeginTrace(E_GetDC))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", hWnd);
+        WriteFuncBuffer("(0x%p)", hWnd);
         Ret = GetDC(hWnd);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_GetDC, Ret == NULL);
     }
     else
@@ -494,9 +494,9 @@ WtGetMessageA(
 
     if (BeginTrace(E_GetMessageA))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+        WriteFuncBuffer("(0x%p, 0x%p, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
         Ret = GetMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_GetMessageA, Ret == -1);
     }
     else
@@ -518,9 +518,9 @@ WtGetMessageW(
 
     if (BeginTrace(E_GetMessageW))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+        WriteFuncBuffer("(0x%p, 0x%p, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
         Ret = GetMessageW(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_GetMessageW, Ret == -1);
     }
     else
@@ -540,9 +540,9 @@ WtGetWindowRect(
 
     if (BeginTrace(E_GetWindowRect))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpRect);
+        WriteFuncBuffer("(0x%p, 0x%p)", hWnd, lpRect);
         Ret = GetWindowRect(hWnd, lpRect);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_GetWindowRect, Ret == FALSE);
     }
     else
@@ -563,9 +563,9 @@ WtMessageBoxA(
 
     if (BeginTrace(E_MessageBoxA))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, \"%s\", \"%s\", %u)", hWnd, lpText, lpCaption, uType);
+        WriteFuncBuffer("(0x%p, \"%s\", \"%s\", %u)", hWnd, lpText, lpCaption, uType);
         Ret = MessageBoxA(hWnd, lpText, lpCaption, uType);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_MessageBoxA, Ret == 0);
     }
     else
@@ -586,9 +586,9 @@ WtMessageBoxW(
 
     if (BeginTrace(E_MessageBoxW))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, \"%ws\", \"%ws\", %u)", hWnd, lpText, lpCaption, uType);
+        WriteFuncBuffer("(0x%p, \"%ws\", \"%ws\", %u)", hWnd, lpText, lpCaption, uType);
         Ret = MessageBoxW(hWnd, lpText, lpCaption, uType);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_MessageBoxW, Ret == 0);
     }
     else
@@ -611,9 +611,9 @@ WtMessageBoxExA(
 
     if (BeginTrace(E_MessageBoxExA))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, \"%s\", \"%s\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
+        WriteFuncBuffer("(0x%p, \"%s\", \"%s\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
         Ret = MessageBoxExA(hWnd, lpText, lpCaption, uType, wLanguageId);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_MessageBoxExA, Ret == 0);
     }
     else
@@ -636,9 +636,9 @@ WtMessageBoxExW(
 
     if (BeginTrace(E_MessageBoxExW))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, \"%ws\", \"%ws\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
+        WriteFuncBuffer("(0x%p, \"%ws\", \"%ws\", %u, %hu)", hWnd, lpText, lpCaption, uType, wLanguageId);
         Ret = MessageBoxExW(hWnd, lpText, lpCaption, uType, wLanguageId);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_MessageBoxExW, Ret == 0);
     }
     else
@@ -661,9 +661,9 @@ WtPeekMessageA(
 
     if (BeginTrace(E_PeekMessageA))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
+        WriteFuncBuffer("(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
         Ret = PeekMessageA(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_PeekMessageA, FALSE);
     }
     else
@@ -686,9 +686,9 @@ WtPeekMessageW(
 
     if (BeginTrace(E_PeekMessageW))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
+        WriteFuncBuffer("(0x%p, 0x%p, %u, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
         Ret = PeekMessageW(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_PeekMessageW, FALSE);
     }
     else
@@ -710,9 +710,9 @@ WtPostMessageA(
 
     if (BeginTrace(E_PostMessageA))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
+        WriteFuncBuffer("(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
         Ret = PostMessageA(hWnd, Msg, wParam, lParam);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_PostMessageA, Ret == FALSE);
     }
     else
@@ -734,9 +734,9 @@ WtPostMessageW(
 
     if (BeginTrace(E_PostMessageW))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
+        WriteFuncBuffer("(0x%p, %u, %u, %u)", hWnd, Msg, wParam, lParam);
         Ret = PostMessageW(hWnd, Msg, wParam, lParam);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_PostMessageW, Ret == FALSE);
     }
     else
@@ -752,7 +752,7 @@ WtPostQuitMessage(
 {
     if (BeginTrace(E_PostQuitMessage))
     {
-        fprintf(pOpts->OutputFile, "(%d) = VOID", nExitCode);
+        WriteFuncBuffer("(%d) = VOID", nExitCode);
         EndTrace(E_PostQuitMessage, FALSE);
     }
     PostQuitMessage(nExitCode);
@@ -768,9 +768,9 @@ WtRegisterClassExA(
 
     if (BeginTrace(E_RegisterClassExA))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", unnamedParam1);
+        WriteFuncBuffer("(0x%p)", unnamedParam1);
         Ret = RegisterClassExA(unnamedParam1);
-        fprintf(pOpts->OutputFile, " = %hu", Ret);
+        WriteFuncBuffer(" = %hu", Ret);
         EndTrace(E_RegisterClassExA, Ret == 0);
     }
     else
@@ -789,9 +789,9 @@ WtRegisterClassExW(
 
     if (BeginTrace(E_RegisterClassExW))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", unnamedParam1);
+        WriteFuncBuffer("(0x%p)", unnamedParam1);
         Ret = RegisterClassExW(unnamedParam1);
-        fprintf(pOpts->OutputFile, " = %hu", Ret);
+        WriteFuncBuffer(" = %hu", Ret);
         EndTrace(E_RegisterClassExW, Ret == 0);
     }
     else
@@ -811,9 +811,9 @@ WtReleaseDC(
 
     if (BeginTrace(E_ReleaseDC))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, hDC);
+        WriteFuncBuffer("(0x%p, 0x%p)", hWnd, hDC);
         Ret = ReleaseDC(hWnd, hDC);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_ReleaseDC, FALSE);
     }
     else
@@ -833,9 +833,9 @@ WtScreenToClient(
 
     if (BeginTrace(E_ScreenToClient))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hWnd, lpPoint);
+        WriteFuncBuffer("(0x%p, 0x%p)", hWnd, lpPoint);
         Ret = ScreenToClient(hWnd, lpPoint);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_ScreenToClient, Ret == FALSE);
     }
     else
@@ -854,9 +854,9 @@ WtShowCursor(
 
     if (BeginTrace(E_ShowCursor))
     {
-        fprintf(pOpts->OutputFile, "(%d)", bShow);
+        WriteFuncBuffer("(%d)", bShow);
         Ret = ShowCursor(bShow);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_ShowCursor, FALSE);
     }
     else
@@ -876,9 +876,9 @@ WtShowWindow(
 
     if (BeginTrace(E_ShowWindow))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %d)", hWnd, nCmdShow);
+        WriteFuncBuffer("(0x%p, %d)", hWnd, nCmdShow);
         Ret = ShowWindow(hWnd, nCmdShow);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_ShowWindow, FALSE);
     }
     else
@@ -897,9 +897,9 @@ WtTranslateMessage(
 
     if (BeginTrace(E_TranslateMessage))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", lpMsg);
+        WriteFuncBuffer("(0x%p)", lpMsg);
         Ret = TranslateMessage(lpMsg);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_TranslateMessage, FALSE);
     }
     else
@@ -918,9 +918,9 @@ WtUpdateWindow(
 
     if (BeginTrace(E_UpdateWindow))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", hWnd);
+        WriteFuncBuffer("(0x%p)", hWnd);
         Ret = UpdateWindow(hWnd);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_UpdateWindow, FALSE);
     }
     else

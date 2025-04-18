@@ -13,9 +13,9 @@ WtCreateDirectoryA(
 
     if (BeginTrace(E_CreateDirectoryA))
     {
-        fprintf(pOpts->OutputFile, "(\"%s\", 0x%p)", lpPathName, lpSecurityAttributes);
+        WriteFuncBuffer("(\"%s\", 0x%p)", lpPathName, lpSecurityAttributes);
         Ret = CreateDirectoryA(lpPathName, lpSecurityAttributes);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_CreateDirectoryA, Ret == FALSE);
     }
     else
@@ -35,9 +35,9 @@ WtCreateDirectoryW(
 
     if (BeginTrace(E_CreateDirectoryW))
     {
-        fprintf(pOpts->OutputFile, "(\"%ws\", 0x%p)", lpPathName, lpSecurityAttributes);
+        WriteFuncBuffer("(\"%ws\", 0x%p)", lpPathName, lpSecurityAttributes);
         Ret = CreateDirectoryW(lpPathName, lpSecurityAttributes);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_CreateDirectoryW, Ret == FALSE);
     }
     else
@@ -60,9 +60,9 @@ WtCreateFileA(LPCSTR lpFileName,
 
     if (BeginTrace(E_CreateFileA))
     {
-        fprintf(pOpts->OutputFile, "(\"%s\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+        WriteFuncBuffer("(\"%s\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
         Ret = CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_CreateFileA, Ret == INVALID_HANDLE_VALUE);
     }
     else
@@ -85,9 +85,9 @@ WtCreateFileW(LPCWSTR lpFileName,
 
     if (BeginTrace(E_CreateFileW))
     {
-        fprintf(pOpts->OutputFile, "(\"%ws\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+        WriteFuncBuffer("(\"%ws\", %u, %u, 0x%p, %u, %u, 0x%p)", lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
         Ret = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_CreateFileW, Ret == INVALID_HANDLE_VALUE);
     }
     else
@@ -106,9 +106,9 @@ WtDeleteFileA(
 
     if (BeginTrace(E_DeleteFileA))
     {
-        fprintf(pOpts->OutputFile, "(\"%s\")", lpFileName);
+        WriteFuncBuffer("(\"%s\")", lpFileName);
         Ret = DeleteFileA(lpFileName);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_DeleteFileA, Ret == FALSE);
     }
     else
@@ -127,9 +127,9 @@ WtDeleteFileW(
 
     if (BeginTrace(E_DeleteFileW))
     {
-        fprintf(pOpts->OutputFile, "(\"%ws\")", lpFileName);
+        WriteFuncBuffer("(\"%ws\")", lpFileName);
         Ret = DeleteFileW(lpFileName);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_DeleteFileW, Ret == FALSE);
     }
     else
@@ -149,9 +149,9 @@ WtGetFileSize(
 
     if (BeginTrace(E_GetFileSize))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hFile, lpFileSizeHigh);
+        WriteFuncBuffer("(0x%p, 0x%p)", hFile, lpFileSizeHigh);
         Ret = GetFileSize(hFile, lpFileSizeHigh);
-        fprintf(pOpts->OutputFile, " = %u", Ret);
+        WriteFuncBuffer(" = %u", Ret);
         EndTrace(E_GetFileSize, Ret == INVALID_FILE_SIZE);
     }
     else
@@ -171,9 +171,9 @@ WtGetFileSizeEx(
 
     if (BeginTrace(E_GetFileSizeEx))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p)", hFile, lpFileSize);
+        WriteFuncBuffer("(0x%p, 0x%p)", hFile, lpFileSize);
         Ret = GetFileSizeEx(hFile, lpFileSize);
-        fprintf(pOpts->OutputFile, " = %u", Ret);
+        WriteFuncBuffer(" = %u", Ret);
         EndTrace(E_GetFileSizeEx, Ret == INVALID_FILE_SIZE);
     }
     else
@@ -192,9 +192,9 @@ WtGetFileType(
 
     if (BeginTrace(E_GetFileType))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", hFile);
+        WriteFuncBuffer("(0x%p)", hFile);
         Ret = GetFileType(hFile);
-        fprintf(pOpts->OutputFile, " = %u", Ret);
+        WriteFuncBuffer(" = %u", Ret);
         EndTrace(E_GetFileType, FALSE); // check documentation
     }
     else
@@ -217,11 +217,11 @@ WtReadFile(
 
     if (BeginTrace(E_ReadFile))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
+        WriteFuncBuffer("(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
                 nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
         Ret = ReadFile(hFile, lpBuffer,
                 nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_ReadFile, Ret == FALSE);
     }
     else
@@ -244,11 +244,11 @@ WtReadFileEx(
 
     if (BeginTrace(E_ReadFileEx))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
+        WriteFuncBuffer("(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
                 nNumberOfBytesToRead, lpOverlapped, lpCompletionRoutine);
         Ret = ReadFileEx(hFile, lpBuffer,
                 nNumberOfBytesToRead, lpOverlapped, lpCompletionRoutine);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_ReadFileEx, Ret == FALSE);
     }
     else
@@ -267,10 +267,10 @@ WtRemoveDirectoryA(
 
     if (BeginTrace(E_RemoveDirectoryA))
     {
-        fprintf(pOpts->OutputFile, "(\"%s\")",
+        WriteFuncBuffer("(\"%s\")",
                 lpPathName);
         Ret = RemoveDirectoryA(lpPathName);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_RemoveDirectoryA, Ret == FALSE);
     }
     else
@@ -289,10 +289,10 @@ WtRemoveDirectoryW(
 
     if (BeginTrace(E_RemoveDirectoryW))
     {
-        fprintf(pOpts->OutputFile, "(\"%ws\")",
+        WriteFuncBuffer("(\"%ws\")",
                 lpPathName);
         Ret = RemoveDirectoryW(lpPathName);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_RemoveDirectoryW, Ret == FALSE);
     }
     else
@@ -311,9 +311,9 @@ WtSetEndOfFile(
 
     if (BeginTrace(E_SetEndOfFile))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", hFile);
+        WriteFuncBuffer("(0x%p)", hFile);
         Ret = SetEndOfFile(hFile);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_SetEndOfFile, Ret == FALSE);
     }
     else
@@ -335,11 +335,11 @@ WtSetFilePointer(
 
     if (BeginTrace(E_SetFilePointer))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %d, 0x%p, %u)", hFile, lDistanceToMove,
+        WriteFuncBuffer("(0x%p, %d, 0x%p, %u)", hFile, lDistanceToMove,
                 lpDistanceToMoveHigh, dwMoveMethod);
         Ret = SetFilePointer(hFile, lDistanceToMove,
                 lpDistanceToMoveHigh, dwMoveMethod);
-        fprintf(pOpts->OutputFile, " = %u", Ret);
+        WriteFuncBuffer(" = %u", Ret);
         EndTrace(E_SetFilePointer, Ret == INVALID_SET_FILE_POINTER);
     }
     else
@@ -361,11 +361,11 @@ WtSetFilePointerEx(
 
     if (BeginTrace(E_SetFilePointerEx))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %d, 0x%p, %u)", hFile, liDistanceToMove,
+        WriteFuncBuffer("(0x%p, %d, 0x%p, %u)", hFile, liDistanceToMove,
                 lpNewFilePointer, dwMoveMethod);
         Ret = SetFilePointerEx(hFile, liDistanceToMove,
                 lpNewFilePointer, dwMoveMethod);
-        fprintf(pOpts->OutputFile, " = %u", Ret);
+        WriteFuncBuffer(" = %u", Ret);
         EndTrace(E_SetFilePointerEx, Ret == FALSE);
     }
     else
@@ -388,11 +388,11 @@ WtWriteFile(
 
     if (BeginTrace(E_WriteFile))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
+        WriteFuncBuffer("(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
                 nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
         Ret = WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite,
                 lpNumberOfBytesWritten, lpOverlapped);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_WriteFile, Ret == FALSE);
     }
     else
@@ -415,11 +415,11 @@ WtWriteFileEx(
 
     if (BeginTrace(E_WriteFileEx))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
+        WriteFuncBuffer("(0x%p, 0x%p, %u, 0x%p, 0x%p)", hFile, lpBuffer,
                 nNumberOfBytesToWrite, lpOverlapped, lpCompletionRoutine);
         Ret = WriteFileEx(hFile, lpBuffer, nNumberOfBytesToWrite,
                 lpOverlapped, lpCompletionRoutine);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_WriteFileEx, Ret == FALSE);
     }
     else

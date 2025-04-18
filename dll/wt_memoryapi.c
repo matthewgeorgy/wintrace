@@ -18,10 +18,10 @@ WtCreateFileMappingA(
 
     if (BeginTrace(E_CreateFileMappingA))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u, %u, \"%s\")",
+        WriteFuncBuffer("(0x%p, 0x%p, %u, %u, %u, \"%s\")",
                 hFile, lpFileMappingAttributes, flProtect, dwMaximumSizeHigh, dwMaximumSizeLow, lpName);
         Ret = CreateFileMappingA(hFile, lpFileMappingAttributes, flProtect, dwMaximumSizeHigh, dwMaximumSizeLow, lpName);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_CreateFileMappingA, Ret == NULL);
     }
     else
@@ -45,10 +45,10 @@ WtCreateFileMappingW(
 
     if (BeginTrace(E_CreateFileMappingW))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %u, %u, %u, \"%ws\")",
+        WriteFuncBuffer("(0x%p, 0x%p, %u, %u, %u, \"%ws\")",
                 hFile, lpFileMappingAttributes, flProtect, dwMaximumSizeHigh, dwMaximumSizeLow, lpName);
         Ret = CreateFileMappingW(hFile, lpFileMappingAttributes, flProtect, dwMaximumSizeHigh, dwMaximumSizeLow, lpName);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_CreateFileMappingW, Ret == NULL);
     }
     else
@@ -68,10 +68,10 @@ WtFlushViewOfFile(
 
     if (BeginTrace(E_FlushViewOfFile))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %llu)",
+        WriteFuncBuffer("(0x%p, %llu)",
                 lpBaseAddress, dwNumberOfBytesToFlush);
         Ret = FlushViewOfFile(lpBaseAddress, dwNumberOfBytesToFlush);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_FlushViewOfFile, Ret == FALSE);
     }
     else
@@ -94,10 +94,10 @@ WtMapViewOfFile(
 
     if (BeginTrace(E_MapViewOfFile))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %u, %u, %u, %llu)",
+        WriteFuncBuffer("(0x%p, %u, %u, %u, %llu)",
                 hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh, dwFileOffsetLow, dwNumberOfBytesToMap);
         Ret = MapViewOfFile(hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh, dwFileOffsetLow, dwNumberOfBytesToMap);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_MapViewOfFile, Ret == NULL);
     }
     else
@@ -121,10 +121,10 @@ WtMapViewOfFileEx(
 
     if (BeginTrace(E_MapViewOfFileEx))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %u, %u, %u, %llu, 0x%p)",
+        WriteFuncBuffer("(0x%p, %u, %u, %u, %llu, 0x%p)",
                 hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh, dwFileOffsetLow, dwNumberOfBytesToMap, lpBaseAddress);
         Ret = MapViewOfFileEx(hFileMappingObject, dwDesiredAccess, dwFileOffsetHigh, dwFileOffsetLow, dwNumberOfBytesToMap, lpBaseAddress);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_MapViewOfFileEx, Ret == NULL);
     }
     else
@@ -146,10 +146,10 @@ WtOpenFileMappingA(
 
     if (BeginTrace(E_OpenFileMappingA))
     {
-        fprintf(pOpts->OutputFile, "(%u, %d, \"%s\")",
+        WriteFuncBuffer("(%u, %d, \"%s\")",
                 dwDesiredAccess, bInheritHandle, lpName);
         Ret = OpenFileMappingA(dwDesiredAccess, bInheritHandle, lpName);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_OpenFileMappingA, Ret == NULL);
     }
     else
@@ -170,10 +170,10 @@ WtOpenFileMappingW(
 
     if (BeginTrace(E_OpenFileMappingW))
     {
-        fprintf(pOpts->OutputFile, "(%u, %d, \"%ws\")",
+        WriteFuncBuffer("(%u, %d, \"%ws\")",
                 dwDesiredAccess, bInheritHandle, lpName);
         Ret = OpenFileMappingW(dwDesiredAccess, bInheritHandle, lpName);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_OpenFileMappingW, Ret == NULL);
     }
     else
@@ -192,10 +192,10 @@ WtUnmapViewOfFile(
 
     if (BeginTrace(E_UnmapViewOfFile))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)",
+        WriteFuncBuffer("(0x%p)",
             lpBaseAddress);
         Ret = UnmapViewOfFile(lpBaseAddress);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_UnmapViewOfFile, Ret == FALSE);
     }
     else
@@ -216,10 +216,10 @@ WtUnmapViewOfFile(
 
 
 /*     ShowDetails(pOpts, ++Cnt); */
-/*     fprintf(pOpts->OutputFile, "UnmapViewOfFileEx(0x%p, %u)", */
+/*     WriteFuncBuffer("UnmapViewOfFileEx(0x%p, %u)", */
 /*         BaseAddress, UnmapFlags); */
 /*     Ret = UnmapViewOfFileEx(BaseAddress, UnmapFlags); */
-/*     fprintf(pOpts->OutputFile, " = %d", Ret); */
+/*     WriteFuncBuffer(" = %d", Ret); */
 
 /*     return Ret; */
 /* } */
@@ -237,10 +237,10 @@ WtVirtualAlloc(
 
     if (BeginTrace(E_VirtualAlloc))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %llu, %u, %u)",
+        WriteFuncBuffer("(0x%p, %llu, %u, %u)",
                 lpAddress, dwSize, flAllocationType, flProtect);
         Ret = VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_VirtualAlloc, Ret == NULL);
     }
     else
@@ -263,10 +263,10 @@ WtVirtualAllocEx(
 
     if (BeginTrace(E_VirtualAllocEx))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %llu, %u, %u)",
+        WriteFuncBuffer("(0x%p, 0x%p, %llu, %u, %u)",
                 hProcess, lpAddress, dwSize, flAllocationType, flProtect);
         Ret = VirtualAllocEx(hProcess, lpAddress, dwSize, flAllocationType, flProtect);
-        fprintf(pOpts->OutputFile, " = 0x%p", Ret);
+        WriteFuncBuffer(" = 0x%p", Ret);
         EndTrace(E_VirtualAllocEx, Ret == NULL);
     }
     else
@@ -287,10 +287,10 @@ WtVirtualFree(
 
     if (BeginTrace(E_VirtualFree))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %llu, %u)",
+        WriteFuncBuffer("(0x%p, %llu, %u)",
                 lpAddress, dwSize, dwFreeType);
         Ret = VirtualFree(lpAddress, dwSize, dwFreeType);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_VirtualFree, Ret == FALSE);
     }
     else
@@ -312,10 +312,10 @@ WtVirtualFreeEx(
 
     if (BeginTrace(E_VirtualFreeEx))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %llu, %u)",
+        WriteFuncBuffer("(0x%p, 0x%p, %llu, %u)",
                 hProcess, lpAddress, dwSize, dwFreeType);
         Ret = VirtualFreeEx(hProcess, lpAddress, dwSize, dwFreeType);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_VirtualFreeEx, Ret == FALSE);
     }
     else
@@ -335,10 +335,10 @@ WtVirtualLock(
 
     if (BeginTrace(E_VirtualLock))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %llu)",
+        WriteFuncBuffer("(0x%p, %llu)",
                 lpAddress, dwSize);
         Ret = VirtualLock(lpAddress, dwSize);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_VirtualLock, Ret == FALSE);
     }
     else
@@ -360,10 +360,10 @@ WtVirtualProtect(
 
     if (BeginTrace(E_VirtualProtect))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %llu, %u, 0x%p)",
+        WriteFuncBuffer("(0x%p, %llu, %u, 0x%p)",
                 lpAddress, dwSize, flNewProtect, lpflOldProtect);
         Ret = VirtualProtect(lpAddress, dwSize, flNewProtect, lpflOldProtect);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_VirtualProtect, Ret == FALSE);
     }
     else
@@ -386,10 +386,10 @@ WtVirtualProtectEx(
 
     if (BeginTrace(E_VirtualProtectEx))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %llu, %u, 0x%p)",
+        WriteFuncBuffer("(0x%p, 0x%p, %llu, %u, 0x%p)",
                 hProcess, lpAddress, dwSize, flNewProtect, lpflOldProtect);
         Ret = VirtualProtectEx(hProcess, lpAddress, dwSize, flNewProtect, lpflOldProtect);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_VirtualProtectEx, Ret == FALSE);
     }
     else
@@ -410,10 +410,10 @@ WtVirtualQuery(
 
     if (BeginTrace(E_VirtualQuery))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, %llu)",
+        WriteFuncBuffer("(0x%p, 0x%p, %llu)",
                 lpAddress, lpBuffer, dwLength);
         Ret = VirtualQuery(lpAddress, lpBuffer, dwLength);
-        fprintf(pOpts->OutputFile, " = %llu", Ret);
+        WriteFuncBuffer(" = %llu", Ret);
         EndTrace(E_VirtualQuery, Ret == 0);
     }
     else
@@ -435,10 +435,10 @@ WtVirtualQueryEx(
 
     if (BeginTrace(E_VirtualQueryEx))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, 0x%p, 0x%p, %llu)",
+        WriteFuncBuffer("(0x%p, 0x%p, 0x%p, %llu)",
                 hProcess, lpAddress, lpBuffer, dwLength);
         Ret = VirtualQueryEx(hProcess, lpAddress, lpBuffer, dwLength);
-        fprintf(pOpts->OutputFile, " = %llu", Ret);
+        WriteFuncBuffer(" = %llu", Ret);
         EndTrace(E_VirtualQueryEx, Ret == 0);
     }
     else
@@ -458,10 +458,10 @@ WtVirtualUnlock(
 
     if (BeginTrace(E_VirtualUnlock))
     {
-        fprintf(pOpts->OutputFile, "(0x%p, %llu)",
+        WriteFuncBuffer("(0x%p, %llu)",
                 lpAddress, dwSize);
         Ret = VirtualUnlock(lpAddress, dwSize);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_VirtualUnlock, Ret == FALSE);
     }
     else

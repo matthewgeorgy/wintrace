@@ -1,6 +1,8 @@
 /*
     Version History
 
+        0.4.5   Added basic printing with Write/PrintFuncBuffer();
+                Need to test it with actual nested calls next
         0.4.4   Implemented EndTrace() in hooks; fixed misc bugs
         0.4.3   Added EndTrace(), g_CallLvl, WriteFuncBuffer(), PrintFuncBuffer()
                 Need to actually implement/integrate these into the hooks

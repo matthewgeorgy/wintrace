@@ -12,9 +12,9 @@ WtQueryPerformanceCounter(
 
     if (BeginTrace(E_QueryPerformanceCounter))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", lpPerformanceCount);
+        WriteFuncBuffer("(0x%p)", lpPerformanceCount);
         Ret = QueryPerformanceCounter(lpPerformanceCount);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_QueryPerformanceCounter, Ret == FALSE);
     }
     else
@@ -33,9 +33,9 @@ WtQueryPerformanceFrequency(
 
     if (BeginTrace(E_QueryPerformanceFrequency))
     {
-        fprintf(pOpts->OutputFile, "(0x%p)", lpFrequency);
+        WriteFuncBuffer("(0x%p)", lpFrequency);
         Ret = QueryPerformanceFrequency(lpFrequency);
-        fprintf(pOpts->OutputFile, " = %d", Ret);
+        WriteFuncBuffer(" = %d", Ret);
         EndTrace(E_QueryPerformanceFrequency, Ret == FALSE);
     }
     else

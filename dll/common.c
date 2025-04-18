@@ -14,11 +14,11 @@ ShowDetails(T_WintraceOpts *Opts,
             DWORD Cnt)
 {
     if (Opts->ShowProcessID)
-        fprintf(Opts->OutputFile, "[%u] ", GetCurrentProcessId());
+        WriteFuncBuffer("[%u] ", GetCurrentProcessId());
     if (Opts->ShowThreadID)
-        fprintf(Opts->OutputFile, "<%u> ", GetCurrentThreadId());
+        WriteFuncBuffer("<%u> ", GetCurrentThreadId());
     if (Opts->ShowFuncCount)
-        fprintf(Opts->OutputFile, "(%u) ", Cnt);
+        WriteFuncBuffer("(%u) ", Cnt);
 }
 
 DWORD
@@ -45,8 +45,9 @@ BeginTrace(E_FuncEnum FunctionName)
 
     if (Func->bTrace || g_TraceAll)
     {
+        g_CallLvl++;
         ShowDetails(pOpts, ++(Func->Cnt));
-        fprintf(pOpts->OutputFile, "%*s%s", g_CallLvl++, "", Func->Name);
+        WriteFuncBuffer("%*c%s", g_CallLvl, ' ', Func->Name);
         return TRUE;
     }
 
@@ -203,11 +204,10 @@ void
 EndTrace(E_FuncEnum FunctionName, // reserved for now*
          BOOL bError)
 {
-    g_CallLvl--;
-
     if (bError)
-        fprintf(pOpts->OutputFile, "(ERROR: %u) ", GetLastError());
-    fprintf(pOpts->OutputFile, "\r\n");
+        WriteFuncBuffer("(ERROR: %u) ", GetLastError());
+    WriteFuncBuffer("\r\n");
+    PrintFuncBuffer(&g_FuncList.Buffers[g_CallLvl--]);
 }
 
 void
