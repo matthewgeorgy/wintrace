@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.1.5   Cleaned up warnings
         0.1.4   Added custom output file parsing
         0.1.3   Tidied up option parsing and usage printing
         0.1.2   Added plumbing for option/switch parsing
@@ -8,6 +9,7 @@
         0.1.0   Initial creation
 */
 
+#define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 #include <stdio.h>
 #include <string.h>
@@ -138,7 +140,7 @@ T_WINTRACE_OPTS
 ParseOpts(int argc,
           char **argv)
 {
-    DWORD               OptInd;
+    INT                 OptInd;
     T_WINTRACE_OPTS     Opts = {0};
 
 

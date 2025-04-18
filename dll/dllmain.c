@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "inc/dllmain.h"
 #include "inc/hashes.h"
 
@@ -75,7 +76,7 @@ PatchIAT(void)
 
     while (ImportDesc->Name != 0)
     {
-        LibraryName = (LPCSTR)ImportDesc->Name + (DWORD_PTR)ImageBase;
+        LibraryName = (LPCSTR)((DWORD_PTR)ImportDesc->Name) + (DWORD_PTR)ImageBase;
         Library = LoadLibraryA(LibraryName);
 
         if (Library)
@@ -86,7 +87,7 @@ PatchIAT(void)
             while (OriginalFirstThunk->u1.AddressOfData != 0)
             {
                 FunctionName = (PIMAGE_IMPORT_BY_NAME)((DWORD_PTR)ImageBase + OriginalFirstThunk->u1.AddressOfData);
-                FuncHash = Djb2(FunctionName->Name);
+                FuncHash = Djb2((LPSTR)FunctionName->Name);
 
                 switch (FuncHash)
                 {
@@ -251,7 +252,7 @@ ReadIAT(void)
 
     while (ImportDesc->Name != 0)
     {
-        LibraryName = (LPCSTR)ImportDesc->Name + (DWORD_PTR)ImageBase;
+        LibraryName = (LPCSTR)((DWORD_PTR)ImportDesc->Name) + (DWORD_PTR)ImageBase;
         Library = LoadLibraryA(LibraryName);
         printf("\n%s\n", LibraryName);
 
@@ -279,11 +280,14 @@ DWORD
 Djb2(LPSTR String)
 {
     DWORD       Hash = 5381;
-    INT         C;
+    INT         C = *String++;
 
 
-    while (C = *String++)
+    while (C)
+	{
         Hash = ((Hash << 5) + Hash) + C;
+		C = *String++;
+	}
 
     return Hash;
 }

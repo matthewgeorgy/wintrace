@@ -1,7 +1,8 @@
 /*
     Version History
 
-		0.3.8	Added WtRemoveDirectoryA/W
+        0.3.9   Cleaned up warnings
+        0.3.8   Added WtRemoveDirectoryA/W
         0.3.7   Added wt_memoryapi.c/h
         0.3.6   Added wt_profileapi.c/h
         0.3.5   Added wt_debugapi.c/h + filled functions + updated hashes
