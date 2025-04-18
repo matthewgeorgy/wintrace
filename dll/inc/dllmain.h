@@ -1,6 +1,9 @@
 /*
     Version History
 
+        0.4.9   Added ~ specifier to the /T switch to specify functions that
+                are not to be traced
+                Needs a bit of bulletproofing
         0.4.8   Added wt_stdlib.h with a few function hooks
         0.4.7   Beginning to add CRT support; currently a few stdio.h functions
         0.4.6   Tested printing with new system; still needs a slight fix
