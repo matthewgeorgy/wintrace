@@ -73,13 +73,16 @@ WtHeapCreate(DWORD flOptions,
              SIZE_T dwMaximumSize)
 {
     HANDLE              Ret;
-    static DWORD        Cnt;
 
 
-    ShowDetails(pOpts, ++Cnt);
-    fprintf(pOpts->OutputFile, "HeapCreate(%u, %llu, %llu)", flOptions, dwInitialSize, dwMaximumSize);
-    Ret = HeapCreate(flOptions, dwInitialSize, dwMaximumSize);
-    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	if (BeginTrace(E_HeapCreate))
+	{
+		fprintf(pOpts->OutputFile, "(%u, %llu, %llu)", flOptions, dwInitialSize, dwMaximumSize);
+		Ret = HeapCreate(flOptions, dwInitialSize, dwMaximumSize);
+		fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
+	}
+	else
+		Ret = HeapCreate(flOptions, dwInitialSize, dwMaximumSize);
 
     return Ret;
 }

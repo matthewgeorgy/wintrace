@@ -11,7 +11,7 @@ main(void)
     INT         I;
 
 
-    printf("---------------------\n");
+    printf("\n|------------TEST: %s------------|\n", __FILE__);
     Heap = GetProcessHeap();
     Arr1 = (INT *)HeapAlloc(Heap, 0, 10 * sizeof(INT));
     for (I = 0; I < 10; I++)
@@ -29,7 +29,7 @@ main(void)
     HeapFree(GetProcessHeap(), 0, Arr1);
     HeapFree(Heap, 0, Arr2);
     HeapDestroy(Heap);
-    printf("---------------------\n");
+    printf("|-----------------------------|\n\n");
 
     return 0;
 }

@@ -4,6 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdio.h>
+#include "func_records.h"
 
 typedef struct _tag_WINTRACE_OPTS
 {
@@ -14,9 +15,9 @@ typedef struct _tag_WINTRACE_OPTS
     FILE        *OutputFile;
 } T_WINTRACE_OPTS;
 
-typedef HANDLE  T_HFILEMAP;
-
+DWORD Djb2(LPSTR String);
 void ShowDetails(T_WINTRACE_OPTS *pOpts, DWORD Cnt);
+BOOL BeginTrace(E_FuncEnum FunctionName);
 
 #endif // COMMON_H
 

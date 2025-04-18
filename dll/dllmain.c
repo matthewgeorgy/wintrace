@@ -4,27 +4,25 @@
 
 T_WINTRACE_OPTS     *pOpts;
 
-DWORD Djb2(LPSTR String);
-
+// Fix hook bugs (ie, GetMessage)
 BOOL APIENTRY
 DllMain(HMODULE hModule,
         DWORD fdwReason,
         LPVOID lpReserved)
 {
-    hModule; lpReserved; // to resolve warning
+    hModule; lpReserved; // to resolve unreferenced parameters warning
     switch (fdwReason)
     {
         case DLL_PROCESS_ATTACH:
         {
-            T_HFILEMAP      FileMap;
+            HANDLE		FileMap;
 
-            FileMap = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, "wintraceOpts");
+            FileMap = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, "WintraceOpts");
             if (FileMap)
             {
                 pOpts = (T_WINTRACE_OPTS *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WINTRACE_OPTS));
                 if (pOpts)
                 {
-                    printf("opts!:%d %d %d %s\n", pOpts->ShowThreadID, pOpts->ShowProcessID, pOpts->ShowFuncCount, pOpts->OutputFilename);
                     if (!pOpts->OutputFilename[0])
                         pOpts->OutputFile = stderr;
                     else
@@ -112,8 +110,8 @@ PatchIAT(void)
                     case FUNC_GetClientRect:                    { PatchEntry(WtGetClientRect); } break;
                     case FUNC_GetCursorPos:                     { PatchEntry(WtGetCursorPos); } break;
                     case FUNC_GetDC:                            { PatchEntry(WtGetDC); } break;
-                    case FUNC_GetMessageA:                      { PatchEntry(WtGetMessage); } break;
-                    case FUNC_GetMessageW:                      { PatchEntry(WtGetMessage); } break;
+                    case FUNC_GetMessageA:                      { PatchEntry(WtGetMessageA); } break;
+                    case FUNC_GetMessageW:                      { PatchEntry(WtGetMessageW); } break;
                     case FUNC_GetWindowRect:                    { PatchEntry(WtGetWindowRect); } break;
                     case FUNC_MessageBoxA:                      { PatchEntry(WtMessageBoxA); } break;
                     case FUNC_MessageBoxW:                      { PatchEntry(WtMessageBoxW); } break;
@@ -198,24 +196,24 @@ PatchIAT(void)
                     case FUNC_QueryPerformanceCounter:          { PatchEntry(WtQueryPerformanceCounter); } break;
                     case FUNC_QueryPerformanceFrequency:        { PatchEntry(WtQueryPerformanceFrequency); } break;
                     // memoryapi.h
-                    case FUNC_CreateFileMappingA:               { PatchEntry(CreateFileMappingA); } break;
-                    case FUNC_CreateFileMappingW:               { PatchEntry(CreateFileMappingW); } break;
-                    case FUNC_FlushViewOfFile:                  { PatchEntry(FlushViewOfFile); } break;
-                    case FUNC_MapViewOfFile:                    { PatchEntry(MapViewOfFile); } break;
-                    case FUNC_MapViewOfFileEx:                  { PatchEntry(MapViewOfFileEx); } break;
-                    case FUNC_OpenFileMappingA:                 { PatchEntry(OpenFileMappingA); } break;
-                    case FUNC_OpenFileMappingW:                 { PatchEntry(OpenFileMappingW); } break;
-                    case FUNC_UnmapViewOfFile:                  { PatchEntry(UnmapViewOfFile); } break;
-                    case FUNC_VirtualAlloc:                     { PatchEntry(VirtualAlloc); } break;
-                    case FUNC_VirtualAllocEx:                   { PatchEntry(VirtualAllocEx); } break;
-                    case FUNC_VirtualFree:                      { PatchEntry(VirtualFree); } break;
-                    case FUNC_VirtualFreeEx:                    { PatchEntry(VirtualFreeEx); } break;
-                    case FUNC_VirtualLock:                      { PatchEntry(VirtualLock); } break;
-                    case FUNC_VirtualProtect:                   { PatchEntry(VirtualProtect); } break;
-                    case FUNC_VirtualProtectEx:                 { PatchEntry(VirtualProtectEx); } break;
-                    case FUNC_VirtualQuery:                     { PatchEntry(VirtualQuery); } break;
-                    case FUNC_VirtualQueryEx:                   { PatchEntry(VirtualQueryEx); } break;
-                    case FUNC_VirtualUnlock:                    { PatchEntry(VirtualUnlock); } break;
+                    case FUNC_CreateFileMappingA:               { PatchEntry(WtCreateFileMappingA); } break;
+                    case FUNC_CreateFileMappingW:               { PatchEntry(WtCreateFileMappingW); } break;
+                    case FUNC_FlushViewOfFile:                  { PatchEntry(WtFlushViewOfFile); } break;
+                    case FUNC_MapViewOfFile:                    { PatchEntry(WtMapViewOfFile); } break;
+                    case FUNC_MapViewOfFileEx:                  { PatchEntry(WtMapViewOfFileEx); } break;
+                    case FUNC_OpenFileMappingA:                 { PatchEntry(WtOpenFileMappingA); } break;
+                    case FUNC_OpenFileMappingW:                 { PatchEntry(WtOpenFileMappingW); } break;
+                    case FUNC_UnmapViewOfFile:                  { PatchEntry(WtUnmapViewOfFile); } break;
+                    case FUNC_VirtualAlloc:                     { PatchEntry(WtVirtualAlloc); } break;
+                    case FUNC_VirtualAllocEx:                   { PatchEntry(WtVirtualAllocEx); } break;
+                    case FUNC_VirtualFree:                      { PatchEntry(WtVirtualFree); } break;
+                    case FUNC_VirtualFreeEx:                    { PatchEntry(WtVirtualFreeEx); } break;
+                    case FUNC_VirtualLock:                      { PatchEntry(WtVirtualLock); } break;
+                    case FUNC_VirtualProtect:                   { PatchEntry(WtVirtualProtect); } break;
+                    case FUNC_VirtualProtectEx:                 { PatchEntry(WtVirtualProtectEx); } break;
+                    case FUNC_VirtualQuery:                     { PatchEntry(WtVirtualQuery); } break;
+                    case FUNC_VirtualQueryEx:                   { PatchEntry(WtVirtualQueryEx); } break;
+                    case FUNC_VirtualUnlock:                    { PatchEntry(WtVirtualUnlock); } break;
 #pragma warning(default: 4127)
                 }
 
@@ -275,21 +273,5 @@ ReadIAT(void)
 
         ImportDesc++;
     }
-}
-
-DWORD
-Djb2(LPSTR String)
-{
-    DWORD       Hash = 5381;
-    INT         C = *String++;
-
-
-    while (C)
-    {
-        Hash = ((Hash << 5) + Hash) + C;
-        C = *String++;
-    }
-
-    return Hash;
 }
 

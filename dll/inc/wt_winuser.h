@@ -136,7 +136,14 @@ HDC WtGetDC(
   HWND hWnd
 );
 
-BOOL WtGetMessage(
+BOOL WtGetMessageA(
+  LPMSG lpMsg,
+  HWND  hWnd,
+  UINT  wMsgFilterMin,
+  UINT  wMsgFilterMax
+);
+
+BOOL WtGetMessageW(
   LPMSG lpMsg,
   HWND  hWnd,
   UINT  wMsgFilterMin,

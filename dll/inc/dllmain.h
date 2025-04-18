@@ -67,6 +67,7 @@
 #include "wt_fileapi.h"
 #include "wt_debugapi.h"
 #include "wt_profileapi.h"
+#include "wt_memoryapi.h"
 
 void PatchIAT(void);
 void ReadIAT(void);
