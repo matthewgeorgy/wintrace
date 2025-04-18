@@ -26,7 +26,7 @@ goto :EOF
 goto :EOF
 
 :test
-    pushd build
+    pushd build\tests
         cl /W4 /MD w:\wintrace\tests\test_heapapi.c
     popd
 goto :EOF

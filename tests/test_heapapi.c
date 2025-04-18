@@ -1,5 +1,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <stdio.h>
 
 int
 main(void)
@@ -10,6 +11,7 @@ main(void)
 	INT			I;
 
 
+	printf("---------------------\n");
 	Heap = GetProcessHeap();
 	Arr1 = (INT *)HeapAlloc(Heap, 0, 10 * sizeof(INT));
 	for (I = 0; I < 10; I++)
@@ -27,6 +29,7 @@ main(void)
 	HeapFree(GetProcessHeap(), 0, Arr1);
 	HeapFree(Heap, 0, Arr2);
 	HeapDestroy(Heap);
+	printf("---------------------\n");
 
 	return 0;
 }
