@@ -4,26 +4,26 @@
 HANDLE
 WtGetCurrentProcess(void)
 {
-	HANDLE 				Ret;
-	static DWORD		Cnt;
+    HANDLE              Ret;
+    static DWORD        Cnt;
 
-	
-	Ret = GetCurrentProcess();
-	printf("[%u] GetCurrentProcess() = 0x%p\n", Cnt++, Ret);
+    
+    Ret = GetCurrentProcess();
+    printf("[%u] GetCurrentProcess() = 0x%p\n", Cnt++, Ret);
 
-	return Ret;
+    return Ret;
 }
 
 DWORD
 WtGetCurrentProcessId(void)
 {
-	DWORD Ret;
-	static DWORD		Cnt;
+    DWORD Ret;
+    static DWORD        Cnt;
 
 
-	Ret = GetCurrentProcessId();
-	printf("[%u] GetCurrentProcessId() = %u\n", Cnt++, Ret);
+    Ret = GetCurrentProcessId();
+    printf("[%u] GetCurrentProcessId() = %u\n", Cnt++, Ret);
 
-	return Ret;
+    return Ret;
 }
-	
+    
