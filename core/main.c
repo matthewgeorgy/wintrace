@@ -1,6 +1,7 @@
 /*
 	Version History
 
+		0.1.1	Added VirtualFreeEx in the remote thread to free DllPath
 		0.1.0	Initial creation
 */
 
@@ -10,16 +11,16 @@
 int
 main(int argc, char **argv)
 {
-	LPCSTR					DllPath = "wintrace.dll";
-	LPCSTR					ProgramName = argv[1];
-	HANDLE					Process;
-	STARTUPINFO				si = {0};
-	PROCESS_INFORMATION		pi = {0};
-	LPVOID					pDllPath;
-	HANDLE					LoadThread;
-	SIZE_T					Len = strlen(DllPath) + 1;
-	BOOL					Status;
-	PTHREAD_START_ROUTINE	pfnThreadRtn;
+	LPCSTR						DllPath = "wintrace.dll";
+	LPCSTR						ProgramName = argv[1];
+	STARTUPINFO					si = {0};
+	PROCESS_INFORMATION			pi = {0};
+	LPVOID						pDllPath;
+	HANDLE						LoadThread;
+	SIZE_T						Len = strlen(DllPath) + 1;
+	BOOL						Status;
+	LPTHREAD_START_ROUTINE		lpfnLoadLibA;
+	LPTHREAD_START_ROUTINE		lpfnFreeLib;
 
 
 	si.cb = sizeof(STARTUPINFO);
@@ -30,30 +31,35 @@ main(int argc, char **argv)
 		return -1;
 	}
 
-	pfnThreadRtn = (PTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "LoadLibraryA");
-	if (!pfnThreadRtn)
+	lpfnLoadLibA = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "LoadLibraryA");
+	if (!lpfnLoadLibA)
 	{
 		printf("could no locate loadliba\n");
 		return -1;
 	}
 
-	Process = pi.hProcess;
+	lpfnFreeLib = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "FreeLibrary");
+	if (!lpfnFreeLib)
+	{
+		printf("could no locate freeliba\n");
+		return -1;
+	}
 
-	pDllPath = VirtualAllocEx(Process, 0, Len, MEM_COMMIT, PAGE_READWRITE);
+	pDllPath = VirtualAllocEx(pi.hProcess, 0, Len, MEM_COMMIT, PAGE_READWRITE);
 	if (!pDllPath)
 	{
 		printf("failed to allocate!\n");
 		return -1;
 	}
 
-	Status = WriteProcessMemory(Process, pDllPath, (LPVOID)DllPath, Len, 0);
+	Status = WriteProcessMemory(pi.hProcess, pDllPath, (LPVOID)DllPath, Len, 0);
 	if (!Status)
 	{
 		printf("failed to write memory!\n");
 		return -1;
 	}
 
-	LoadThread = CreateRemoteThread(Process, NULL, 0, pfnThreadRtn, pDllPath, 0, NULL);
+	LoadThread = CreateRemoteThread(pi.hProcess, NULL, 0, lpfnLoadLibA, pDllPath, 0, NULL);
 	if (!LoadThread)
 	{
 		printf("failed to load thread\n");
@@ -62,12 +68,15 @@ main(int argc, char **argv)
 
 	WaitForSingleObject(LoadThread, INFINITE);
 
-	if (ResumeThread(pi.hThread) == -1)
-	{
-		printf("resume thread failed\n");
-	}
+	ResumeThread(pi.hThread);
 
-	VirtualFreeEx(Process, pDllPath, Len, MEM_RELEASE);
+	WaitForSingleObject(pi.hThread, INFINITE);
+
+	LoadThread = CreateRemoteThread(pi.hProcess, NULL, 0, lpfnFreeLib, pDllPath, 0, NULL);
+
+	WaitForSingleObject(pi.hThread, INFINITE);
+
+	VirtualFreeEx(pi.hProcess, pDllPath, Len, MEM_RELEASE);
 
 	return 0;
 }
