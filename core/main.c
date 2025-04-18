@@ -44,8 +44,11 @@
 #include <windows.h>
 #include <stdio.h>
 #include <string.h>
+/* #define __cplusplus */
+/* #include <Logger.h> */
+/* #undef __cplusplus */
 
-typedef struct _tag_WINTRACE_OPTS
+typedef struct _tag_WintraceOpts
 {
     BOOL        ShowThreadID;
     BOOL        ShowProcessID;
@@ -53,10 +56,10 @@ typedef struct _tag_WINTRACE_OPTS
     CHAR        OutputFilename[64];
     FILE        *OutputFile;
 	CHAR		TraceList[32][32];
-} T_WINTRACE_OPTS;
+} T_WintraceOpts;
 
 void PrintUsage(void);
-T_WINTRACE_OPTS ParseOpts(int argc, char **argv);
+T_WintraceOpts ParseOpts(int argc, char **argv);
 
 int
 main(int argc,
@@ -72,7 +75,7 @@ main(int argc,
     BOOL                        Status;
     LPTHREAD_START_ROUTINE      lpfnLoadLibA;
     LPTHREAD_START_ROUTINE      lpfnFreeLib;
-    T_WINTRACE_OPTS             Opts;
+    T_WintraceOpts             Opts;
     LPVOID                      pOpts;
     HANDLE                      FileMap;
 
@@ -81,20 +84,20 @@ main(int argc,
     Opts = ParseOpts(argc, argv);
 
     // Map shared memory
-    FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WINTRACE_OPTS), "WintraceOpts");
+    FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WintraceOpts), "WintraceOpts");
     if (!FileMap)
     {
         printf("could not create file map (%d)\n", GetLastError());
         return -1;
     }
-    pOpts = (T_WINTRACE_OPTS *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WINTRACE_OPTS));
+    pOpts = (T_WintraceOpts *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WintraceOpts));
     if (!pOpts)
     {
         printf("could not create map view (%d)\n", GetLastError());
         CloseHandle(FileMap);
         return -1;
     }
-    CopyMemory((LPVOID)pOpts, &Opts, sizeof(T_WINTRACE_OPTS));
+    CopyMemory((LPVOID)pOpts, &Opts, sizeof(T_WintraceOpts));
 
     // Inject DLL
     si.cb = sizeof(STARTUPINFO);
@@ -157,23 +160,25 @@ main(int argc,
 
     return 0;
 }
-
+#define CRLF "\r\n"
 void
 PrintUsage(void)
 {
-    printf("\nOptions:\n");
-    printf("  /c            Show function call count\n");
-    printf("  /p            Show process ID\n");
-    printf("  /t            Show thread ID\n");
-    printf("  /o:[file]     Output to [file]\n");
+    printf(	CRLF
+			"Options:" CRLF
+    	 	"  /c            Show function call count" CRLF
+			"  /p            Show process ID" CRLF
+			"  /t            Show thread ID" CRLF
+			"  /T:fns        Trace only fns, a comma separated list of function names" CRLF
+			"  /o:file       Output to file" CRLF);
 }
 
-T_WINTRACE_OPTS
+T_WintraceOpts
 ParseOpts(int argc,
           char **argv)
 {
     INT                 OptInd;
-    T_WINTRACE_OPTS     Opts = {0};
+    T_WintraceOpts     Opts = {0};
 
 
 	ZeroMemory(&Opts, sizeof(Opts));

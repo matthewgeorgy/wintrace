@@ -1,6 +1,6 @@
 #include "inc/wt_memoryapi.h"
 
-extern T_WINTRACE_OPTS      *pOpts;
+extern T_WintraceOpts      *pOpts;
 
 // Actually belongs in winbase.h but this location is more appropriate
 HANDLE

@@ -1,7 +1,7 @@
 #include "inc/wt_processthreadsapi.h"
 #include <stdio.h>
 
-extern T_WINTRACE_OPTS      *pOpts;
+extern T_WintraceOpts      *pOpts;
 
 BOOL
 WtCreateProcessA(

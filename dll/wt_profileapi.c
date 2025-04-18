@@ -1,6 +1,6 @@
 #include "inc/wt_profileapi.h"
 
-extern T_WINTRACE_OPTS *pOpts;
+extern T_WintraceOpts *pOpts;
 
 BOOL
 WtQueryPerformanceCounter(
