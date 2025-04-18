@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.3.3   Added custom output file parsing
         0.3.2   Output now goes to stderr instead of stdout
         0.3.1   Small print fix in WtHeapCompact
         0.3.0   Added wt_fileapi.h/c + functions + added to patch list

@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.1.4   Added custom output file parsing
         0.1.3   Tidied up option parsing and usage printing
         0.1.2   Added plumbing for option/switch parsing
         0.1.1   Added VirtualFreeEx in the remote thread to free DllPath
@@ -9,16 +10,19 @@
 
 #include <windows.h>
 #include <stdio.h>
+#include <string.h>
 
-typedef struct _tag_WINTRACEOPTS
+typedef struct _tag_WINTRACE_OPTS
 {
     BOOL        ShowThreadID;
     BOOL        ShowProcessID;
     BOOL        ShowFuncCount;
-} T_WINTRACEOPTS;
+    CHAR        OutputFilename[64];
+    FILE        *OutputFile;
+} T_WINTRACE_OPTS;
 
 void PrintUsage(void);
-T_WINTRACEOPTS ParseOpts(int argc, char **argv);
+T_WINTRACE_OPTS ParseOpts(int argc, char **argv);
 
 int
 main(int argc,
@@ -34,7 +38,7 @@ main(int argc,
     BOOL                        Status;
     LPTHREAD_START_ROUTINE      lpfnLoadLibA;
     LPTHREAD_START_ROUTINE      lpfnFreeLib;
-    T_WINTRACEOPTS              Opts;
+    T_WINTRACE_OPTS             Opts;
     LPVOID                      pOpts;
     HANDLE                      FileMap;
 
@@ -43,20 +47,20 @@ main(int argc,
     Opts = ParseOpts(argc, argv);
 
     // Map shared memory
-    FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WINTRACEOPTS), "wintraceOpts");
+    FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WINTRACE_OPTS), "wintraceOpts");
     if (!FileMap)
     {
         printf("could not create file map (%d)\n", GetLastError());
         return -1;
     }
-    pOpts = (T_WINTRACEOPTS *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WINTRACEOPTS));
+    pOpts = (T_WINTRACE_OPTS *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WINTRACE_OPTS));
     if (!pOpts)
     {
         printf("could not create map view (%d)\n", GetLastError());
         CloseHandle(FileMap);
         return -1;
     }
-    CopyMemory((LPVOID)pOpts, &Opts, sizeof(T_WINTRACEOPTS));
+    CopyMemory((LPVOID)pOpts, &Opts, sizeof(T_WINTRACE_OPTS));
 
     // Inject DLL
     si.cb = sizeof(STARTUPINFO);
@@ -124,17 +128,18 @@ void
 PrintUsage(void)
 {
     printf("\nOptions:\n");
-    printf("  /c    Show function call count\n");
-    printf("  /p    Show process ID\n");
-    printf("  /t    Show thread ID\n");
+    printf("  /c            Show function call count\n");
+    printf("  /p            Show process ID\n");
+    printf("  /t            Show thread ID\n");
+    printf("  /o:[file]     Output to [file]\n");
 }
 
-T_WINTRACEOPTS
+T_WINTRACE_OPTS
 ParseOpts(int argc,
           char **argv)
 {
     DWORD               OptInd;
-    T_WINTRACEOPTS      Opts = {0};
+    T_WINTRACE_OPTS     Opts = {0};
 
 
     if (argc < 2)
@@ -159,6 +164,10 @@ ParseOpts(int argc,
             case 'p':
             {
                 Opts.ShowProcessID = TRUE;
+            } break;
+            case 'o':
+            {
+                strcpy(Opts.OutputFilename, argv[OptInd] + 3);
             } break;
             case '?':
             {
