@@ -37,6 +37,7 @@ DllMain(HMODULE hModule,
             {
                 printf("could not open file map!(%d)\n", GetLastError());
             }
+			InitFuncRecs();
             PatchIAT();
         } break;
         case DLL_PROCESS_DETACH:

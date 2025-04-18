@@ -58,6 +58,7 @@ typedef struct _tag_WINTRACE_OPTS
     BOOL        ShowFuncCount;
     CHAR        OutputFilename[64];
     FILE        *OutputFile;
+	CHAR		TraceList[32][32];
 } T_WINTRACE_OPTS;
 
 void PrintUsage(void);
@@ -181,6 +182,7 @@ ParseOpts(int argc,
     T_WINTRACE_OPTS     Opts = {0};
 
 
+	ZeroMemory(&Opts, sizeof(Opts));
     if (argc < 2)
     {
         printf("\nUsage: wintrace [options] <exe>\n");
@@ -208,6 +210,19 @@ ParseOpts(int argc,
             {
                 strcpy(Opts.OutputFilename, argv[OptInd] + 3);
             } break;
+			case 'T':
+			{
+				CHAR *Token;
+				INT I = 0;
+
+				Token = strtok(argv[OptInd] + 3, ",");
+				while (Token != NULL && I < 32)
+				{
+					strcpy(Opts.TraceList[I], Token);
+					Token = strtok(NULL, ",");
+					I++;
+				}
+			} break;
             case '?':
             {
                 PrintUsage();

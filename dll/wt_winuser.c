@@ -399,7 +399,27 @@ WtGetDC(
 }
 
 BOOL
-WtGetMessage(
+WtGetMessageA(
+  LPMSG lpMsg,
+  HWND  hWnd,
+  UINT  wMsgFilterMin,
+  UINT  wMsgFilterMax
+)
+{
+    BOOL                Ret;
+    static DWORD        Cnt;
+
+
+    ShowDetails(pOpts, ++Cnt);
+    fprintf(pOpts->OutputFile, "GetMessage(0x%p, 0x%p, %u, %u)", lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+    Ret = GetMessage(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+
+    return Ret;
+}
+
+BOOL
+WtGetMessageW(
   LPMSG lpMsg,
   HWND  hWnd,
   UINT  wMsgFilterMin,
