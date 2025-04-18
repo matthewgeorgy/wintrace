@@ -67,6 +67,13 @@ check either your Visual Studio Documentation, or the Microsoft Docs, to see how
 this lib in your project's property pages (I won't detail it here since it changes between version releases \
 of Visual Studio).
 
+`wintrace` must also be built for the correct target platform of the program you wish to test. That is \
+to say, if you must build `wintrace` for x64 if you want to test an x64 executable (same story for x86).
+
+In addition, `wintrace`'s numerical output (like the numbers found in function parameters is only \
+formatted correctly for x64. You can still build and run `wintrace` for x86, but note that some of the \
+numerical values will be incorrect. This will be addressed soon.
+
 ## How does it work?
 
 To understand how `wintrace` works internally, you must first understand (at a basic level) how DLL's \
