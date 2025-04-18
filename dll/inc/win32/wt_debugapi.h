@@ -3,7 +3,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include "common.h"
+#include <common.h>
 
 BOOL WtCheckRemoteDebuggerPresent(
   HANDLE hProcess,

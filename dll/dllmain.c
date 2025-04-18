@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "inc/dllmain.h"
-#include "inc/hashes.h"
+#include <dllmain.h>
+#include <hashes.h>
 
 T_WintraceOpts      *pOpts;
 

@@ -70,7 +70,7 @@
 #include <Dbghelp.h>
 #include <stdio.h>
 
-#include "common.h"
+#include <common.h>
 #include <win32/wt_winuser.h>
 #include <win32/wt_heapapi.h>
 #include <win32/wt_processthreadsapi.h>
