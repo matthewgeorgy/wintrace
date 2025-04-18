@@ -112,7 +112,8 @@ PatchIAT(void)
                     case FUNC_GetClientRect:                    { PatchEntry(WtGetClientRect); } break;
                     case FUNC_GetCursorPos:                     { PatchEntry(WtGetCursorPos); } break;
                     case FUNC_GetDC:                            { PatchEntry(WtGetDC); } break;
-                    case FUNC_GetMessage:                       { PatchEntry(WtGetMessage); } break;
+                    case FUNC_GetMessageA:                      { PatchEntry(WtGetMessage); } break;
+                    case FUNC_GetMessageW:                      { PatchEntry(WtGetMessage); } break;
                     case FUNC_GetWindowRect:                    { PatchEntry(WtGetWindowRect); } break;
                     case FUNC_MessageBoxA:                      { PatchEntry(WtMessageBoxA); } break;
                     case FUNC_MessageBoxW:                      { PatchEntry(WtMessageBoxW); } break;
@@ -197,24 +198,24 @@ PatchIAT(void)
                     case FUNC_QueryPerformanceCounter:          { PatchEntry(WtQueryPerformanceCounter); } break;
                     case FUNC_QueryPerformanceFrequency:        { PatchEntry(WtQueryPerformanceFrequency); } break;
                     // memoryapi.h
-                    case FUNC_CreateFileMappingA:				{ PatchEntry(CreateFileMappingA); } break;
-                    case FUNC_CreateFileMappingW:				{ PatchEntry(CreateFileMappingW); } break;
-                    case FUNC_FlushViewOfFile:					{ PatchEntry(FlushViewOfFile); } break;
-                    case FUNC_MapViewOfFile:					{ PatchEntry(MapViewOfFile); } break;
-                    case FUNC_MapViewOfFileEx:					{ PatchEntry(MapViewOfFileEx); } break;
-                    case FUNC_OpenFileMappingA:					{ PatchEntry(OpenFileMappingA); } break;
-                    case FUNC_OpenFileMappingW:					{ PatchEntry(OpenFileMappingW); } break;
-                    case FUNC_UnmapViewOfFile:					{ PatchEntry(UnmapViewOfFile); } break;
-                    case FUNC_VirtualAlloc:						{ PatchEntry(VirtualAlloc); } break;
-                    case FUNC_VirtualAllocEx:					{ PatchEntry(VirtualAllocEx); } break;
-                    case FUNC_VirtualFree:						{ PatchEntry(VirtualFree); } break;
-                    case FUNC_VirtualFreeEx:					{ PatchEntry(VirtualFreeEx); } break;
-                    case FUNC_VirtualLock:						{ PatchEntry(VirtualLock); } break;
-                    case FUNC_VirtualProtect:					{ PatchEntry(VirtualProtect); } break;
-                    case FUNC_VirtualProtectEx:					{ PatchEntry(VirtualProtectEx); } break;
-                    case FUNC_VirtualQuery:						{ PatchEntry(VirtualQuery); } break;
-                    case FUNC_VirtualQueryEx:					{ PatchEntry(VirtualQueryEx); } break;
-                    case FUNC_VirtualUnlock:					{ PatchEntry(VirtualUnlock); } break;
+                    case FUNC_CreateFileMappingA:               { PatchEntry(CreateFileMappingA); } break;
+                    case FUNC_CreateFileMappingW:               { PatchEntry(CreateFileMappingW); } break;
+                    case FUNC_FlushViewOfFile:                  { PatchEntry(FlushViewOfFile); } break;
+                    case FUNC_MapViewOfFile:                    { PatchEntry(MapViewOfFile); } break;
+                    case FUNC_MapViewOfFileEx:                  { PatchEntry(MapViewOfFileEx); } break;
+                    case FUNC_OpenFileMappingA:                 { PatchEntry(OpenFileMappingA); } break;
+                    case FUNC_OpenFileMappingW:                 { PatchEntry(OpenFileMappingW); } break;
+                    case FUNC_UnmapViewOfFile:                  { PatchEntry(UnmapViewOfFile); } break;
+                    case FUNC_VirtualAlloc:                     { PatchEntry(VirtualAlloc); } break;
+                    case FUNC_VirtualAllocEx:                   { PatchEntry(VirtualAllocEx); } break;
+                    case FUNC_VirtualFree:                      { PatchEntry(VirtualFree); } break;
+                    case FUNC_VirtualFreeEx:                    { PatchEntry(VirtualFreeEx); } break;
+                    case FUNC_VirtualLock:                      { PatchEntry(VirtualLock); } break;
+                    case FUNC_VirtualProtect:                   { PatchEntry(VirtualProtect); } break;
+                    case FUNC_VirtualProtectEx:                 { PatchEntry(VirtualProtectEx); } break;
+                    case FUNC_VirtualQuery:                     { PatchEntry(VirtualQuery); } break;
+                    case FUNC_VirtualQueryEx:                   { PatchEntry(VirtualQueryEx); } break;
+                    case FUNC_VirtualUnlock:                    { PatchEntry(VirtualUnlock); } break;
 #pragma warning(default: 4127)
                 }
 
@@ -284,10 +285,10 @@ Djb2(LPSTR String)
 
 
     while (C)
-	{
+    {
         Hash = ((Hash << 5) + Hash) + C;
-		C = *String++;
-	}
+        C = *String++;
+    }
 
     return Hash;
 }
