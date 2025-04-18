@@ -80,10 +80,8 @@ PatchIAT(void)
 
 #pragma warning(disable: 4127)
                 if (lstrcmpiA((LPCSTR)FunctionName->Name, "MessageBoxA") == 0) PatchEntry(WtMessageBoxA);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetCurrentProcess") == 0) PatchEntry(WtGetCurrentProcess);
-                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetCurrentProcessId") == 0) PatchEntry(WtGetCurrentProcessId);
-                // heapapi.h
 #ifdef _WIN64
+                // heapapi.h
                 if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetProcessHeap") == 0)       PatchEntry(WtGetProcessHeap);
                 if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetProcessHeaps") == 0)      PatchEntry(WtGetProcessHeaps);
                 if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapAlloc") == 0)            PatchEntry(WtHeapAlloc);
@@ -100,6 +98,23 @@ PatchIAT(void)
                 if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapValidate") == 0)         PatchEntry(WtHeapValidate);
                 if (lstrcmpiA((LPCSTR)FunctionName->Name, "HeapWalk") == 0)             PatchEntry(WtHeapWalk);
 #endif // _WIN64
+                // processthreadspi.h
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateProcessA") == 0)                   PatchEntry(WtCreateProcessA);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateProcessW") == 0)                   PatchEntry(WtCreateProcessW);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateProcessAsUserA") == 0)             PatchEntry(WtCreateProcessAsUserA);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateProcessAsUserW") == 0)             PatchEntry(WtCreateProcessAsUserW);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateRemoteThread") == 0)               PatchEntry(WtCreateRemoteThread);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateRemoteThreadEx") == 0)             PatchEntry(WtCreateRemoteThreadEx);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "CreateThread") == 0)                     PatchEntry(WtCreateThread);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "DeleteProcThreadAttributeList") == 0)    PatchEntry(WtDeleteProcThreadAttributeList);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ExitProcess") == 0)                      PatchEntry(WtExitProcess);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ExitThread") == 0)                       PatchEntry(WtExitThread);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetCurrentProcess") == 0)                PatchEntry(WtGetCurrentProcess);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "GetCurrentProcessId") == 0)              PatchEntry(WtGetCurrentProcessId);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "ResumeThread") == 0)                     PatchEntry(WtResumeThread);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "SuspendThread") == 0)                    PatchEntry(WtSuspendThread);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "TerminateProcess") == 0)                 PatchEntry(WtTerminateProcess);
+                if (lstrcmpiA((LPCSTR)FunctionName->Name, "TerminateThread") == 0)                  PatchEntry(WtTerminateThread);
 #pragma warning(default: 4127)
 
                 OriginalFirstThunk++;
