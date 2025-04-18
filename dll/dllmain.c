@@ -1,6 +1,7 @@
 /*
 	Version History
 
+		0.1.1	Added wt_winuser.h/c and wt_processthreadsapi.c/h
 		0.1.0	Initial creation
 */
 
@@ -8,40 +9,9 @@
 #include <Dbghelp.h>
 #include <stdio.h>
 
-int WINAPI
-WtMessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)
-{
-	int			Ret;
-	FARPROC		_MessageBoxA;
+#include "wt_winuser.h"
+#include "wt_processthreadsapi.h"
 
-	_MessageBoxA = GetProcAddress(GetModuleHandle("User32.dll"), "MessageBoxA");
-	Ret = MessageBoxA(hWnd, lpText, lpCaption, uType);
-	printf("MessageBoxA(0x%p, \"%s\", \"%s\", %u) = %d\n", hWnd, lpText, lpCaption, uType, Ret);
-	return Ret;
-}
-
-HANDLE
-WtGetCurrentProcess(void)
-{
-	HANDLE 		Ret;
-	
-	Ret = GetCurrentProcess();
-	printf("GetCurrentProcess() = 0x%p\n", Ret);
-
-	return Ret;
-}
-
-DWORD
-WtGetCurrentProcessId(void)
-{
-	DWORD Ret;
-
-	Ret = GetCurrentProcessId();
-	printf("GetCurrentProcessId() = %u\n", Ret);
-
-	return Ret;
-}
-	
 BOOL APIENTRY
 DllMain(HMODULE hModule,
 		DWORD fdwReason,
