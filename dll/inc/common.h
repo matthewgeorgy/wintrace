@@ -5,7 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdio.h>
-#include "func_records.h"
+#include <func_records.h>
 
 // Options structure that mirrors the core executable's
 typedef struct _tag_WintraceOpts
