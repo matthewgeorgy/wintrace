@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.2.0   Function call counts print conditionally according to options
         0.1.9   Added common.h to contain common defs we'll need across files
         0.1.8   Added basic file mapping to retrieve options from core process
         0.1.7   Cleanup + retab; forcing x64 DLLCRT

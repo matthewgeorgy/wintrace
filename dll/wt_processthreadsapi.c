@@ -1,16 +1,22 @@
 #include "inc/wt_processthreadsapi.h"
 #include <stdio.h>
 
+extern T_WINTRACEOPTS      *pOpts;
+
 HANDLE
 WtGetCurrentProcess(void)
 {
     HANDLE              Ret;
     static DWORD        Cnt;
 
-    
-    Ret = GetCurrentProcess();
-    printf("[%u] GetCurrentProcess() = 0x%p\n", Cnt++, Ret);
 
+    if (pOpts->ShowFuncCount)
+        printf("[%u] ", Cnt);
+    printf("GetCurrentProcess()");
+    Ret = GetCurrentProcess();
+    printf(" = 0x%p\n", Ret);
+
+    Cnt++;
     return Ret;
 }
 
@@ -21,9 +27,13 @@ WtGetCurrentProcessId(void)
     static DWORD        Cnt;
 
 
+    if (pOpts->ShowFuncCount)
+        printf("[%u] ", Cnt);
+    printf("GetCurrentProcessId()");
     Ret = GetCurrentProcessId();
-    printf("[%u] GetCurrentProcessId() = %u\n", Cnt++, Ret);
+    printf(" = %u\n", Ret);
 
+    Cnt++;
     return Ret;
 }
-    
+

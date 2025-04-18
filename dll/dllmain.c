@@ -11,7 +11,7 @@ DllMain(HMODULE hModule,
     {
         case DLL_PROCESS_ATTACH:
         {
-            T_HFILEMAP		FileMap;
+            T_HFILEMAP      FileMap;
 
             FileMap = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, "wintraceOpts");
             if (FileMap)
