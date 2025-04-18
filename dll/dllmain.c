@@ -212,6 +212,10 @@ PatchIAT(void)
                     case FUNC_VirtualQuery:                     { PatchEntry(WtVirtualQuery); } break;
                     case FUNC_VirtualQueryEx:                   { PatchEntry(WtVirtualQueryEx); } break;
                     case FUNC_VirtualUnlock:                    { PatchEntry(WtVirtualUnlock); } break;
+					// stdio.h
+					case FUNC_fopen:							{ PatchEntry(wt_fopen); } break;
+					case FUNC__wfopen:							{ PatchEntry(wt__wfopen); } break;
+					case FUNC_fclose:							{ PatchEntry(wt_fclose); } break;
 #pragma warning(default: 4127)
                 }
 

@@ -132,6 +132,10 @@ LPSTR Funcs[] =
     "VirtualQuery",
     "VirtualQueryEx",
     "VirtualUnlock",
+	// stdio.h
+	"fopen",
+	"_wfopen",
+	"fclose"
 };
 
 
