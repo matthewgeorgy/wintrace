@@ -175,6 +175,8 @@ PatchIAT(void)
                     case FUNC_GetFileType:                      { PatchEntry(WtGetFileType); } break;
                     case FUNC_ReadFile:                         { PatchEntry(WtReadFile); } break;
                     case FUNC_ReadFileEx:                       { PatchEntry(WtReadFileEx); } break;
+                    case FUNC_RemoveDirectoryA:                 { PatchEntry(WtRemoveDirectoryA); } break;
+                    case FUNC_RemoveDirectoryW:                 { PatchEntry(WtRemoveDirectoryW); } break;
                     case FUNC_SetEndOfFile:                     { PatchEntry(WtSetEndOfFile); } break;
                     case FUNC_SetFilePointer:                   { PatchEntry(WtSetFilePointer); } break;
                     case FUNC_SetFilePointerEx:                 { PatchEntry(WtSetFilePointerEx); } break;

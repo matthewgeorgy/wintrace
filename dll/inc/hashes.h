@@ -78,6 +78,8 @@
 #define FUNC_GetFileType 2022872135
 #define FUNC_ReadFile 1895930145
 #define FUNC_ReadFileEx 3083628222
+#define FUNC_RemoveDirectoryA 1100116521
+#define FUNC_RemoveDirectoryW 1100116543
 #define FUNC_SetEndOfFile 1696626301
 #define FUNC_SetFilePointer 1408199666
 #define FUNC_SetFilePointerEx 226113999

@@ -73,6 +73,14 @@ BOOL WtReadFileEx(
   LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
 );
 
+BOOL WtRemoveDirectoryA(
+  LPCSTR lpPathName
+);
+
+BOOL WtRemoveDirectoryW(
+  LPCWSTR lpPathName
+);
+
 BOOL WtSetEndOfFile(
   HANDLE hFile
 );
