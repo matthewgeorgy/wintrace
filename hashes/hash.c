@@ -77,6 +77,23 @@ LPSTR Funcs[] =
 	"SuspendThread",
 	"TerminateProcess",
 	"TerminateThread",
+	// fileapi.h
+	"CreateDirectoryA",
+	"CreateDirectoryW",
+	"CreateFileA",
+	"CreateFileW",
+	"DeleteFileA",
+	"DeleteFileW",
+	"GetFileSize",
+	"GetFileSizeEx",
+	"GetFileType",
+	"ReadFile",
+	"ReadFileEx",
+	"SetEndOfFile",
+	"SetFilePointer",
+	"SetFilePointerEx",
+	"WriteFile",
+	"WriteFileEx",
 };
 
 
