@@ -29,14 +29,11 @@ DllMain(HMODULE hModule,
                         pOpts->OutputFile = fopen(pOpts->OutputFilename, "w+");
                 }
                 else
-                {
                     printf("failed to map file view!(%d)\n", GetLastError());
-                }
             }
             else
-            {
                 printf("could not open file map!(%d)\n", GetLastError());
-            }
+
 			InitFuncRecs();
             PatchIAT();
         } break;

@@ -1,6 +1,7 @@
 /*
     Version History
 
+		0.1.6	Added specific tracing
         0.1.5   Cleaned up warnings
         0.1.4   Added custom output file parsing
         0.1.3   Tidied up option parsing and usage printing
@@ -19,13 +20,6 @@
 	wintrace /i:GetFileSize:25:3 ...	GetFileSize call #3 returns 25
 
 	wintrace {/i|/e}:HeapAlloc,HeapFree ...	Chain multiple funcs??
-*/
-
-/*
-	Trace synopsis:
-
-	wintrace /T:HeapAlloc,HeapCreate ...	Only trace HeapAlloc + HeapCreate
-	Functions are arranged in a comma-seperated list
 */
 
 /*

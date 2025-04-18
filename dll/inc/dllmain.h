@@ -1,6 +1,7 @@
 /*
     Version History
 
+		0.4.1	Added specific tracing
         0.4.0   Fixed GetMessage
         0.3.9   Cleaned up warnings
         0.3.8   Added WtRemoveDirectoryA/W
