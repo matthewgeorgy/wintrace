@@ -55,7 +55,7 @@ WtBeginPaint(
     ShowDetails(pOpts, ++Cnt);
     fprintf(pOpts->OutputFile, "BeginPaint(0x%p, 0x%p)", hWnd, lpPaint);
     Ret = BeginPaint(hWnd, lpPaint);
-    fprintf(pOpts->OutputFile, " = %d\n", Ret);
+    fprintf(pOpts->OutputFile, " = 0x%p\n", Ret);
 
     return Ret;
 }
@@ -616,7 +616,7 @@ WtRegisterClassExA(
     ShowDetails(pOpts, ++Cnt);
     fprintf(pOpts->OutputFile, "RegisterClassExA(0x%p)", unnamedParam1);
     Ret = RegisterClassExA(unnamedParam1);
-    fprintf(pOpts->OutputFile, " = %hu", Ret);
+    fprintf(pOpts->OutputFile, " = %hu\n", Ret);
 
     return Ret;
 }
@@ -633,7 +633,7 @@ WtRegisterClassExW(
     ShowDetails(pOpts, ++Cnt);
     fprintf(pOpts->OutputFile, "RegisterClassExW(0x%p)", unnamedParam1);
     Ret = RegisterClassExW(unnamedParam1);
-    fprintf(pOpts->OutputFile, " = %hu", Ret);
+    fprintf(pOpts->OutputFile, " = %hu\n", Ret);
 
     return Ret;
 }
