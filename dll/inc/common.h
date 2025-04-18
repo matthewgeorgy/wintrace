@@ -32,5 +32,8 @@ BOOL BeginTrace(E_FuncEnum FunctionName);
 // tracing flag (will add more later)
 void InitFuncRecs();
 
+// End the trace for a function
+void EndTrace(E_FuncEnum FunctionName, BOOL bError);
+
 #endif // COMMON_H
 

@@ -3,9 +3,10 @@
 #include <stdio.h>
 
 // Globals
-extern		T_FuncRec g_FuncRecs[];
-extern		T_WintraceOpts *pOpts;
-BOOL 		g_TraceAll = TRUE;
+extern      T_FuncRec g_FuncRecs[];
+extern      T_WintraceOpts *pOpts;
+BOOL        g_TraceAll = TRUE;
+INT         g_CallLvl = 0;
 
 void
 ShowDetails(T_WintraceOpts *Opts,
@@ -44,7 +45,7 @@ BeginTrace(E_FuncEnum FunctionName)
     if (Func->bTrace || g_TraceAll)
     {
         ShowDetails(pOpts, ++(Func->Cnt));
-        fprintf(pOpts->OutputFile, "%s", Func->Name);
+        fprintf(pOpts->OutputFile, "%*s%s", g_CallLvl++, "", Func->Name);
         return TRUE;
     }
 
@@ -194,5 +195,16 @@ InitFuncRecs()
             }
         }
     }
+}
+
+void
+EndTrace(E_FuncEnum FunctionName,
+         BOOL bError)
+{
+    g_CallLvl--;
+
+    if (bError)
+        fprintf(pOpts->OutputFile, "(ERROR: %u)", GetLastError());
+    fprintf(pOpts->OutputFile, "\n", GetLastError());
 }
 
