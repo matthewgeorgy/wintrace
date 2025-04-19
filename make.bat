@@ -6,6 +6,7 @@ if "%1"=="test"     goto :test
 
 :install
 	pushd hookgen
+		call make.bat
 		call compile.bat
 	popd
     pushd build
