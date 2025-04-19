@@ -189,7 +189,7 @@ main(int argc,
 		}
 		else
 		{
-			WriteBuffer(&SourceBuffer, "VOID");
+			WriteBuffer(&SourceBuffer, "VOID\"");
 		}
 		WriteBuffer(&SourceBuffer, ");\n");
 
