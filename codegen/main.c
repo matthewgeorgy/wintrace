@@ -62,6 +62,9 @@ main(int argc,
 	Buffer.Buff = (CHAR *)malloc(BUFF_SIZE);
 	Buffer.Pos = 0;
 
+	WriteBuffer(&Buffer, "#include <win32/%s>\n\n", InputFilename);
+	WriteBuffer(&Buffer, "extern T_WintraceOpts\t\t*pOpts;\n\n");
+
 	for (INT J = 0; J < Count; J++)
 	{
 		T_Function Func = Functions[J];
