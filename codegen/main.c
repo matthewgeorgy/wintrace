@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include "hashes.h"
 
 #define BUFF_SIZE		1024 * 1024
 
@@ -25,6 +26,8 @@ typedef struct _tag_Buffer
 CHAR			**StringFile(char *filename, int *plen);
 T_Function		*ParseFunctions(CHAR *Filename, INT *Count);
 void			WriteBuffer(T_Buffer *Buffer, char *Format, ...);
+void			GetFormat(CHAR *Format, CHAR *Type);
+DWORD			Djb2(LPSTR String);
 
 int
 main(void)
@@ -39,6 +42,9 @@ main(void)
 	Functions = ParseFunctions("in.txt", &Count);
 	Buffer.Buff = (CHAR *)malloc(BUFF_SIZE);
 	Buffer.Pos = 0;
+
+	/* for (INT J = 0; J < Count; J++) */
+	/* { */
 	Func = Functions[0];
 
 	WriteBuffer(&Buffer, "%s\nWt%s", Func.ReturnType, Func.Name);
@@ -46,7 +52,7 @@ main(void)
 
 	if (Func.ArgCount == 0)
 	{
-		WriteBuffer(&Buffer, ")\n");
+		WriteBuffer(&Buffer, ")");
 	}
 	else
 	{
@@ -70,8 +76,76 @@ main(void)
 		WriteBuffer(&Buffer, ")");
 	}
 
+	WriteBuffer(&Buffer, "\n{\n");
+
+	// Return variable stack
+	if (strcmp(Func.ReturnType, "void"))
+	{
+		WriteBuffer(&Buffer,
+			"\t%s Ret;\n\n",
+			Func.ReturnType
+		);
+	}
+
+	WriteBuffer(&Buffer,
+		"\tif (BeginTrace(E_%s))\n"
+		"\t{\n",
+		Func.Name);
+
+	WriteBuffer(&Buffer,
+		"\t\tWriteFuncBuffer(\"(");
+
+	// Arguments in WriteFuncBuffer string
+	INT Commas = Func.ArgCount - 1;
+	for (INT K = 0; K < Func.ArgCount; K++)
+	{
+		CHAR Format[8];
+		GetFormat(Format, Func.ArgTypes[K]);
+		WriteBuffer(&Buffer, "%s", Format);
+		if (Commas)
+		{
+			WriteBuffer(&Buffer, ", ");
+			Commas--;
+		}
+	}
+	WriteBuffer(&Buffer, ")\"");
+
+	// Arguments in WriteFuncBuffer varargs
+	Commas = Func.ArgCount - 1;
+	if (Commas > 0)
+	{
+		WriteBuffer(&Buffer, ",");
+	}
+	for (INT K = 0; K < Func.ArgCount; K++)
+	{
+		WriteBuffer(&Buffer, " %s", Func.ArgNames[K]);
+		if (Commas)
+		{
+			WriteBuffer(&Buffer, ",");
+			Commas--;
+		}
+	}
+	WriteBuffer(&Buffer, ");\n");
+
+	WriteBuffer(&Buffer, "\t}");
+
+	// Return variable return
+	if (strcmp(Func.ReturnType, "void"))
+	{
+		WriteBuffer(&Buffer,
+			"\n\n\treturn (Ret);"
+		);
+	}
+
+	WriteBuffer(&Buffer, "\n}\n\n");
+	/* } */
 
 	printf("%s\n", Buffer.Buff);
+
+	HANDLE OutputFile;
+
+	OutputFile = CreateFile("foo.txt", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	WriteFile(OutputFile, Buffer.Buff, Buffer.Pos, 0, 0);
 
 	return (0);
 }
@@ -121,14 +195,14 @@ ParseFunctions(CHAR *Filename,
 		}
 		Functions[J].ArgCount = Arg;
 
-		printf("\tType: %s\n", Functions[J].ReturnType);
-		printf("\tName: %s\n", Functions[J].Name);
-		printf("\tCount: %d\n", Functions[J].ArgCount);
-		for (INT I = 0; I < Functions[J].ArgCount; I++)
-		{
-			printf("\t\tType %d: %s\n", I, Functions[J].ArgTypes[I]);
-			printf("\t\tName %d: %s\n", I, Functions[J].ArgNames[I]);
-		}
+		/* printf("\tType: %s\n", Functions[J].ReturnType); */
+		/* printf("\tName: %s\n", Functions[J].Name); */
+		/* printf("\tCount: %d\n", Functions[J].ArgCount); */
+		/* for (INT I = 0; I < Functions[J].ArgCount; I++) */
+		/* { */
+		/* 	printf("\t\tType %d: %s\n", I, Functions[J].ArgTypes[I]); */
+		/* 	printf("\t\tName %d: %s\n", I, Functions[J].ArgNames[I]); */
+		/* } */
 	}
 
 	return (Functions);
@@ -184,8 +258,8 @@ StringFile(char *filename, int *plen)
    return list;
 }
 
-void			
-WriteBuffer(T_Buffer *Buffer, 
+void
+WriteBuffer(T_Buffer *Buffer,
 			char *Format,
 			...)
 {
@@ -199,5 +273,62 @@ WriteBuffer(T_Buffer *Buffer,
 	Buffer->Pos += Bytes;
 
 	va_end(VarArgs);
+}
+
+void
+GetFormat(CHAR *Format,
+		  CHAR *Type)
+{
+	DWORD		Hash;
+
+
+	Hash = Djb2(Type);
+	switch (Hash)
+	{
+		case TYPE_LPVOID:
+		case TYPE_HANDLE:
+		case TYPE_LPSECURITY_ATTRIBUTES:
+		{
+			strcpy(Format, "0x%p");
+		} break;
+
+		case TYPE_LPSTR:
+		case TYPE_LPCSTR:
+		{
+			strcpy(Format, "0x%s");
+		} break;
+
+		case TYPE_DWORD:
+		{
+			strcpy(Format, "%u");
+		} break;
+
+		case TYPE_SIZE_T:
+		{
+			strcpy(Format, "%llu");
+		} break;
+
+		default:
+		{
+			printf("CODEGEN ERR: NO FORMAT FOUND FOR %s\n", Type);
+			exit(-1);
+		} break;
+	}
+}
+
+DWORD
+Djb2(LPSTR String)
+{
+    DWORD       Hash = 5381;
+    INT         C = *String++;
+
+
+    while (C)
+    {
+        Hash = ((Hash << 5) + Hash) + C;
+        C = *String++;
+    }
+
+    return Hash;
 }
 
