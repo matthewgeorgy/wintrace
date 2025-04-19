@@ -89,7 +89,7 @@
 #include <crt/wt_stdio.h>
 #include <crt/wt_stdlib.h>
 
-#define WINTRACE_DLL_VERSION "0.4.10"
+#define WINTRACE_DLL_VERSION "0.5.0"
 
 // Goes through the IAT and patches the function addresses
 void PatchIAT(void);
