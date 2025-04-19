@@ -363,6 +363,12 @@ GetFormat(CHAR *Format,
 		case TYPE_LPVOID:
 		case TYPE_HANDLE:
 		case TYPE_LPSECURITY_ATTRIBUTES:
+		case TYPE_LPDWORD:
+		case TYPE_PLARGE_INTEGER:
+		case TYPE_LPOVERLAPPED:
+		case TYPE_LPOVERLAPPED_COMPLETION_ROUTINE:
+		case TYPE_PLONG:
+		case TYPE_LPCVOID:
 		{
 			strcpy(Format, "0x%p");
 		} break;
@@ -385,6 +391,8 @@ GetFormat(CHAR *Format,
 
 		case TYPE_INT:
 		case TYPE_BOOL:
+		case TYPE_LONG:
+		case TYPE_LARGE_INTEGER:
 		{
 			strcpy(Format, "%d");
 		} break;
@@ -392,6 +400,12 @@ GetFormat(CHAR *Format,
 		case TYPE_CHAR:
 		{
 			strcpy(Format, "%c");
+		} break;
+
+		case TYPE_LPWSTR:
+		case TYPE_LPCWSTR:
+		{
+			strcpy(Format, "%ws");
 		} break;
 
 		default:
