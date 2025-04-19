@@ -5,7 +5,7 @@ if "%1"=="clean"    goto :clean
 if "%1"=="test"     goto :test
 
 :install
-	pushd codegen
+	pushd hookgen
 		call compile.bat
 	popd
     pushd build
