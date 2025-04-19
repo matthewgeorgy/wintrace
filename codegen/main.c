@@ -30,205 +30,219 @@ void			GetFormat(CHAR *Format, CHAR *Type);
 DWORD			Djb2(LPSTR String);
 
 int
-main(void)
+main(int argc,
+	 char **argv)
 {
 	T_Function		*Functions;
 	INT				Count;
-	T_Function		Func;
 	T_Buffer		Buffer;
-	INT				Ptr;
+	HANDLE 			OutputFile;
+	CHAR			*InputFilename,
+					*OutputFilename;
 
 
-	Functions = ParseFunctions("in.txt", &Count);
+	if (argc < 2)
+	{
+		printf("No input file provided...!\r\n");
+		printf("Usage: hookgen <file>\r\n");
+		return (-1);
+	}
+
+	InputFilename = argv[1];
+	INT Len = (INT)strlen(InputFilename);
+	OutputFilename = (LPSTR)malloc(Len + 1);
+	memcpy(OutputFilename, InputFilename, Len);
+	OutputFilename[Len - 1] = 'c';
+
+	Functions = ParseFunctions(InputFilename, &Count);
 	Buffer.Buff = (CHAR *)malloc(BUFF_SIZE);
 	Buffer.Pos = 0;
 
 	for (INT J = 0; J < Count; J++)
 	{
-	Func = Functions[J];
+		T_Function Func = Functions[J];
 
-	WriteBuffer(&Buffer, "%s\nWt%s", Func.ReturnType, Func.Name);
-	WriteBuffer(&Buffer, "(");
+		WriteBuffer(&Buffer, "%s\nWt%s", Func.ReturnType, Func.Name);
+		WriteBuffer(&Buffer, "(");
 
-	if (Func.ArgCount == 0)
-	{
-		WriteBuffer(&Buffer, ")");
-	}
-	else
-	{
-		INT Commas = Func.ArgCount - 1;
-
-		WriteBuffer(&Buffer, "\n");
-
-		for (INT I = 0; I < Func.ArgCount; I++)
+		if (Func.ArgCount == 0)
 		{
-			WriteBuffer(&Buffer, "\t %s %s", Func.ArgTypes[I], Func.ArgNames[I]);
+			WriteBuffer(&Buffer, ")");
+		}
+		else
+		{
+			INT Commas = Func.ArgCount - 1;
 
-			if (Commas > 0)
+			WriteBuffer(&Buffer, "\n");
+
+			for (INT I = 0; I < Func.ArgCount; I++)
+			{
+				WriteBuffer(&Buffer, "\t %s %s", Func.ArgTypes[I], Func.ArgNames[I]);
+
+				if (Commas > 0)
+				{
+					WriteBuffer(&Buffer, ",");
+					Commas--;
+				}
+
+				WriteBuffer(&Buffer, "\n");
+			}
+
+			WriteBuffer(&Buffer, ")");
+		}
+
+		WriteBuffer(&Buffer, "\n{\n");
+
+		// Create stack
+		if (strcmp(Func.ReturnType, "void"))
+		{
+			WriteBuffer(&Buffer,
+				"\t%s Ret;\n\n",
+				Func.ReturnType
+			);
+		}
+
+		// BeginTrace
+		WriteBuffer(&Buffer,
+			"\tif (BeginTrace(E_%s))\n"
+			"\t{\n",
+			Func.Name);
+		WriteBuffer(&Buffer,
+			"\t\tWriteFuncBuffer(\"(");
+
+		// Arguments in WriteFuncBuffer string
+		INT Commas = Func.ArgCount - 1;
+		for (INT K = 0; K < Func.ArgCount; K++)
+		{
+			CHAR Format[8];
+			GetFormat(Format, Func.ArgTypes[K]);
+			WriteBuffer(&Buffer, "%s", Format);
+			if (Commas)
+			{
+				WriteBuffer(&Buffer, ", ");
+				Commas--;
+			}
+		}
+		WriteBuffer(&Buffer, ")\"");
+
+		// Arguments in WriteFuncBuffer varargs
+		Commas = Func.ArgCount - 1;
+		if (Func.ArgCount > 0)
+		{
+			WriteBuffer(&Buffer, ",");
+		}
+		for (INT K = 0; K < Func.ArgCount; K++)
+		{
+			WriteBuffer(&Buffer, " %s", Func.ArgNames[K]);
+			if (Commas)
 			{
 				WriteBuffer(&Buffer, ",");
 				Commas--;
 			}
-
-			WriteBuffer(&Buffer, "\n");
-		}
-
-		WriteBuffer(&Buffer, ")");
-	}
-
-	WriteBuffer(&Buffer, "\n{\n");
-
-	// Create stack
-	if (strcmp(Func.ReturnType, "void"))
-	{
-		WriteBuffer(&Buffer,
-			"\t%s Ret;\n\n",
-			Func.ReturnType
-		);
-	}
-
-	// BeginTrace
-	WriteBuffer(&Buffer,
-		"\tif (BeginTrace(E_%s))\n"
-		"\t{\n",
-		Func.Name);
-	WriteBuffer(&Buffer,
-		"\t\tWriteFuncBuffer(\"(");
-
-	// Arguments in WriteFuncBuffer string
-	INT Commas = Func.ArgCount - 1;
-	for (INT K = 0; K < Func.ArgCount; K++)
-	{
-		CHAR Format[8];
-		GetFormat(Format, Func.ArgTypes[K]);
-		WriteBuffer(&Buffer, "%s", Format);
-		if (Commas)
-		{
-			WriteBuffer(&Buffer, ", ");
-			Commas--;
-		}
-	}
-	WriteBuffer(&Buffer, ")\"");
-
-	// Arguments in WriteFuncBuffer varargs
-	Commas = Func.ArgCount - 1;
-	if (Commas > 0)
-	{
-		WriteBuffer(&Buffer, ",");
-	}
-	for (INT K = 0; K < Func.ArgCount; K++)
-	{
-		WriteBuffer(&Buffer, " %s", Func.ArgNames[K]);
-		if (Commas)
-		{
-			WriteBuffer(&Buffer, ",");
-			Commas--;
-		}
-	}
-	WriteBuffer(&Buffer, ");\n");
-
-	// Call the real function
-	// We call it inside the BeginTrace block if it's a non-void function.
-	// Otherwise, it gets called outside the block
-	if (strcmp(Func.ReturnType, "void"))
-	{
-		WriteBuffer(&Buffer,
-			"\t\tRet = %s(",
-			Func.Name);
-		Commas = Func.ArgCount - 1;
-		for (INT K = 0; K < Func.ArgCount; K++)
-		{
-			WriteBuffer(&Buffer, "%s", Func.ArgNames[K]);
-			if (Commas)
-			{
-				WriteBuffer(&Buffer, ", ");
-				Commas--;
-			}
 		}
 		WriteBuffer(&Buffer, ");\n");
-	}
 
-	// WriteFuncBuffer hook function return value
-	WriteBuffer(&Buffer, "\t\tWriteFuncBuffer(\" = ");
-	if (strcmp(Func.ReturnType, "void"))
-	{
-		CHAR Format[8];
-		GetFormat(Format, Func.ReturnType);
-		WriteBuffer(&Buffer,
-			"%s\", Ret", Format);
-	}
-	else
-	{
-		WriteBuffer(&Buffer,
-			"VOID");
-	}
-	WriteBuffer(&Buffer, ");\n");
-
-	// EndTrace
-	WriteBuffer(&Buffer,
-		"\t\tEndTrace(E_%s, FALSE);\n",
-		Func.Name);
-	/* if (strcmp(Func.ReturnType, "void")) */
-	/* { */
-	/* } */
-
-	WriteBuffer(&Buffer, "\t}\n");
-
-	if (strcmp(Func.ReturnType, "void"))
-	{
-		WriteBuffer(&Buffer, "\telse\n\t{\n");
-		WriteBuffer(&Buffer, "\t\tRet = ");
-		WriteBuffer(&Buffer, "%s(", Func.Name);
-
-		Commas = Func.ArgCount - 1;
-		for (INT K = 0; K < Func.ArgCount; K++)
+		// Call the real function
+		// We call it inside the BeginTrace block if it's a non-void function.
+		// Otherwise, it gets called outside the block
+		if (strcmp(Func.ReturnType, "void"))
 		{
-			WriteBuffer(&Buffer, "%s", Func.ArgNames[K]);
-			if (Commas)
+			WriteBuffer(&Buffer,
+				"\t\tRet = %s(",
+				Func.Name);
+			Commas = Func.ArgCount - 1;
+			for (INT K = 0; K < Func.ArgCount; K++)
 			{
-				WriteBuffer(&Buffer, ", ");
-				Commas--;
+				WriteBuffer(&Buffer, "%s", Func.ArgNames[K]);
+				if (Commas)
+				{
+					WriteBuffer(&Buffer, ", ");
+					Commas--;
+				}
 			}
+			WriteBuffer(&Buffer, ");\n");
 		}
-		WriteBuffer(&Buffer, ");");
 
-		WriteBuffer(&Buffer, "\n\t}\n");
-	}
-	else
-	{
-		WriteBuffer(&Buffer, "\n\t%s(", Func.Name);
-
-		Commas = Func.ArgCount - 1;
-		for (INT K = 0; K < Func.ArgCount; K++)
+		// WriteFuncBuffer hook function return value
+		WriteBuffer(&Buffer, "\t\tWriteFuncBuffer(\" = ");
+		if (strcmp(Func.ReturnType, "void"))
 		{
-			WriteBuffer(&Buffer, "%s", Func.ArgNames[K]);
-			if (Commas)
-			{
-				WriteBuffer(&Buffer, ", ");
-				Commas--;
-			}
+			CHAR Format[8];
+			GetFormat(Format, Func.ReturnType);
+			WriteBuffer(&Buffer,
+				"%s\", Ret", Format);
 		}
-		WriteBuffer(&Buffer, ");");
-	}
+		else
+		{
+			WriteBuffer(&Buffer,
+				"VOID");
+		}
+		WriteBuffer(&Buffer, ");\n");
 
-
-	// Return variable return
-	if (strcmp(Func.ReturnType, "void"))
-	{
+		// EndTrace
 		WriteBuffer(&Buffer,
-			"\n\treturn (Ret);"
-		);
-	}
+			"\t\tEndTrace(E_%s, FALSE);\n",
+			Func.Name);
+		/* if (strcmp(Func.ReturnType, "void")) */
+		/* { */
+		/* } */
 
-	WriteBuffer(&Buffer, "\n}\n\n");
+		WriteBuffer(&Buffer, "\t}\n");
+
+		if (strcmp(Func.ReturnType, "void"))
+		{
+			WriteBuffer(&Buffer, "\telse\n\t{\n");
+			WriteBuffer(&Buffer, "\t\tRet = ");
+			WriteBuffer(&Buffer, "%s(", Func.Name);
+
+			Commas = Func.ArgCount - 1;
+			for (INT K = 0; K < Func.ArgCount; K++)
+			{
+				WriteBuffer(&Buffer, "%s", Func.ArgNames[K]);
+				if (Commas)
+				{
+					WriteBuffer(&Buffer, ", ");
+					Commas--;
+				}
+			}
+			WriteBuffer(&Buffer, ");");
+
+			WriteBuffer(&Buffer, "\n\t}\n");
+		}
+		else
+		{
+			WriteBuffer(&Buffer, "\n\t%s(", Func.Name);
+
+			Commas = Func.ArgCount - 1;
+			for (INT K = 0; K < Func.ArgCount; K++)
+			{
+				WriteBuffer(&Buffer, "%s", Func.ArgNames[K]);
+				if (Commas)
+				{
+					WriteBuffer(&Buffer, ", ");
+					Commas--;
+				}
+			}
+			WriteBuffer(&Buffer, ");");
+		}
+
+
+		// Return variable return
+		if (strcmp(Func.ReturnType, "void"))
+		{
+			WriteBuffer(&Buffer,
+				"\n\treturn (Ret);"
+			);
+		}
+
+		WriteBuffer(&Buffer, "\n}\n\n");
 	}
 
 	printf("%s\n", Buffer.Buff);
 
-	HANDLE OutputFile;
 
-	OutputFile = CreateFile("foo.txt", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	WriteFile(OutputFile, Buffer.Buff, Buffer.Pos, 0, 0);
+	OutputFile = CreateFile(OutputFilename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	WriteFile(OutputFile, Buffer.Buff, (DWORD)Buffer.Pos, 0, 0);
 	CloseHandle(OutputFile);
 
 	return (0);
@@ -376,7 +390,7 @@ GetFormat(CHAR *Format,
 		case TYPE_LPSTR:
 		case TYPE_LPCSTR:
 		{
-			strcpy(Format, "0x%s");
+			strcpy(Format, "\\\"%s\\\"");
 		} break;
 
 		case TYPE_DWORD:
@@ -405,7 +419,7 @@ GetFormat(CHAR *Format,
 		case TYPE_LPWSTR:
 		case TYPE_LPCWSTR:
 		{
-			strcpy(Format, "%ws");
+			strcpy(Format, "\\\"%ws\\\"");
 		} break;
 
 		default:
