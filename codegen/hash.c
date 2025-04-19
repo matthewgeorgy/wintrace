@@ -44,6 +44,7 @@ LPSTR Types[] =
 	"HANDLE",
 	"LPVOID",
 	"void",
+	"LPSECURITY_ATTRIBUTES"
 };
 
 

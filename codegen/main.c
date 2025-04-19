@@ -43,9 +43,9 @@ main(void)
 	Buffer.Buff = (CHAR *)malloc(BUFF_SIZE);
 	Buffer.Pos = 0;
 
-	/* for (INT J = 0; J < Count; J++) */
-	/* { */
-	Func = Functions[0];
+	for (INT J = 0; J < Count; J++)
+	{
+	Func = Functions[J];
 
 	WriteBuffer(&Buffer, "%s\nWt%s", Func.ReturnType, Func.Name);
 	WriteBuffer(&Buffer, "(");
@@ -78,7 +78,7 @@ main(void)
 
 	WriteBuffer(&Buffer, "\n{\n");
 
-	// Return variable stack
+	// Create stack
 	if (strcmp(Func.ReturnType, "void"))
 	{
 		WriteBuffer(&Buffer,
@@ -87,11 +87,11 @@ main(void)
 		);
 	}
 
+	// BeginTrace
 	WriteBuffer(&Buffer,
 		"\tif (BeginTrace(E_%s))\n"
 		"\t{\n",
 		Func.Name);
-
 	WriteBuffer(&Buffer,
 		"\t\tWriteFuncBuffer(\"(");
 
@@ -127,18 +127,101 @@ main(void)
 	}
 	WriteBuffer(&Buffer, ");\n");
 
-	WriteBuffer(&Buffer, "\t}");
+	// Call the real function
+	// We call it inside the BeginTrace block if it's a non-void function.
+	// Otherwise, it gets called outside the block
+	if (strcmp(Func.ReturnType, "void"))
+	{
+		WriteBuffer(&Buffer,
+			"\t\tRet = %s(",
+			Func.Name);
+		Commas = Func.ArgCount - 1;
+		for (INT K = 0; K < Func.ArgCount; K++)
+		{
+			WriteBuffer(&Buffer, "%s", Func.ArgNames[K]);
+			if (Commas)
+			{
+				WriteBuffer(&Buffer, ", ");
+				Commas--;
+			}
+		}
+		WriteBuffer(&Buffer, ");\n");
+	}
+
+	// WriteFuncBuffer hook function return value
+	WriteBuffer(&Buffer, "\t\tWriteFuncBuffer(\" = ");
+	if (strcmp(Func.ReturnType, "void"))
+	{
+		CHAR Format[8];
+		GetFormat(Format, Func.ReturnType);
+		WriteBuffer(&Buffer,
+			"%s\", Ret", Format);
+	}
+	else
+	{
+		WriteBuffer(&Buffer,
+			"VOID");
+	}
+	WriteBuffer(&Buffer, ");\n");
+
+	// EndTrace
+	WriteBuffer(&Buffer,
+		"\t\tEndTrace(E_%s, FALSE);\n",
+		Func.Name);
+	/* if (strcmp(Func.ReturnType, "void")) */
+	/* { */
+	/* } */
+
+	WriteBuffer(&Buffer, "\t}\n");
+
+	if (strcmp(Func.ReturnType, "void"))
+	{
+		WriteBuffer(&Buffer, "\telse\n\t{\n");
+		WriteBuffer(&Buffer, "\t\tRet = ");
+		WriteBuffer(&Buffer, "%s(", Func.Name);
+
+		Commas = Func.ArgCount - 1;
+		for (INT K = 0; K < Func.ArgCount; K++)
+		{
+			WriteBuffer(&Buffer, "%s", Func.ArgNames[K]);
+			if (Commas)
+			{
+				WriteBuffer(&Buffer, ", ");
+				Commas--;
+			}
+		}
+		WriteBuffer(&Buffer, ");");
+
+		WriteBuffer(&Buffer, "\n\t}\n");
+	}
+	else
+	{
+		WriteBuffer(&Buffer, "\n\t%s(", Func.Name);
+
+		Commas = Func.ArgCount - 1;
+		for (INT K = 0; K < Func.ArgCount; K++)
+		{
+			WriteBuffer(&Buffer, "%s", Func.ArgNames[K]);
+			if (Commas)
+			{
+				WriteBuffer(&Buffer, ", ");
+				Commas--;
+			}
+		}
+		WriteBuffer(&Buffer, ");");
+	}
+
 
 	// Return variable return
 	if (strcmp(Func.ReturnType, "void"))
 	{
 		WriteBuffer(&Buffer,
-			"\n\n\treturn (Ret);"
+			"\n\treturn (Ret);"
 		);
 	}
 
 	WriteBuffer(&Buffer, "\n}\n\n");
-	/* } */
+	}
 
 	printf("%s\n", Buffer.Buff);
 
@@ -146,6 +229,7 @@ main(void)
 
 	OutputFile = CreateFile("foo.txt", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	WriteFile(OutputFile, Buffer.Buff, Buffer.Pos, 0, 0);
+	CloseHandle(OutputFile);
 
 	return (0);
 }
@@ -194,15 +278,6 @@ ParseFunctions(CHAR *Filename,
 			Arg++;
 		}
 		Functions[J].ArgCount = Arg;
-
-		/* printf("\tType: %s\n", Functions[J].ReturnType); */
-		/* printf("\tName: %s\n", Functions[J].Name); */
-		/* printf("\tCount: %d\n", Functions[J].ArgCount); */
-		/* for (INT I = 0; I < Functions[J].ArgCount; I++) */
-		/* { */
-		/* 	printf("\t\tType %d: %s\n", I, Functions[J].ArgTypes[I]); */
-		/* 	printf("\t\tName %d: %s\n", I, Functions[J].ArgNames[I]); */
-		/* } */
 	}
 
 	return (Functions);
@@ -306,6 +381,17 @@ GetFormat(CHAR *Format,
 		case TYPE_SIZE_T:
 		{
 			strcpy(Format, "%llu");
+		} break;
+
+		case TYPE_INT:
+		case TYPE_BOOL:
+		{
+			strcpy(Format, "%d");
+		} break;
+
+		case TYPE_CHAR:
+		{
+			strcpy(Format, "%c");
 		} break;
 
 		default:
