@@ -3,6 +3,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <hashes.h>
 
 typedef struct _tag_FuncRec
 {
