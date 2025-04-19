@@ -1,6 +1,7 @@
 /*
     Version History
 
+		0.2.4	Naming Opts, Pipe, and Fence with the target PID
         0.2.3   Added a switch /P to use named pipes to print debug output through the EXE instead of the DLL (WIP)
         0.2.2   /? now shows the core and dll version
         0.2.1   Changed help/usage display to look nicer and to accommodate
@@ -76,7 +77,7 @@
 #define CRLF "\r\n"
 
 // Version
-#define WINTRACE_CORE_VERSION "0.2.3"
+#define WINTRACE_CORE_VERSION "0.2.4"
 
 // Extra options here that aren't used by the DLL (ProgramName and CmdArgs)
 // Might rename this to T_WintraceOptsEx or something to specify this, or
@@ -107,6 +108,11 @@ DWORD __stdcall InitializePipe(LPVOID Param);
 
 typedef LPSTR (__stdcall *MYPROC)(void);
 
+// Names
+CHAR		OptsName[32],
+			PipeName[32],
+			FenceName[32];
+
 int
 main(int argc,
      char **argv)
@@ -130,8 +136,24 @@ main(int argc,
     // Parse opts
     Opts = ParseOpts(argc, argv);
 
+    // Create process
+    StartupInfo.cb = sizeof(STARTUPINFO);
+    Status = CreateProcess(Opts.ProgramName, Opts.CmdArgs, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &StartupInfo, &ProcessInfo);
+    if (!Status)
+    {
+        fprintf(stderr, "Failed to create process!\n");
+        return -1;
+    }
+
+	// Construct names
+	sprintf(OptsName, "WintraceOpts_%u", ProcessInfo.dwProcessId);
+	sprintf(PipeName, "\\\\.\\pipe\\WintracePipe_%u", ProcessInfo.dwProcessId);
+	sprintf(FenceName, "WintraceFence_%u", ProcessInfo.dwProcessId);
+
+	printf("[core] PID: %u\n Opts:%s\n Pipe:%s\n Fence:%s\n", ProcessInfo.dwProcessId, OptsName, PipeName, FenceName);
+
     // Map shared memory
-    FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WintraceOpts), "WintraceOpts");
+    FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WintraceOpts), OptsName);
     if (!FileMap)
     {
         fprintf(stderr, "Could not create file map (%d)\n", GetLastError());
@@ -146,15 +168,7 @@ main(int argc,
     }
     CopyMemory((LPVOID)pOpts, &Opts, sizeof(T_WintraceOpts));
 
-    // Inject DLL
-    StartupInfo.cb = sizeof(STARTUPINFO);
-    Status = CreateProcess(Opts.ProgramName, Opts.CmdArgs, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &StartupInfo, &ProcessInfo);
-    if (!Status)
-    {
-        fprintf(stderr, "Failed to create process!\n");
-        return -1;
-    }
-
+	// Inject DLL
     lpfnLoadLibA = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "LoadLibraryA");
     if (!lpfnLoadLibA)
     {
@@ -186,7 +200,7 @@ main(int argc,
     // Fence
     if (Opts.UsePipes)
     {
-        Fence = CreateEventA(NULL, FALSE, FALSE, "WintraceFence");
+        Fence = CreateEventA(NULL, FALSE, FALSE, FenceName);
         if (!Fence)
         {
             printf("failed to create fence %d\n", GetLastError());
@@ -367,7 +381,7 @@ InitializePipe(LPVOID Param)
     BOOL        Status;
 
 
-    g_Pipe = CreateNamedPipe("\\\\.\\pipe\\WintracePipe", PIPE_ACCESS_INBOUND, PIPE_TYPE_BYTE, 1, 0, 0, 0, NULL);
+    g_Pipe = CreateNamedPipe(PipeName, PIPE_ACCESS_INBOUND, PIPE_TYPE_BYTE, 1, 0, 0, 0, NULL);
     printf("server: created pipe\r\n");
     Status = ConnectNamedPipe(g_Pipe, NULL);
     if (!Status)

@@ -5,6 +5,10 @@
 T_WintraceOpts      *pOpts;
 HANDLE              g_Pipe;
 HANDLE              g_Fence;
+// Names
+CHAR		OptsName[32],
+			PipeName[32],
+			FenceName[32];
 
 LPSTR __stdcall
 GetWintraceDllVersion(void)
@@ -23,8 +27,18 @@ DllMain(HMODULE hModule,
         case DLL_PROCESS_ATTACH:
         {
             HANDLE      FileMap;
+			DWORD		ProcessId;
 
-            FileMap = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, "WintraceOpts");
+			ProcessId = GetCurrentProcessId();
+
+			// Construct names
+			sprintf(OptsName, "WintraceOpts_%u", ProcessId);
+			sprintf(PipeName, "\\\\.\\pipe\\WintracePipe_%u", ProcessId);
+			sprintf(FenceName, "WintraceFence_%u", ProcessId);
+
+			printf("[dll] PID: %u\n Opts:%s\n Pipe:%s\n Fence:%s\n", ProcessId, OptsName, PipeName, FenceName);
+
+            FileMap = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, OptsName);
             if (FileMap)
             {
                 pOpts = (T_WintraceOpts *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WintraceOpts));
@@ -54,7 +68,7 @@ DllMain(HMODULE hModule,
 
             if (pOpts->UsePipes)
             {
-                g_Pipe = CreateFileA("\\\\.\\pipe\\WintracePipe",
+                g_Pipe = CreateFileA(PipeName,
                     GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
                     NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
                 if (g_Pipe)
@@ -62,7 +76,7 @@ DllMain(HMODULE hModule,
                     printf("client: connected pipe\r\n");
                 }
 
-                g_Fence = OpenEventA(SYNCHRONIZE, FALSE, "WintraceFence");
+                g_Fence = OpenEventA(SYNCHRONIZE, FALSE, FenceName);
                 if (g_Fence)
                 {
                     printf("client: opened the fence\r\n");
