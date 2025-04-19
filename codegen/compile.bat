@@ -1,12 +1,12 @@
 @echo off
 
-hookgen wt_debugapi Wt
-hookgen wt_fileapi Wt
-hookgen wt_heapapi Wt
-hookgen wt_memoryapi Wt
-hookgen wt_processthreadsapi Wt
-hookgen wt_profileapi Wt
-hookgen wt_winuser Wt
+hookgen wt_debugapi Wt win32
+hookgen wt_fileapi Wt win32
+hookgen wt_heapapi Wt win32
+hookgen wt_memoryapi Wt win32
+hookgen wt_processthreadsapi Wt win32
+hookgen wt_profileapi Wt win32
+hookgen wt_winuser Wt win32
 
 cp wt_debugapi.h W:\wintrace\dll\inc\win32
 cp wt_fileapi.h W:\wintrace\dll\inc\win32

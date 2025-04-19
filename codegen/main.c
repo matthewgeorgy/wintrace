@@ -44,19 +44,21 @@ main(int argc,
 					*HeaderName,
 					*SourceName,
 					*Prefix,
+					*Folder,
 					*IncludeGuard;
 	INT				Commas;
 
 
-	if (argc < 3)
+	if (argc < 4)
 	{
 		printf("No input file provided...!\r\n");
-		printf("Usage: hookgen <file> <prefix>\r\n");
+		printf("Usage: hookgen <file> <prefix> <folder>\r\n");
 		return (-1);
 	}
 
 	ListName = argv[1];
 	Prefix = argv[2];
+	Folder = argv[3];
 
 	Len = (INT)strlen(ListName);
 	HeaderName = (CHAR *)malloc(Len + 3);
@@ -80,7 +82,7 @@ main(int argc,
 	SourceBuffer.Pos = 0;
 
 	// Header and extern global pOpts
-	WriteBuffer(&SourceBuffer, "#include <win32/%s>\n\n", HeaderName);
+	WriteBuffer(&SourceBuffer, "#include <%s/%s>\n\n", Folder, HeaderName);
 	WriteBuffer(&SourceBuffer, "extern T_WintraceOpts\t\t*pOpts;\n\n");
 
 	for (INT J = 0; J < Count; J++)
