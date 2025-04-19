@@ -1,66 +1,72 @@
 #include <crt/wt_stdio.h>
 
-extern T_WintraceOpts      *pOpts;
+extern T_WintraceOpts		*pOpts;
 
-FILE *wt_fopen(
-   const char *filename,
-   const char *mode
+LPFILE
+wt_fopen(
+	LPCSTR filename,
+	LPCSTR mode
 )
 {
-    FILE        *ret;
+	LPFILE Ret;
 
+	if (BeginTrace(E_fopen))
+	{
+		WriteFuncBuffer("(\"%s\", \"%s\")", filename, mode);
+		Ret = fopen(filename, mode);
+		WriteFuncBuffer(" = 0x%p", Ret);
+		EndTrace(E_fopen, FALSE);
+	}
+	else
+	{
+		Ret = fopen(filename, mode);
+	}
 
-    if (BeginTrace(E_fopen))
-    {
-        WriteFuncBuffer("(\"%s\", \"%s\")", filename, mode);
-        ret = fopen(filename, mode);
-        WriteFuncBuffer(" = 0x%p", ret);
-        EndTrace(E_fopen, ret == NULL);
-    }
-    else
-        ret = fopen(filename, mode);
-
-    return ret;
+	return (Ret);
 }
 
-FILE *wt__wfopen(
-   const wchar_t *filename,
-   const wchar_t *mode
+LPFILE
+wt__wfopen(
+	LPCWSTR filename,
+	LPCWSTR mode
 )
 {
-    FILE        *ret;
+	LPFILE Ret;
 
+	if (BeginTrace(E__wfopen))
+	{
+		WriteFuncBuffer("(\"%ws\", \"%ws\")", filename, mode);
+		Ret = _wfopen(filename, mode);
+		WriteFuncBuffer(" = 0x%p", Ret);
+		EndTrace(E__wfopen, FALSE);
+	}
+	else
+	{
+		Ret = _wfopen(filename, mode);
+	}
 
-    if (BeginTrace(E__wfopen))
-    {
-        WriteFuncBuffer("(\"%ws\", \"%ws\")", filename, mode);
-        ret = _wfopen(filename, mode);
-        WriteFuncBuffer(" = 0x%p", ret);
-        EndTrace(E__wfopen, ret == NULL);
-    }
-    else
-        ret = _wfopen(filename, mode);
-
-    return ret;
+	return (Ret);
 }
 
-int wt_fclose(
-   FILE *stream
+int
+wt_fclose(
+	LPFILE stream
 )
 {
-    int     ret;
+	int Ret;
 
+	if (BeginTrace(E_fclose))
+	{
+		WriteFuncBuffer("(0x%p)", stream);
+		Ret = fclose(stream);
+		WriteFuncBuffer(" = %d", Ret);
+		EndTrace(E_fclose, FALSE);
+	}
+	else
+	{
+		Ret = fclose(stream);
+	}
 
-    if (BeginTrace(E_fclose))
-    {
-        WriteFuncBuffer("(0x%p)", stream);
-        ret = fclose(stream);
-        WriteFuncBuffer(" = %d", ret);
-        EndTrace(E_fclose, ret == EOF);
-    }
-    else
-        ret = fclose(stream);
-
-    return ret;
+	return (Ret);
 }
 

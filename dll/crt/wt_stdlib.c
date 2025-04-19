@@ -1,41 +1,41 @@
 #include <crt/wt_stdlib.h>
 
-extern T_WintraceOpts      *pOpts;
+extern T_WintraceOpts		*pOpts;
 
-void *
+LPVOID
 wt_malloc(
-   size_t size
+	size_t size
 )
 {
-	void		*ret;
-
+	LPVOID Ret;
 
 	if (BeginTrace(E_malloc))
 	{
-		WriteFuncBuffer("(%u)", size);
-		ret = malloc(size);
-		WriteFuncBuffer(" = 0x%p", ret);
-		EndTrace(E_malloc, ret == NULL);
+		WriteFuncBuffer("(%llu)", size);
+		Ret = malloc(size);
+		WriteFuncBuffer(" = 0x%p", Ret);
+		EndTrace(E_malloc, FALSE);
 	}
 	else
-		ret = malloc(size);
+	{
+		Ret = malloc(size);
+	}
 
-	return ret;
+	return (Ret);
 }
 
 void
 wt_free(
-   void *memblock
+	LPVOID memblock
 )
 {
 	if (BeginTrace(E_free))
 	{
 		WriteFuncBuffer("(0x%p)", memblock);
-		free(memblock);
 		WriteFuncBuffer(" = VOID");
 		EndTrace(E_free, FALSE);
 	}
-	else
-		free(memblock);
+
+	free(memblock);
 }
 

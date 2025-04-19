@@ -1,15 +1,9 @@
 #ifndef WT_STDLIB_H
 #define WT_STDLIB_H
 
-#include <common.h>
-#include <stdlib.h>
+#include "common.h"
 
-void *wt_malloc(
-   size_t size
-);
-
-void wt_free(
-   void *memblock
-);
+LPVOID wt_malloc(size_t size);
+void wt_free(LPVOID memblock);
 
 #endif // WT_STDLIB_H

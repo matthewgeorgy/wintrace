@@ -1,20 +1,10 @@
 #ifndef WT_STDIO_H
 #define WT_STDIO_H
 
-// already includes <stdio.h>
-#include <common.h>
+#include "common.h"
 
-FILE *wt_fopen(
-   const char *filename,
-   const char *mode
-);
-FILE *wt__wfopen(
-   const wchar_t *filename,
-   const wchar_t *mode
-);
-
-int wt_fclose(
-   FILE *stream
-);
+LPFILE wt_fopen(LPCSTR filename, LPCSTR mode);
+LPFILE wt__wfopen(LPCWSTR filename, LPCWSTR mode);
+int wt_fclose(LPFILE stream);
 
 #endif // WT_STDIO_H
