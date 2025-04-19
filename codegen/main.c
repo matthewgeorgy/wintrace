@@ -6,7 +6,7 @@
 #include <stdarg.h>
 #include "hashes.h"
 
-#define BUFF_SIZE		1024 * 1024
+#define BUFF_SIZE		1024 * 1024 // 1 MB
 
 typedef struct _tag_Function
 {
@@ -117,19 +117,12 @@ main(int argc,
 		// Create stack
 		if (strcmp(Func.ReturnType, "void"))
 		{
-			WriteBuffer(&SourceBuffer,
-				"\t%s Ret;\n\n",
-				Func.ReturnType
-			);
+			WriteBuffer(&SourceBuffer, "\t%s Ret;\n\n", Func.ReturnType);
 		}
 
 		// BeginTrace
-		WriteBuffer(&SourceBuffer,
-			"\tif (BeginTrace(E_%s))\n"
-			"\t{\n",
-			Func.Name);
-		WriteBuffer(&SourceBuffer,
-			"\t\tWriteFuncBuffer(\"(");
+		WriteBuffer(&SourceBuffer, "\tif (BeginTrace(E_%s))\n\t{\n", Func.Name);
+		WriteBuffer(&SourceBuffer, "\t\tWriteFuncBuffer(\"(");
 
 		// Arguments in WriteFuncBuffer string
 		INT Commas = Func.ArgCount - 1;
@@ -168,9 +161,7 @@ main(int argc,
 		// Otherwise, it gets called outside the block
 		if (strcmp(Func.ReturnType, "void"))
 		{
-			WriteBuffer(&SourceBuffer,
-				"\t\tRet = %s(",
-				Func.Name);
+			WriteBuffer(&SourceBuffer, "\t\tRet = %s(", Func.Name);
 			Commas = Func.ArgCount - 1;
 			for (INT K = 0; K < Func.ArgCount; K++)
 			{
@@ -190,20 +181,16 @@ main(int argc,
 		{
 			CHAR Format[8];
 			GetFormat(Format, Func.ReturnType);
-			WriteBuffer(&SourceBuffer,
-				"%s\", Ret", Format);
+			WriteBuffer(&SourceBuffer, "%s\", Ret", Format);
 		}
 		else
 		{
-			WriteBuffer(&SourceBuffer,
-				"VOID");
+			WriteBuffer(&SourceBuffer, "VOID");
 		}
 		WriteBuffer(&SourceBuffer, ");\n");
 
 		// EndTrace
-		WriteBuffer(&SourceBuffer,
-			"\t\tEndTrace(E_%s, FALSE);\n",
-			Func.Name);
+		WriteBuffer(&SourceBuffer, "\t\tEndTrace(E_%s, FALSE);\n", Func.Name);
 		/* if (strcmp(Func.ReturnType, "void")) */
 		/* { */
 		/* } */
@@ -226,8 +213,8 @@ main(int argc,
 					Commas--;
 				}
 			}
-			WriteBuffer(&SourceBuffer, ");");
 
+			WriteBuffer(&SourceBuffer, ");");
 			WriteBuffer(&SourceBuffer, "\n\t}\n");
 		}
 		else
@@ -244,9 +231,9 @@ main(int argc,
 					Commas--;
 				}
 			}
+
 			WriteBuffer(&SourceBuffer, ");");
 		}
-
 
 		// Return variable return
 		if (strcmp(Func.ReturnType, "void"))
@@ -259,7 +246,7 @@ main(int argc,
 		WriteBuffer(&SourceBuffer, "\n}\n\n");
 	}
 
-	printf("%s\n", SourceBuffer.Buff);
+	/* printf("%s\n", SourceBuffer.Buff); */
 
 	SourceFile = CreateFile(SourceName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	WriteFile(SourceFile, SourceBuffer.Buff, (DWORD)SourceBuffer.Pos, 0, 0);
@@ -278,7 +265,7 @@ main(int argc,
 	IncludeGuard[Len + 1] = 'H';
 	IncludeGuard[Len + 2] = 0;
 
-	printf("%s", IncludeGuard);
+	/* printf("%s", IncludeGuard); */
 
 	File = StringFile(ListName, &Len);
 
