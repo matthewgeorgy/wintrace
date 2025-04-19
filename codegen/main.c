@@ -34,25 +34,29 @@ main(int argc,
 	 char **argv)
 {
 	T_Function		*Functions;
-	INT				Count;
+	INT				Count,
+					Len;
 	T_Buffer		Buffer;
 	HANDLE 			OutputFile;
 	CHAR			*InputFilename,
-					*OutputFilename;
+					*OutputFilename,
+					*Prefix;
 
 
-	if (argc < 2)
+	if (argc < 3)
 	{
 		printf("No input file provided...!\r\n");
-		printf("Usage: hookgen <file>\r\n");
+		printf("Usage: hookgen <file> <prefix>\r\n");
 		return (-1);
 	}
 
 	InputFilename = argv[1];
-	INT Len = (INT)strlen(InputFilename);
+	Len = (INT)strlen(InputFilename);
 	OutputFilename = (LPSTR)malloc(Len + 1);
 	memcpy(OutputFilename, InputFilename, Len);
 	OutputFilename[Len - 1] = 'c';
+	OutputFilename[Len] = 0;
+	Prefix = argv[2];
 
 	Functions = ParseFunctions(InputFilename, &Count);
 	Buffer.Buff = (CHAR *)malloc(BUFF_SIZE);
@@ -62,7 +66,7 @@ main(int argc,
 	{
 		T_Function Func = Functions[J];
 
-		WriteBuffer(&Buffer, "%s\nWt%s", Func.ReturnType, Func.Name);
+		WriteBuffer(&Buffer, "%s\n%s%s", Func.ReturnType, Prefix, Func.Name);
 		WriteBuffer(&Buffer, "(");
 
 		if (Func.ArgCount == 0)
