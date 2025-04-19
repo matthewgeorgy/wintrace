@@ -1,7 +1,8 @@
 /*
     Version History
 
-		0.2.4	Naming Opts, Pipe, and Fence with the target PID
+		0.2.5   Explicit /B option for blocking functions to trace
+        0.2.4   Naming Opts, Pipe, and Fence with the target PID
         0.2.3   Added a switch /P to use named pipes to print debug output through the EXE instead of the DLL (WIP)
         0.2.2   /? now shows the core and dll version
         0.2.1   Changed help/usage display to look nicer and to accommodate
@@ -92,6 +93,7 @@ typedef struct _tag_WintraceOpts
     CHAR        OutputFilename[64];
     FILE        *OutputFile;
     CHAR        TraceList[32][32];
+	CHAR		BlockList[32][32];
     CHAR        *ProgramName,
                 CmdArgs[128];
 } T_WintraceOpts;
@@ -109,9 +111,9 @@ DWORD __stdcall InitializePipe(LPVOID Param);
 typedef LPSTR (__stdcall *MYPROC)(void);
 
 // Names
-CHAR		OptsName[32],
-			PipeName[32],
-			FenceName[32];
+CHAR        OptsName[32],
+            PipeName[32],
+            FenceName[32];
 
 int
 main(int argc,
@@ -145,12 +147,12 @@ main(int argc,
         return -1;
     }
 
-	// Construct names
-	sprintf(OptsName, "WintraceOpts_%u", ProcessInfo.dwProcessId);
-	sprintf(PipeName, "\\\\.\\pipe\\WintracePipe_%u", ProcessInfo.dwProcessId);
-	sprintf(FenceName, "WintraceFence_%u", ProcessInfo.dwProcessId);
+    // Construct names
+    sprintf(OptsName, "WintraceOpts_%u", ProcessInfo.dwProcessId);
+    sprintf(PipeName, "\\\\.\\pipe\\WintracePipe_%u", ProcessInfo.dwProcessId);
+    sprintf(FenceName, "WintraceFence_%u", ProcessInfo.dwProcessId);
 
-	printf("[core] PID: %u\n Opts:%s\n Pipe:%s\n Fence:%s\n", ProcessInfo.dwProcessId, OptsName, PipeName, FenceName);
+    printf("[core] PID: %u\n Opts:%s\n Pipe:%s\n Fence:%s\n", ProcessInfo.dwProcessId, OptsName, PipeName, FenceName);
 
     // Map shared memory
     FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WintraceOpts), OptsName);
@@ -168,7 +170,7 @@ main(int argc,
     }
     CopyMemory((LPVOID)pOpts, &Opts, sizeof(T_WintraceOpts));
 
-	// Inject DLL
+    // Inject DLL
     lpfnLoadLibA = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "LoadLibraryA");
     if (!lpfnLoadLibA)
     {
@@ -284,6 +286,7 @@ PrintUsage(void)
             "  /p            Show process ID" CRLF
             "  /t            Show thread ID" CRLF
             "  /T:fns        Trace only fns, a comma separated list of function names" CRLF
+            "  /B:fns        Trace all functions except fns, a comma separated list of function names" CRLF
             "  /o:file       Output to file" CRLF
             "  /P            (BETA) Print debug output using pipes" CRLF
             "  /?            Show available options" CRLF,
@@ -342,6 +345,19 @@ ParseOpts(int argc,
                     I++;
                 }
             } break;
+            case 'B':
+            {
+                CHAR *Token;
+                INT I = 0;
+
+                Token = strtok(argv[OptInd] + 3, ",");
+                while (Token != NULL && I < 32)
+                {
+                    strcpy(Opts.BlockList[I], Token);
+                    Token = strtok(NULL, ",");
+                    I++;
+                }
+            } break;
             case '?':
             {
                 PrintUsage();
@@ -356,6 +372,12 @@ ParseOpts(int argc,
             } break;
         }
     }
+
+	if (Opts.TraceList[0][0] && Opts.BlockList[0][0])
+	{
+		printf("error: can only trace (/T) OR block (/B) functions...!" CRLF);
+		exit(-1);
+	}
 
     // Fill out EXE name
     Opts.ProgramName = argv[OptInd++];
