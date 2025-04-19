@@ -16,9 +16,12 @@ typedef struct _tag_WintraceOpts
     BOOL        ShowThreadID;
     BOOL        ShowProcessID;
     BOOL        ShowFuncCount;
+	BOOL		UsePipes;
     CHAR        OutputFilename[64];
     FILE        *OutputFile;
     CHAR        TraceList[32][32];
+    CHAR        *ProgramName,
+                CmdArgs[128];
 } T_WintraceOpts;
 
 // Function string trace buffer

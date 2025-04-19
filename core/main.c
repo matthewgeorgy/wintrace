@@ -1,7 +1,8 @@
 /*
     Version History
 
-		0.2.2	/? now shows the core and dll version
+        0.2.3   Added a switch /P to use named pipes to print debug output through the EXE instead of the DLL (WIP)
+        0.2.2   /? now shows the core and dll version
         0.2.1   Changed help/usage display to look nicer and to accommodate
                 wintrace being able to receive program args
         0.2.0   Fixed more CRLF's + added some TODO's
@@ -75,7 +76,7 @@
 #define CRLF "\r\n"
 
 // Version
-#define WINTRACE_CORE_VERSION "0.2.2"
+#define WINTRACE_CORE_VERSION "0.2.3"
 
 // Extra options here that aren't used by the DLL (ProgramName and CmdArgs)
 // Might rename this to T_WintraceOptsEx or something to specify this, or
@@ -86,6 +87,7 @@ typedef struct _tag_WintraceOpts
     BOOL        ShowThreadID;
     BOOL        ShowProcessID;
     BOOL        ShowFuncCount;
+    BOOL        UsePipes;
     CHAR        OutputFilename[64];
     FILE        *OutputFile;
     CHAR        TraceList[32][32];
@@ -98,6 +100,10 @@ void            PrintUsage(void);
 
 // Read cmdline arguments
 T_WintraceOpts  ParseOpts(int argc, char **argv);
+
+// Pipe stuff
+HANDLE      g_Pipe;
+DWORD __stdcall InitializePipe(LPVOID Param);
 
 typedef LPSTR (__stdcall *MYPROC)(void);
 
@@ -116,7 +122,9 @@ main(int argc,
     LPTHREAD_START_ROUTINE      lpfnFreeLib;
     T_WintraceOpts              Opts;
     LPVOID                      pOpts;
-    HANDLE                      FileMap;
+    HANDLE                      FileMap,
+                                PipeThread;
+    HANDLE                      Fence;
 
 
     // Parse opts
@@ -175,6 +183,20 @@ main(int argc,
         return -1;
     }
 
+    // Fence
+    if (Opts.UsePipes)
+    {
+        Fence = CreateEventA(NULL, FALSE, FALSE, "WintraceFence");
+        if (!Fence)
+        {
+            printf("failed to create fence %d\n", GetLastError());
+            return (-1);
+        }
+
+        // Pipe thread
+        PipeThread = CreateThread(NULL, 0, &InitializePipe, NULL, 0, NULL);
+    }
+
     // LoadLibrary thread
     LoadThread = CreateRemoteThread(ProcessInfo.hProcess, NULL, 0, lpfnLoadLibA, pDllPath, 0, NULL);
     if (!LoadThread)
@@ -186,6 +208,30 @@ main(int argc,
 
     // Main thread
     ResumeThread(ProcessInfo.hThread);
+
+    // Read from pipe
+    if (Opts.UsePipes)
+    {
+        CHAR        Buffer[1024];
+        DWORD       NumRead;
+
+        for (;;)
+        {
+            Status = ReadFile(g_Pipe, Buffer, 512, &NumRead, NULL);
+            if (Status)
+            {
+                Buffer[NumRead] = 0;
+                fprintf(stderr, "%s", Buffer);
+                SetEvent(Fence);
+            }
+            else
+            {
+                // target EXE is finished executing -> pipe closed
+                break;
+            }
+        }
+    }
+
     WaitForSingleObject(ProcessInfo.hThread, INFINITE);
 
     // FreeLibrary thread
@@ -196,6 +242,11 @@ main(int argc,
     VirtualFreeEx(ProcessInfo.hProcess, pDllPath, Len, MEM_RELEASE);
     UnmapViewOfFile(FileMap);
     CloseHandle(FileMap);
+    if (Opts.UsePipes)
+    {
+        CloseHandle(g_Pipe);
+        CloseHandle(Fence);
+    }
 
     return 0;
 }
@@ -203,16 +254,16 @@ main(int argc,
 void
 PrintUsage(void)
 {
-	HMODULE		WintraceDll;
-	MYPROC		GetDllVersion;
+    HMODULE     WintraceDll;
+    MYPROC      GetDllVersion;
 
 
-	WintraceDll = LoadLibraryExA("wintrace.dll", NULL, DONT_RESOLVE_DLL_REFERENCES);
-	GetDllVersion = (MYPROC)GetProcAddress(WintraceDll, "GetWintraceDllVersion");
+    WintraceDll = LoadLibraryExA("wintrace.dll", NULL, DONT_RESOLVE_DLL_REFERENCES);
+    GetDllVersion = (MYPROC)GetProcAddress(WintraceDll, "GetWintraceDllVersion");
 
     fprintf(stderr,  CRLF
-			"core version: %s" CRLF
-			"dll version: %s" CRLF CRLF
+            "core version: %s" CRLF
+            "dll version: %s" CRLF CRLF
             "Usage: wintrace [options...] <exe> [args...]" CRLF CRLF
             "Options:" CRLF
             "  /c            Show function call count" CRLF
@@ -220,8 +271,9 @@ PrintUsage(void)
             "  /t            Show thread ID" CRLF
             "  /T:fns        Trace only fns, a comma separated list of function names" CRLF
             "  /o:file       Output to file" CRLF
+            "  /P            (BETA) Print debug output using pipes" CRLF
             "  /?            Show available options" CRLF,
-			WINTRACE_CORE_VERSION, GetDllVersion());
+            WINTRACE_CORE_VERSION, GetDllVersion());
 }
 
 T_WintraceOpts
@@ -258,6 +310,10 @@ ParseOpts(int argc,
             case 'o':
             {
                 strcpy(Opts.OutputFilename, argv[OptInd] + 3);
+            } break;
+            case 'P':
+            {
+                Opts.UsePipes = TRUE;
             } break;
             case 'T':
             {
@@ -303,5 +359,26 @@ ParseOpts(int argc,
     }
 
     return Opts;
+}
+
+DWORD __stdcall
+InitializePipe(LPVOID Param)
+{
+    BOOL        Status;
+
+
+    g_Pipe = CreateNamedPipe("\\\\.\\pipe\\WintracePipe", PIPE_ACCESS_INBOUND, PIPE_TYPE_BYTE, 1, 0, 0, 0, NULL);
+    printf("server: created pipe\r\n");
+    Status = ConnectNamedPipe(g_Pipe, NULL);
+    if (!Status)
+    {
+        printf("server: failed to connect pipe...!\r\n");
+    }
+    else
+    {
+        printf("server: connected pipe\r\n");
+    }
+
+    return (0);
 }
 

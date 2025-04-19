@@ -3,11 +3,13 @@
 #include <stdio.h>
 
 // Globals
-extern      T_FuncRec g_FuncRecs[];
-extern      T_WintraceOpts *pOpts;
-BOOL        g_TraceAll = TRUE;
-INT         g_CallLvl = 0;
-T_FuncList  g_FuncList;
+extern      		T_FuncRec g_FuncRecs[];
+extern      		T_WintraceOpts *pOpts;
+BOOL        		g_TraceAll = TRUE;
+INT         		g_CallLvl = 0;
+T_FuncList  		g_FuncList;
+extern HANDLE		g_Pipe;
+extern HANDLE		g_Fence;
 
 void
 ShowDetails(T_WintraceOpts *Opts,
@@ -258,7 +260,23 @@ WriteFuncBuffer(char *Format,
 void
 PrintFuncBuffer(T_FuncBuffer *Buffer)
 {
-    fprintf(pOpts->OutputFile, "%s", Buffer->Buff);
+	if (pOpts->UsePipes)
+	{
+		BOOL Status;
+		DWORD NumRead;
+
+		Status = WriteFile(g_Pipe, Buffer->Buff, 512, &NumRead, NULL);
+		if (!Status)
+		{
+			printf("failed to write to pipe %d...!\r\n", GetLastError());
+		}
+		WaitForSingleObject(g_Fence, INFINITE);
+	}
+	else
+	{
+    	fprintf(pOpts->OutputFile, "%s", Buffer->Buff);
+	}
+
     Buffer->Pos = 0;
 }
 

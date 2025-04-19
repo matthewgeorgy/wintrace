@@ -1,8 +1,9 @@
 /*
     Version History
 
-		0.5.1	CRT function hooks are now generated using hookgen
-		0.5.0	Win32 function hooks are now generated using hookgen
+        0.5.2   Added a switch /P to use named pipes to print debug output through the EXE instead of the DLL (WIP)
+        0.5.1   CRT function hooks are now generated using hookgen
+        0.5.0   Win32 function hooks are now generated using hookgen
         0.4.10  Added function for getting wintrace.dll version
         0.4.9   Added ~ specifier to the /T switch to specify functions that
                 are not to be traced
@@ -90,7 +91,7 @@
 #include <crt/wt_stdio.h>
 #include <crt/wt_stdlib.h>
 
-#define WINTRACE_DLL_VERSION "0.5.1"
+#define WINTRACE_DLL_VERSION "0.5.2"
 
 // Goes through the IAT and patches the function addresses
 void PatchIAT(void);

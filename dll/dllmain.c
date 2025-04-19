@@ -3,6 +3,8 @@
 #include <hashes.h>
 
 T_WintraceOpts      *pOpts;
+HANDLE				g_Pipe;
+HANDLE				g_Fence;
 
 LPSTR __stdcall
 GetWintraceDllVersion(void)
@@ -41,10 +43,31 @@ DllMain(HMODULE hModule,
 
             InitFuncRecs();
             PatchIAT();
+
+			if (pOpts->UsePipes)
+			{
+				g_Pipe = CreateFileA("\\\\.\\pipe\\WintracePipe",
+					GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
+					NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+				if (g_Pipe)
+				{
+					printf("client: connected pipe\r\n");
+				}
+
+				g_Fence = OpenEventA(SYNCHRONIZE, FALSE, "WintraceFence");
+				if (g_Fence)
+				{
+					printf("client: opened the fence\r\n");
+				}
+			}
         } break;
         case DLL_PROCESS_DETACH:
         {
             fclose(pOpts->OutputFile);
+			if (pOpts->UsePipes)
+			{
+				CloseHandle(g_Pipe);
+			}
         } break;
     }
 
