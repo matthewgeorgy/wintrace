@@ -35,7 +35,7 @@ DllMain(HMODULE hModule,
 			sprintf(PipeName, "\\\\.\\pipe\\WintracePipe_%u", ProcessId);
 			sprintf(FenceName, "WintraceFence_%u", ProcessId);
 
-			printf("[dll] PID: %u\n Opts:%s\n Pipe:%s\n Fence:%s\n", ProcessId, OptsName, PipeName, FenceName);
+			/* printf("[dll] PID: %u\n Opts:%s\n Pipe:%s\n Fence:%s\n", ProcessId, OptsName, PipeName, FenceName); */
 
             FileMap = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, OptsName);
             if (FileMap)
@@ -54,12 +54,12 @@ DllMain(HMODULE hModule,
                 }
                 else
                 {
-                    printf("failed to map file view!(%d)\n", GetLastError());
+                    printf("[DLL] Failed to map file view!(%d)\n", GetLastError());
                 }
             }
             else
             {
-                printf("could not open file map!(%d)\n", GetLastError());
+                printf("[DLL] Could not open file map!(%d)\n", GetLastError());
             }
 
             InitFuncRecs();
@@ -72,13 +72,13 @@ DllMain(HMODULE hModule,
                     NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
                 if (g_Pipe)
                 {
-                    printf("client: connected pipe\r\n");
+                    printf("[DLL] Connected pipe...\r\n");
                 }
 
                 g_Fence = OpenEventA(SYNCHRONIZE, FALSE, FenceName);
                 if (g_Fence)
                 {
-                    printf("client: opened the fence\r\n");
+                    printf("[DLL] Opened the fence...\r\n");
                 }
             }
         } break;

@@ -1,6 +1,7 @@
 /*
     Version History
 
+		0.2.6	Made printing in core & dll a bit nicer
 		0.2.5   Explicit /B option for blocking functions to trace
         0.2.4   Naming Opts, Pipe, and Fence with the target PID
         0.2.3   Added a switch /P to use named pipes to print debug output through the EXE instead of the DLL (WIP)
@@ -78,7 +79,7 @@
 #define CRLF "\r\n"
 
 // Version
-#define WINTRACE_CORE_VERSION "0.2.4"
+#define WINTRACE_CORE_VERSION "0.2.6"
 
 // Extra options here that aren't used by the DLL (ProgramName and CmdArgs)
 // Might rename this to T_WintraceOptsEx or something to specify this, or
@@ -152,19 +153,24 @@ main(int argc,
     sprintf(PipeName, "\\\\.\\pipe\\WintracePipe_%u", ProcessInfo.dwProcessId);
     sprintf(FenceName, "WintraceFence_%u", ProcessInfo.dwProcessId);
 
-    printf("[core] PID: %u\n Opts:%s\n Pipe:%s\n Fence:%s\n", ProcessInfo.dwProcessId, OptsName, PipeName, FenceName);
+    printf("[CORE] Initialized successfully:" CRLF
+		   "  PID: %u" CRLF
+		   "  Opts: %s" CRLF
+		   "  Pipe: %s" CRLF
+		   "  Fence: %s" CRLF,
+		   ProcessInfo.dwProcessId, OptsName, PipeName, FenceName);
 
     // Map shared memory
     FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WintraceOpts), OptsName);
     if (!FileMap)
     {
-        fprintf(stderr, "Could not create file map (%d)\n", GetLastError());
+        fprintf(stderr, "[CORE] Could not create file map (%d)\n", GetLastError());
         return -1;
     }
     pOpts = (T_WintraceOpts *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WintraceOpts));
     if (!pOpts)
     {
-        fprintf(stderr, "Could not create map view (%d)\n", GetLastError());
+        fprintf(stderr, "[CORE] Could not create map view (%d)\n", GetLastError());
         CloseHandle(FileMap);
         return -1;
     }
@@ -174,28 +180,28 @@ main(int argc,
     lpfnLoadLibA = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "LoadLibraryA");
     if (!lpfnLoadLibA)
     {
-        fprintf(stderr, "Could no locate LoadLibraryA\n");
+        fprintf(stderr, "[CORE] Could no locate LoadLibraryA\n");
         return -1;
     }
 
     lpfnFreeLib = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "FreeLibrary");
     if (!lpfnFreeLib)
     {
-        fprintf(stderr, "Could no locate FreeLibrary\n");
+        fprintf(stderr, "[CORE] Could no locate FreeLibrary\n");
         return -1;
     }
 
     pDllPath = VirtualAllocEx(ProcessInfo.hProcess, 0, Len, MEM_COMMIT, PAGE_READWRITE);
     if (!pDllPath)
     {
-        fprintf(stderr, "Failed to allocate DLL path!\n");
+        fprintf(stderr, "[CORE] Failed to allocate DLL path!\n");
         return -1;
     }
 
     Status = WriteProcessMemory(ProcessInfo.hProcess, pDllPath, (LPVOID)DllPath, Len, 0);
     if (!Status)
     {
-        fprintf(stderr, "Failed to write target memory!\n");
+        fprintf(stderr, "[CORE] Failed to write target memory!\n");
         return -1;
     }
 
@@ -205,7 +211,7 @@ main(int argc,
         Fence = CreateEventA(NULL, FALSE, FALSE, FenceName);
         if (!Fence)
         {
-            printf("failed to create fence %d\n", GetLastError());
+            printf("[CORE] Failed to create fence %d\n", GetLastError());
             return (-1);
         }
 
@@ -217,7 +223,7 @@ main(int argc,
     LoadThread = CreateRemoteThread(ProcessInfo.hProcess, NULL, 0, lpfnLoadLibA, pDllPath, 0, NULL);
     if (!LoadThread)
     {
-        fprintf(stderr, "Failed to load thread\n");
+        fprintf(stderr, "[CORE] Failed to load remote thread\n");
         return -1;
     }
     WaitForSingleObject(LoadThread, INFINITE);
@@ -375,7 +381,7 @@ ParseOpts(int argc,
 
 	if (Opts.TraceList[0][0] && Opts.BlockList[0][0])
 	{
-		printf("error: can only trace (/T) OR block (/B) functions...!" CRLF);
+		printf("Error: can only trace (/T) OR block (/B) functions...!" CRLF);
 		exit(-1);
 	}
 
@@ -404,15 +410,15 @@ InitializePipe(LPVOID Param)
 
 
     g_Pipe = CreateNamedPipe(PipeName, PIPE_ACCESS_INBOUND, PIPE_TYPE_BYTE, 1, 0, 0, 0, NULL);
-    printf("server: created pipe\r\n");
+    printf("[CORE] Created pipe...\r\n");
     Status = ConnectNamedPipe(g_Pipe, NULL);
     if (!Status)
     {
-        printf("server: failed to connect pipe...!\r\n");
+        printf("[CORE] Failed to connect pipe...!\r\n");
     }
     else
     {
-        printf("server: connected pipe\r\n");
+        printf("[CORE] Connected pipe...\r\n");
     }
 
     return (0);

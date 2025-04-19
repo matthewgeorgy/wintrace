@@ -1,6 +1,7 @@
 /*
     Version History
 
+		0.5.6	Made printing in core & dll a bit nicer
 		0.5.5   Explicit /B option for blocking functions to trace
 		0.5.4	Naming Opts, Pipe, and Fence with the target PID
         0.5.3   Tidying up some DLL stuff
@@ -94,7 +95,7 @@
 #include <crt/wt_stdio.h>
 #include <crt/wt_stdlib.h>
 
-#define WINTRACE_DLL_VERSION "0.5.5"
+#define WINTRACE_DLL_VERSION "0.5.6"
 
 // Goes through the IAT and patches the function addresses
 void PatchIAT(void);
