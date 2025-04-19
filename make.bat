@@ -5,6 +5,9 @@ if "%1"=="clean"    goto :clean
 if "%1"=="test"     goto :test
 
 :install
+	pushd codegen
+		call compile.bat
+	popd
     pushd build
 		cl /W4 /c /I"..\dll\inc" ..\dll\crt\*.c
 		cl /W4 /c /I"..\dll\inc" ..\dll\win32\*.c

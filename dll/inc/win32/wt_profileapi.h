@@ -3,13 +3,7 @@
 
 #include "common.h"
 
-BOOL WtQueryPerformanceCounter(
-  LARGE_INTEGER *lpPerformanceCount
-);
-
-BOOL WtQueryPerformanceFrequency(
-  LARGE_INTEGER *lpFrequency
-);
+BOOL WtQueryPerformanceCounter(PLARGE_INTEGER lpPerformanceCount);
+BOOL WtQueryPerformanceFrequency(PLARGE_INTEGER lpFrequency);
 
 #endif // WT_PROFILEAPI_H
-

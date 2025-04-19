@@ -1,6 +1,7 @@
 /*
     Version History
 
+		0.5.0	Win32 function hooks are now generated using hookgen
         0.4.10  Added function for getting wintrace.dll version
         0.4.9   Added ~ specifier to the /T switch to specify functions that
                 are not to be traced
