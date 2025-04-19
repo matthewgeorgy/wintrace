@@ -40,8 +40,7 @@ main(int argc,
 					HeaderBuffer;
 	HANDLE 			HeaderFile,
 					SourceFile;
-	CHAR			**File,
-					*ListName,
+	CHAR			*ListName,
 					*HeaderName,
 					*SourceName,
 					*Prefix,
@@ -74,9 +73,13 @@ main(int argc,
 
 	Functions = ParseFunctions(ListName, &Count);
 
+	//////////////////////////////////////////////////////////////////////////
+	// Source file generation
+
 	SourceBuffer.Buff = (CHAR *)malloc(BUFF_SIZE);
 	SourceBuffer.Pos = 0;
 
+	// Header and extern global pOpts
 	WriteBuffer(&SourceBuffer, "#include <win32/%s>\n\n", HeaderName);
 	WriteBuffer(&SourceBuffer, "extern T_WintraceOpts\t\t*pOpts;\n\n");
 
@@ -99,7 +102,7 @@ main(int argc,
 
 			for (INT I = 0; I < Func.ArgCount; I++)
 			{
-				WriteBuffer(&SourceBuffer, "\t %s %s", Func.ArgTypes[I], Func.ArgNames[I]);
+				WriteBuffer(&SourceBuffer, "\t%s %s", Func.ArgTypes[I], Func.ArgNames[I]);
 
 				if (Commas > 0)
 				{
@@ -236,9 +239,7 @@ main(int argc,
 		// Return variable return
 		if (strcmp(Func.ReturnType, "void"))
 		{
-			WriteBuffer(&SourceBuffer,
-				"\n\treturn (Ret);"
-			);
+			WriteBuffer(&SourceBuffer, "\n\treturn (Ret);");
 		}
 
 		WriteBuffer(&SourceBuffer, "\n}\n\n");
@@ -248,6 +249,9 @@ main(int argc,
 	WriteFile(SourceFile, SourceBuffer.Buff, (DWORD)SourceBuffer.Pos, 0, 0);
 	CloseHandle(SourceFile);
 
+	//////////////////////////////////////////////////////////////////////////
+	// Header file generation
+
 	HeaderBuffer.Buff = (CHAR *)malloc(BUFF_SIZE);
 	HeaderBuffer.Pos = 0;
 
@@ -255,19 +259,17 @@ main(int argc,
 	strcpy(IncludeGuard, ListName);
 	for (INT I = 0; I < strlen(IncludeGuard); I++)
 	{
-		IncludeGuard[I] = toupper(IncludeGuard[I]);
+		IncludeGuard[I] = (CHAR)toupper(IncludeGuard[I]);
 	}
 	IncludeGuard[Len] = '_';
 	IncludeGuard[Len + 1] = 'H';
 	IncludeGuard[Len + 2] = 0;
 
-	File = StringFile(ListName, &Len);
-
 	WriteBuffer(&HeaderBuffer, "#ifndef %s\n", IncludeGuard);
 	WriteBuffer(&HeaderBuffer, "#define %s\n\n", IncludeGuard);
 	WriteBuffer(&HeaderBuffer, "#include \"common.h\"\n\n");
 
-	for (INT I = 0; I < Len; I++)
+	for (INT I = 0; I < Count; I++)
 	{
 		T_Function Func = Functions[I];
 
@@ -422,15 +424,21 @@ GetFormat(CHAR *Format,
 	Hash = Djb2(Type);
 	switch (Hash)
 	{
+		case TYPE_PVOID:
+		case TYPE_PSIZE_T:
 		case TYPE_LPVOID:
 		case TYPE_HANDLE:
 		case TYPE_LPSECURITY_ATTRIBUTES:
 		case TYPE_LPDWORD:
+		case TYPE_PDWORD:
+		case TYPE_PMEMORY_BASIC_INFORMATION:
 		case TYPE_PLARGE_INTEGER:
 		case TYPE_LPOVERLAPPED:
 		case TYPE_LPOVERLAPPED_COMPLETION_ROUTINE:
 		case TYPE_PLONG:
 		case TYPE_LPCVOID:
+		case TYPE_PHANDLE:
+		case TYPE_LPPROCESS_HEAP_ENTRY:
 		{
 			strcpy(Format, "0x%p");
 		} break;
@@ -455,6 +463,7 @@ GetFormat(CHAR *Format,
 		case TYPE_BOOL:
 		case TYPE_LONG:
 		case TYPE_LARGE_INTEGER:
+		case TYPE_HEAP_INFORMATION_CLASS:
 		{
 			strcpy(Format, "%d");
 		} break;
