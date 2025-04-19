@@ -36,11 +36,16 @@ main(int argc,
 	T_Function		*Functions;
 	INT				Count,
 					Len;
-	T_Buffer		Buffer;
-	HANDLE 			OutputFile;
-	CHAR			*InputFilename,
-					*OutputFilename,
-					*Prefix;
+	T_Buffer		SourceBuffer,
+					HeaderBuffer;
+	HANDLE 			HeaderFile,
+					SourceFile;
+	CHAR			**File,
+					*ListName,
+					*HeaderName,
+					*SourceName,
+					*Prefix,
+					*IncludeGuard;
 
 
 	if (argc < 3)
@@ -50,71 +55,80 @@ main(int argc,
 		return (-1);
 	}
 
-	InputFilename = argv[1];
-	Len = (INT)strlen(InputFilename);
-	OutputFilename = (LPSTR)malloc(Len + 1);
-	memcpy(OutputFilename, InputFilename, Len);
-	OutputFilename[Len - 1] = 'c';
-	OutputFilename[Len] = 0;
+	ListName = argv[1];
 	Prefix = argv[2];
 
-	Functions = ParseFunctions(InputFilename, &Count);
-	Buffer.Buff = (CHAR *)malloc(BUFF_SIZE);
-	Buffer.Pos = 0;
+	Len = (INT)strlen(ListName);
+	HeaderName = (CHAR *)malloc(Len + 3);
+	SourceName = (CHAR *)malloc(Len + 3);
+	memcpy(HeaderName, ListName, Len);
+	memcpy(SourceName, ListName, Len);
 
-	WriteBuffer(&Buffer, "#include <win32/%s>\n\n", InputFilename);
-	WriteBuffer(&Buffer, "extern T_WintraceOpts\t\t*pOpts;\n\n");
+	HeaderName[Len] = '.';
+	HeaderName[Len + 1] = 'h';
+	HeaderName[Len + 2] = 0;
+	SourceName[Len] = '.';
+	SourceName[Len + 1] = 'c';
+	SourceName[Len + 2] = 0;
+
+	Functions = ParseFunctions(ListName, &Count);
+
+	SourceBuffer.Buff = (CHAR *)malloc(BUFF_SIZE);
+	SourceBuffer.Pos = 0;
+
+	WriteBuffer(&SourceBuffer, "#include <win32/%s>\n\n", HeaderName);
+	WriteBuffer(&SourceBuffer, "extern T_WintraceOpts\t\t*pOpts;\n\n");
 
 	for (INT J = 0; J < Count; J++)
 	{
 		T_Function Func = Functions[J];
 
-		WriteBuffer(&Buffer, "%s\n%s%s", Func.ReturnType, Prefix, Func.Name);
-		WriteBuffer(&Buffer, "(");
+		WriteBuffer(&SourceBuffer, "%s\n%s%s", Func.ReturnType, Prefix, Func.Name);
+		WriteBuffer(&SourceBuffer, "(");
 
 		if (Func.ArgCount == 0)
 		{
-			WriteBuffer(&Buffer, ")");
+			WriteBuffer(&SourceBuffer, ")");
 		}
 		else
 		{
 			INT Commas = Func.ArgCount - 1;
 
-			WriteBuffer(&Buffer, "\n");
+			WriteBuffer(&SourceBuffer, "\n");
 
 			for (INT I = 0; I < Func.ArgCount; I++)
 			{
-				WriteBuffer(&Buffer, "\t %s %s", Func.ArgTypes[I], Func.ArgNames[I]);
+				WriteBuffer(&SourceBuffer, "\t %s %s", Func.ArgTypes[I], Func.ArgNames[I]);
 
 				if (Commas > 0)
 				{
-					WriteBuffer(&Buffer, ",");
+					WriteBuffer(&SourceBuffer, ",");
 					Commas--;
 				}
 
-				WriteBuffer(&Buffer, "\n");
+				WriteBuffer(&SourceBuffer, "\n");
 			}
 
-			WriteBuffer(&Buffer, ")");
+			WriteBuffer(&SourceBuffer, ")");
 		}
 
-		WriteBuffer(&Buffer, "\n{\n");
+		WriteBuffer(&SourceBuffer, "\n{\n");
 
 		// Create stack
 		if (strcmp(Func.ReturnType, "void"))
 		{
-			WriteBuffer(&Buffer,
+			WriteBuffer(&SourceBuffer,
 				"\t%s Ret;\n\n",
 				Func.ReturnType
 			);
 		}
 
 		// BeginTrace
-		WriteBuffer(&Buffer,
+		WriteBuffer(&SourceBuffer,
 			"\tif (BeginTrace(E_%s))\n"
 			"\t{\n",
 			Func.Name);
-		WriteBuffer(&Buffer,
+		WriteBuffer(&SourceBuffer,
 			"\t\tWriteFuncBuffer(\"(");
 
 		// Arguments in WriteFuncBuffer string
@@ -123,134 +137,165 @@ main(int argc,
 		{
 			CHAR Format[8];
 			GetFormat(Format, Func.ArgTypes[K]);
-			WriteBuffer(&Buffer, "%s", Format);
+			WriteBuffer(&SourceBuffer, "%s", Format);
 			if (Commas)
 			{
-				WriteBuffer(&Buffer, ", ");
+				WriteBuffer(&SourceBuffer, ", ");
 				Commas--;
 			}
 		}
-		WriteBuffer(&Buffer, ")\"");
+		WriteBuffer(&SourceBuffer, ")\"");
 
 		// Arguments in WriteFuncBuffer varargs
 		Commas = Func.ArgCount - 1;
 		if (Func.ArgCount > 0)
 		{
-			WriteBuffer(&Buffer, ",");
+			WriteBuffer(&SourceBuffer, ",");
 		}
 		for (INT K = 0; K < Func.ArgCount; K++)
 		{
-			WriteBuffer(&Buffer, " %s", Func.ArgNames[K]);
+			WriteBuffer(&SourceBuffer, " %s", Func.ArgNames[K]);
 			if (Commas)
 			{
-				WriteBuffer(&Buffer, ",");
+				WriteBuffer(&SourceBuffer, ",");
 				Commas--;
 			}
 		}
-		WriteBuffer(&Buffer, ");\n");
+		WriteBuffer(&SourceBuffer, ");\n");
 
 		// Call the real function
 		// We call it inside the BeginTrace block if it's a non-void function.
 		// Otherwise, it gets called outside the block
 		if (strcmp(Func.ReturnType, "void"))
 		{
-			WriteBuffer(&Buffer,
+			WriteBuffer(&SourceBuffer,
 				"\t\tRet = %s(",
 				Func.Name);
 			Commas = Func.ArgCount - 1;
 			for (INT K = 0; K < Func.ArgCount; K++)
 			{
-				WriteBuffer(&Buffer, "%s", Func.ArgNames[K]);
+				WriteBuffer(&SourceBuffer, "%s", Func.ArgNames[K]);
 				if (Commas)
 				{
-					WriteBuffer(&Buffer, ", ");
+					WriteBuffer(&SourceBuffer, ", ");
 					Commas--;
 				}
 			}
-			WriteBuffer(&Buffer, ");\n");
+			WriteBuffer(&SourceBuffer, ");\n");
 		}
 
 		// WriteFuncBuffer hook function return value
-		WriteBuffer(&Buffer, "\t\tWriteFuncBuffer(\" = ");
+		WriteBuffer(&SourceBuffer, "\t\tWriteFuncBuffer(\" = ");
 		if (strcmp(Func.ReturnType, "void"))
 		{
 			CHAR Format[8];
 			GetFormat(Format, Func.ReturnType);
-			WriteBuffer(&Buffer,
+			WriteBuffer(&SourceBuffer,
 				"%s\", Ret", Format);
 		}
 		else
 		{
-			WriteBuffer(&Buffer,
+			WriteBuffer(&SourceBuffer,
 				"VOID");
 		}
-		WriteBuffer(&Buffer, ");\n");
+		WriteBuffer(&SourceBuffer, ");\n");
 
 		// EndTrace
-		WriteBuffer(&Buffer,
+		WriteBuffer(&SourceBuffer,
 			"\t\tEndTrace(E_%s, FALSE);\n",
 			Func.Name);
 		/* if (strcmp(Func.ReturnType, "void")) */
 		/* { */
 		/* } */
 
-		WriteBuffer(&Buffer, "\t}\n");
+		WriteBuffer(&SourceBuffer, "\t}\n");
 
 		if (strcmp(Func.ReturnType, "void"))
 		{
-			WriteBuffer(&Buffer, "\telse\n\t{\n");
-			WriteBuffer(&Buffer, "\t\tRet = ");
-			WriteBuffer(&Buffer, "%s(", Func.Name);
+			WriteBuffer(&SourceBuffer, "\telse\n\t{\n");
+			WriteBuffer(&SourceBuffer, "\t\tRet = ");
+			WriteBuffer(&SourceBuffer, "%s(", Func.Name);
 
 			Commas = Func.ArgCount - 1;
 			for (INT K = 0; K < Func.ArgCount; K++)
 			{
-				WriteBuffer(&Buffer, "%s", Func.ArgNames[K]);
+				WriteBuffer(&SourceBuffer, "%s", Func.ArgNames[K]);
 				if (Commas)
 				{
-					WriteBuffer(&Buffer, ", ");
+					WriteBuffer(&SourceBuffer, ", ");
 					Commas--;
 				}
 			}
-			WriteBuffer(&Buffer, ");");
+			WriteBuffer(&SourceBuffer, ");");
 
-			WriteBuffer(&Buffer, "\n\t}\n");
+			WriteBuffer(&SourceBuffer, "\n\t}\n");
 		}
 		else
 		{
-			WriteBuffer(&Buffer, "\n\t%s(", Func.Name);
+			WriteBuffer(&SourceBuffer, "\n\t%s(", Func.Name);
 
 			Commas = Func.ArgCount - 1;
 			for (INT K = 0; K < Func.ArgCount; K++)
 			{
-				WriteBuffer(&Buffer, "%s", Func.ArgNames[K]);
+				WriteBuffer(&SourceBuffer, "%s", Func.ArgNames[K]);
 				if (Commas)
 				{
-					WriteBuffer(&Buffer, ", ");
+					WriteBuffer(&SourceBuffer, ", ");
 					Commas--;
 				}
 			}
-			WriteBuffer(&Buffer, ");");
+			WriteBuffer(&SourceBuffer, ");");
 		}
 
 
 		// Return variable return
 		if (strcmp(Func.ReturnType, "void"))
 		{
-			WriteBuffer(&Buffer,
+			WriteBuffer(&SourceBuffer,
 				"\n\treturn (Ret);"
 			);
 		}
 
-		WriteBuffer(&Buffer, "\n}\n\n");
+		WriteBuffer(&SourceBuffer, "\n}\n\n");
 	}
 
-	printf("%s\n", Buffer.Buff);
+	printf("%s\n", SourceBuffer.Buff);
 
+	SourceFile = CreateFile(SourceName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	WriteFile(SourceFile, SourceBuffer.Buff, (DWORD)SourceBuffer.Pos, 0, 0);
+	CloseHandle(SourceFile);
 
-	OutputFile = CreateFile(OutputFilename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	WriteFile(OutputFile, Buffer.Buff, (DWORD)Buffer.Pos, 0, 0);
-	CloseHandle(OutputFile);
+	HeaderBuffer.Buff = (CHAR *)malloc(BUFF_SIZE);
+	HeaderBuffer.Pos = 0;
+
+	IncludeGuard = (CHAR *)malloc(Len + 1);
+	strcpy(IncludeGuard, ListName);
+	for (INT I = 0; I < strlen(IncludeGuard); I++)
+	{
+		IncludeGuard[I] = toupper(IncludeGuard[I]);
+	}
+	IncludeGuard[Len] = '_';
+	IncludeGuard[Len + 1] = 'H';
+	IncludeGuard[Len + 2] = 0;
+
+	printf("%s", IncludeGuard);
+
+	File = StringFile(ListName, &Len);
+
+	WriteBuffer(&HeaderBuffer, "#ifndef %s\n", IncludeGuard);
+	WriteBuffer(&HeaderBuffer, "#define %s\n\n", IncludeGuard);
+	WriteBuffer(&HeaderBuffer, "#include \"common.h\"\n\n");
+
+	for (INT I = 0; I < Len; I++)
+	{
+		WriteBuffer(&HeaderBuffer, "%s\n", File[I]);
+	}
+
+	WriteBuffer(&HeaderBuffer, "\n#endif %s\n", IncludeGuard);
+
+	HeaderFile = CreateFile(HeaderName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	WriteFile(HeaderFile, HeaderBuffer.Buff, (DWORD)HeaderBuffer.Pos, 0, 0);
+	CloseHandle(HeaderFile);
 
 	return (0);
 }
