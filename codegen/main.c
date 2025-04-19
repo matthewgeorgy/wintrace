@@ -347,6 +347,7 @@ ParseFunctions(CHAR *Filename,
 	return (Functions);
 }
 
+// stb_stringfile, thank you Sean Barrett
 CHAR **
 StringFile(char *filename, int *plen)
 {
@@ -439,6 +440,23 @@ GetFormat(CHAR *Format,
 		case TYPE_LPCVOID:
 		case TYPE_PHANDLE:
 		case TYPE_LPPROCESS_HEAP_ENTRY:
+		case TYPE_LPPROC_THREAD_ATTRIBUTE_LIST:
+		case TYPE_LPSTARTUPINFOA:
+		case TYPE_LPSTARTUPINFOW:
+		case TYPE_LPPROCESS_INFORMATION:
+		case TYPE_LPTHREAD_START_ROUTINE:
+		case TYPE_LPDEBUG_EVENT:
+		case TYPE_PBOOL:
+		case TYPE_LPBOOL:
+		case TYPE_LPRECT:
+		case TYPE_HWND:
+		case TYPE_LPPAINTSTRUCT:
+		case TYPE_HDC:
+		case TYPE_LPPOINT:
+		case TYPE_HMENU:
+		case TYPE_HINSTANCE:
+		case TYPE_LPMSG:
+		case TYPE_HBRUSH:
 		{
 			strcpy(Format, "0x%p");
 		} break;
@@ -449,7 +467,15 @@ GetFormat(CHAR *Format,
 			strcpy(Format, "\\\"%s\\\"");
 		} break;
 
+		case TYPE_WORD:
+		case TYPE_ATOM:
 		case TYPE_DWORD:
+		case TYPE_UINT:
+		case TYPE_LRESULT:
+		case TYPE_WPARAM:
+		case TYPE_LPARAM:
+		case TYPE_LPWNDCLASSEXA:
+		case TYPE_LPWNDCLASSEXW:
 		{
 			strcpy(Format, "%u");
 		} break;
@@ -459,11 +485,13 @@ GetFormat(CHAR *Format,
 			strcpy(Format, "%llu");
 		} break;
 
+		case TYPE_int:
 		case TYPE_INT:
 		case TYPE_BOOL:
 		case TYPE_LONG:
 		case TYPE_LARGE_INTEGER:
 		case TYPE_HEAP_INFORMATION_CLASS:
+		case TYPE_short:
 		{
 			strcpy(Format, "%d");
 		} break;
