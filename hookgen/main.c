@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <assert.h>
-#include "hashes.h"
+#include "type_hashes.h"
 
 #define BUFF_SIZE       1024 * 1024 // 1 MB
 
@@ -45,6 +45,7 @@ DWORD           Djb2(LPSTR String);
 void            GenerateHooks(T_Function *Functions, INT Count, CHAR *ListName, CHAR *Prefix, CHAR *Folder);
 void            GenerateFuncRecords(T_Function *Functions[], INT Count[], CHAR *LibNames[], SIZE_T HookListSize);
 void            GeneratePatchFunction(T_Function *Functions[], INT Count[], CHAR *LibNames[], SIZE_T HookListSize);
+void            GenerateFunctionHashes(T_Function *Functions[], INT Count[], CHAR *LibNames[], SIZE_T HookListSize);
 
 int
 main(void)
@@ -75,6 +76,7 @@ main(void)
 
     GenerateFuncRecords(Functions, Count, LibNames, _countof(HookList));
     GeneratePatchFunction(Functions, Count, LibNames, _countof(HookList));
+    GenerateFunctionHashes(Functions, Count, LibNames, _countof(HookList));
 
     return (0);
 }
@@ -722,26 +724,61 @@ GeneratePatchFunction(T_Function *Functions[],
             WriteBuffer(&Buffer, "%*c", Written, ' ');
             WriteBuffer(&Buffer, "{ PatchEntry(");
 
-			// Choose the correct prefix:
-			// wt_ for CRT
-			// Wt for Win32
-			if (!strcmp(LibNames[I], "stdio") || !strcmp(LibNames[I], "stdlib"))
-			{
-				WriteBuffer(&Buffer, "wt_");
-			}
-			else
-			{
-				WriteBuffer(&Buffer, "Wt");
-			}
+            // Choose the correct prefix:
+            // wt_ for CRT
+            // Wt for Win32
+            if (!strcmp(LibNames[I], "stdio") || !strcmp(LibNames[I], "stdlib"))
+            {
+                WriteBuffer(&Buffer, "wt_");
+            }
+            else
+            {
+                WriteBuffer(&Buffer, "Wt");
+            }
 
-			WriteBuffer(&Buffer, "%s); } break;\n", Functions[I][J].Name);
+            WriteBuffer(&Buffer, "%s); } break;\n", Functions[I][J].Name);
         }
     }
-	WriteBuffer(&Buffer, "#pragma warning(default: 4127)\n");
-	WriteBuffer(&Buffer, "    }\n");
-	WriteBuffer(&Buffer, "}\n");
+    WriteBuffer(&Buffer, "#pragma warning(default: 4127)\n");
+    WriteBuffer(&Buffer, "    }\n");
+    WriteBuffer(&Buffer, "}\n");
 
     File = CreateFile("patch_function.c", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     WriteFile(File, Buffer.Buff, (DWORD)Buffer.Pos, 0, 0);
     CloseHandle(File);
 }
+
+void            
+GenerateFunctionHashes(T_Function *Functions[],
+               		   INT Count[],
+					   CHAR *LibNames[],
+               		   SIZE_T HookListSize)
+{
+    T_Buffer        Buffer;
+    HANDLE          File;
+
+
+    Buffer.Buff = (CHAR *)malloc(BUFF_SIZE);
+    Buffer.Pos = 0;
+
+	WriteBuffer(&Buffer, "#ifndef FUNC_HASHES_H\n");
+	WriteBuffer(&Buffer, "#define FUNC_HASHES_H\n\n");
+
+    for (INT I = 0; I < HookListSize; I++)
+    {
+        WriteBuffer(&Buffer, "// %s.h\n", LibNames[I]);
+        for (INT J = 0; J < Count[I]; J++)
+        {
+			DWORD Hash = Djb2(Functions[I][J].Name);
+
+			WriteBuffer(&Buffer, "#define FUNC_%s %u\n", Functions[I][J].Name, Hash);
+		}
+	}
+
+	WriteBuffer(&Buffer, "\n#endif // FUNC_HASHES_H\n");
+
+    File = CreateFile("func_hashes.h", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    WriteFile(File, Buffer.Buff, (DWORD)Buffer.Pos, 0, 0);
+    CloseHandle(File);
+}
+

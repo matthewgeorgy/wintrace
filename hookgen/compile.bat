@@ -33,3 +33,6 @@ move func_records.c W:\wintrace\dll
 :: PatchFunction
 move patch_function.c W:\wintrace\dll
 
+:: Function hashes
+move func_hashes.h W:\wintrace\dll\inc
+
