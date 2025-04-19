@@ -34,11 +34,11 @@ goto :EOF
 
 :clean
     pushd build
-        del /Q *.*
+        del /Q *.obj *.exe *.pdb *.ilk *.lib *.exp *.dll
 		del /Q Foo\*
 		rmdir Foo
 		pushd tests
-			del /Q *.*
+			del /Q *.exe
 		popd
     popd
 goto :EOF
