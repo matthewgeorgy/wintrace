@@ -1,4 +1,3 @@
-#include <func_records.h>
 #include <common.h>
 
 extern		T_WintraceOpts *pOpts;
@@ -281,46 +280,3 @@ SetTrace(DWORD Hash,
 	}
 }
 
-void
-InitFuncRecs()
-{
-    DWORD       Hash;
-    INT         I;
-
-
-	// Only tracing specific functions, set just these to TRUE
-	if (pOpts->TraceList[0][0])
-	{
-		for (I = 0; I < 32 && pOpts->TraceList[I]; I++)
-		{
-			Hash = Djb2(pOpts->TraceList[I]);
-
-			SetTrace(Hash, TRUE);
-		}
-	}
-
-	// Blocking specific functions
-	else if (pOpts->BlockList[0][0])
-    {
-        for (I = 0; I < E_Count; I++)
-        {
-            g_FuncRecs[I].bTrace = TRUE;
-        }
-
-		for (I = 0; I < 32 && pOpts->BlockList[I]; I++)
-		{
-			Hash = Djb2(pOpts->BlockList[I]);
-
-			SetTrace(Hash, FALSE);
-		}
-    }
-
-	// Tracing all functions
-    else
-    {
-        for (I = 0; I < E_Count; I++)
-        {
-            g_FuncRecs[I].bTrace = TRUE;
-        }
-    }
-}

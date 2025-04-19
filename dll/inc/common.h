@@ -6,6 +6,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <hashes.h>
 #include <func_records.h>
 
 typedef FILE *LPFILE; 
@@ -52,6 +53,9 @@ BOOL BeginTrace(E_FuncEnum FunctionName);
 // Initialize the function records array, specifically setting the conditional
 // tracing flag (will add more later)
 void InitFuncRecs();
+
+// Set whether a function in g_FuncRecs should be traced
+void SetTrace(DWORD Hash, BOOL bTrace);
 
 // End the trace for a function
 void EndTrace(E_FuncEnum FunctionName, BOOL bError);
