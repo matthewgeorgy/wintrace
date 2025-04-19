@@ -25,3 +25,8 @@ mv wt_stdlib.h W:\wintrace\dll\inc\crt
 
 mv wt_stdio.c W:\wintrace\dll\crt
 mv wt_stdlib.c W:\wintrace\dll\crt
+
+:: Func records
+mv func_records.h W:\wintrace\dll\inc
+mv func_records.c W:\wintrace\dll
+

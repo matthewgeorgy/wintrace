@@ -39,17 +39,19 @@ CHAR *HookList[] =
 
 CHAR			**StringFile(char *filename, int *plen);
 T_Function		*ParseFunctions(CHAR *Filename, INT *Count);
-void			WriteBuffer(T_Buffer *Buffer, char *Format, ...);
+SIZE_T			WriteBuffer(T_Buffer *Buffer, char *Format, ...);
 void			GetFormat(CHAR *Format, CHAR *Type);
 DWORD			Djb2(LPSTR String);
 void			GenerateHooks(T_Function *Functions, INT Count, CHAR *ListName, CHAR *Prefix, CHAR *Folder);
+void			GenerateFuncRecords(T_Function *Functions[], INT Count[], CHAR *LibNames[], SIZE_T HookListSize);
 
 int
 main(void)
 {
 	T_Function		*Functions[9];
-	INT				Count[9],
-					I;
+	INT				Count[9];
+	CHAR			*LibNames[9];
+	INT				I;
 	CHAR			ListName[32],
 					Prefix[32],
 					Folder[32];
@@ -57,15 +59,20 @@ main(void)
 	
 	assert(_countof(Functions) == _countof(HookList));	
 	assert(_countof(Count) == _countof(HookList));	
+	assert(_countof(LibNames) == _countof(HookList));	
 
 	for (I = 0; I < _countof(HookList); I++)
 	{
 		sscanf(HookList[I], "%s %s %s", ListName, Prefix, Folder);
 
 		Functions[I] = ParseFunctions(ListName, &Count[I]);
-
 		GenerateHooks(Functions[I], Count[I], ListName, Prefix, Folder);
+
+		LibNames[I] = (CHAR *)malloc(strlen(ListName) - 3);
+		strcpy(LibNames[I], &ListName[3]);
 	}
+
+	GenerateFuncRecords(Functions, Count, LibNames, _countof(HookList));
 
 	return (0);
 }
@@ -170,7 +177,7 @@ StringFile(char *filename, int *plen)
    return list;
 }
 
-void
+SIZE_T
 WriteBuffer(T_Buffer *Buffer,
 			char *Format,
 			...)
@@ -185,6 +192,8 @@ WriteBuffer(T_Buffer *Buffer,
 	Buffer->Pos += Bytes;
 
 	va_end(VarArgs);
+
+	return (Bytes);
 }
 
 void
@@ -567,5 +576,110 @@ GenerateHooks(T_Function *Functions,
 	WriteFile(HeaderFile, HeaderBuffer.Buff, (DWORD)HeaderBuffer.Pos, 0, 0);
 	CloseHandle(HeaderFile);
 
+}
+
+void			
+GenerateFuncRecords(T_Function *Functions[],
+				    INT Count[],
+				    CHAR *LibNames[],
+				    SIZE_T HookListSize)
+{
+	T_Buffer		HeaderBuffer,
+					SourceBuffer;
+	HANDLE			HeaderFile,
+					SourceFile;
+
+
+	//////////////////////////////////////////////////////////////////////////
+	// Source file generation
+
+	SourceBuffer.Buff = (CHAR *)malloc(BUFF_SIZE);
+	SourceBuffer.Pos = 0;
+
+	// Header and extern global pOpts
+	WriteBuffer(&SourceBuffer, "#include <common.h>\n\n");
+	WriteBuffer(&SourceBuffer, "extern T_WintraceOpts *pOpts;\n\n");
+
+	// Function record array
+	WriteBuffer(&SourceBuffer, "// Full list of supported function records\n");
+	WriteBuffer(&SourceBuffer, "T_FuncRec  g_FuncRecs[] =\n{\n");
+
+	for (INT I = 0; I < HookListSize; I++)
+	{
+		WriteBuffer(&SourceBuffer, "    // %s.h\n", LibNames[I]);
+
+		for (INT J = 0; J < Count[I]; J++)
+		{
+			WriteBuffer(&SourceBuffer, "    { \"%s\", 0, FALSE },\n", Functions[I][J].Name);
+		}
+	}
+	WriteBuffer(&SourceBuffer, "};\n\n");
+
+
+	// SetTrace function
+	WriteBuffer(&SourceBuffer, "void\nSetTrace(DWORD Hash,\n         BOOL bTrace)\n{\n");
+	WriteBuffer(&SourceBuffer, "    switch (Hash)\n    {\n");
+
+	for (INT I = 0; I < HookListSize; I++)
+	{
+		WriteBuffer(&SourceBuffer, "        // %s.h\n", LibNames[I]);
+
+		for (INT J = 0; J < Count[I]; J++)
+		{
+			SIZE_T Written = WriteBuffer(&SourceBuffer, "        case FUNC_%s:", Functions[I][J].Name);
+			Written = 52 - Written;
+			WriteBuffer(&SourceBuffer, "%*c", Written, ' ');
+			WriteBuffer(&SourceBuffer, "{ g_FuncRecs[E_%s].bTrace = bTrace; } break;\n", Functions[I][J].Name);
+		}
+	}
+	WriteBuffer(&SourceBuffer, "    }\n");
+	WriteBuffer(&SourceBuffer, "}\n");
+
+	SourceFile = CreateFile("func_records.c", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	WriteFile(SourceFile, SourceBuffer.Buff, (DWORD)SourceBuffer.Pos, 0, 0);
+	CloseHandle(SourceFile);
+
+	//////////////////////////////////////////////////////////////////////////
+	// Header file generation
+
+	HeaderBuffer.Buff = (CHAR *)malloc(BUFF_SIZE);
+	HeaderBuffer.Pos = 0;
+
+	// Include guards
+	WriteBuffer(&HeaderBuffer, "#ifndef FUNC_RECORDS_H\n");
+	WriteBuffer(&HeaderBuffer, "#define FUNC_RECORDS_H\n\n");
+
+	// Includes 
+	WriteBuffer(&HeaderBuffer, "#define WIN32_LEAN_AND_MEAN\n");
+	WriteBuffer(&HeaderBuffer, "#include <windows.h>\n\n");
+
+	// T_FuncRec
+	WriteBuffer(&HeaderBuffer, "typedef struct _tag_FuncRec\n"
+							   "{\n"
+						   	   "    CHAR        *Name;\n"	   
+						   	   "    DWORD       Cnt;\n"	   
+						   	   "    BOOL        bTrace;\n"
+							   "} T_FuncRec;\n\n");  
+
+
+	// E_FuncEnum
+	WriteBuffer(&HeaderBuffer, "typedef enum _tag_FuncEnum\n{\n");
+	for (INT I = 0; I < HookListSize; I++)
+	{
+		WriteBuffer(&HeaderBuffer, "    // %s.h\n", LibNames[I]);
+
+		for (INT J = 0; J < Count[I]; J++)
+		{
+			WriteBuffer(&HeaderBuffer, "    E_%s,\n", Functions[I][J].Name);
+		}
+	}
+	WriteBuffer(&HeaderBuffer, "    E_Count,\n");
+	WriteBuffer(&HeaderBuffer, "} E_FuncEnum;\n\n");
+
+	WriteBuffer(&HeaderBuffer, "#endif // FUNC_RECORDS_H");
+
+	HeaderFile = CreateFile("func_records.h", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	WriteFile(HeaderFile, HeaderBuffer.Buff, (DWORD)HeaderBuffer.Pos, 0, 0);
+	CloseHandle(HeaderFile);
 }
 
