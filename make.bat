@@ -23,6 +23,7 @@ goto :EOF
         cl /W4 /MD ..\..\tests\test_memoryapi.c
         cl /W4 /MD ..\..\tests\test_stdio.c
         cl /W4 /MD ..\..\tests\test_stdlib.c
+        cl /W4 /MD ..\..\tests\test_threads.c
 		del /Q *.obj
     popd
 goto :EOF
