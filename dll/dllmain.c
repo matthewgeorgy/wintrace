@@ -97,6 +97,58 @@ DllMain(HMODULE hModule,
 }
 
 void
+PatchIAT(void)
+{
+    HANDLE                          ImageBase;
+    PIMAGE_DOS_HEADER               DosHeader;
+    PIMAGE_NT_HEADERS               NtHeader;
+    PIMAGE_IMPORT_DESCRIPTOR        ImportDesc;
+    IMAGE_DATA_DIRECTORY            ImportDir;
+    LPCSTR                          LibraryName;
+    HMODULE                         Library;
+    PIMAGE_IMPORT_BY_NAME           FunctionName;
+    PIMAGE_THUNK_DATA               OriginalFirstThunk,
+                                    FirstThunk;
+    DWORD                           FuncHash;
+
+
+    ImageBase = GetModuleHandleA(NULL);
+    DosHeader = (PIMAGE_DOS_HEADER)ImageBase;
+    NtHeader = (PIMAGE_NT_HEADERS)((DWORD_PTR)ImageBase + DosHeader->e_lfanew);
+
+    ImportDir = NtHeader->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
+    ImportDesc = (PIMAGE_IMPORT_DESCRIPTOR)(ImportDir.VirtualAddress + (DWORD_PTR)ImageBase);
+
+    while (ImportDesc->Name != 0)
+    {
+        // NOTE(matthew): Do I actually need this? Why the fuck did I put this here??
+        // It's not actually used for anything and calling LoadLibrary from DllMain is bad!
+
+        /* LibraryName = (LPCSTR)((DWORD_PTR)ImportDesc->Name) + (DWORD_PTR)ImageBase; */
+        /* Library = LoadLibraryA(LibraryName); */
+
+        /* if (Library) */
+        /* { */
+        OriginalFirstThunk = (PIMAGE_THUNK_DATA)((DWORD_PTR)ImageBase + ImportDesc->OriginalFirstThunk);
+        FirstThunk = (PIMAGE_THUNK_DATA)((DWORD_PTR)ImageBase + ImportDesc->FirstThunk);
+
+        while (OriginalFirstThunk->u1.AddressOfData != 0)
+        {
+            FunctionName = (PIMAGE_IMPORT_BY_NAME)((DWORD_PTR)ImageBase + OriginalFirstThunk->u1.AddressOfData);
+            FuncHash = Djb2((LPSTR)FunctionName->Name);
+
+			PatchFunction(FuncHash, FirstThunk);
+
+            OriginalFirstThunk++;
+            FirstThunk++;
+        }
+        /* } */
+
+        ImportDesc++;
+    }
+}
+
+void
 ReadIAT(void)
 {
     LPVOID                          ImageBase;

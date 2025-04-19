@@ -99,12 +99,16 @@
 // Goes through the IAT and patches the function addresses
 void PatchIAT(void);
 
+// Patches a function using its Djb2 hash
+void PatchFunction(DWORD FuncHash, PIMAGE_THUNK_DATA FirstThunk);
+
 // 'Dummy' function for printing the IAT (function names + addresses)
 void ReadIAT(void);
 
 __declspec(dllexport) LPSTR __stdcall GetWintraceDllVersion(void);
 
 // Simpe macro for patching a functions address in the IAT
+// Takes FirstThunk and OldProtect from the scope of PatchFunction()!
 #define PatchEntry(__Func) \
     do \
     { \
