@@ -459,6 +459,7 @@ GetFormat(CHAR *Format,
 		case TYPE_HINSTANCE:
 		case TYPE_LPMSG:
 		case TYPE_HBRUSH:
+		case TYPE_LPFILE:
 		{
 			strcpy(Format, "0x%p");
 		} break;
@@ -482,6 +483,7 @@ GetFormat(CHAR *Format,
 			strcpy(Format, "%u");
 		} break;
 
+		case TYPE_size_t:
 		case TYPE_SIZE_T:
 		{
 			strcpy(Format, "%llu");

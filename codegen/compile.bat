@@ -1,5 +1,6 @@
 @echo off
 
+:: Win32 hooks
 hookgen wt_debugapi Wt win32
 hookgen wt_fileapi Wt win32
 hookgen wt_heapapi Wt win32
@@ -23,3 +24,13 @@ cp wt_memoryapi.c W:\wintrace\dll\win32
 cp wt_processthreadsapi.c W:\wintrace\dll\win32
 cp wt_profileapi.c W:\wintrace\dll\win32
 cp wt_winuser.c W:\wintrace\dll\win32
+
+:: CRT hooks
+hookgen wt_stdio wt_ crt
+hookgen wt_stdlib wt_ crt
+
+cp wt_stdio.h W:\wintrace\dll\inc\crt
+cp wt_stdlib.h W:\wintrace\dll\inc\crt
+
+cp wt_stdio.c W:\wintrace\dll\crt
+cp wt_stdlib.c W:\wintrace\dll\crt

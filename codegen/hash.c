@@ -12,6 +12,9 @@ LPSTR Types[] =
 	"short",
 	"int",
 	"long",
+	"float",
+	"double",
+	"size_t",
 	"INT",
 	"INT8",
 	"INT16",
@@ -83,7 +86,8 @@ LPSTR Types[] =
 	"LPMSG",
 	"HBRUSH",
 	"LPWNDCLASSEXA",
-	"LPWNDCLASSEXW"
+	"LPWNDCLASSEXW",
+	"LPFILE"
 };
 
 

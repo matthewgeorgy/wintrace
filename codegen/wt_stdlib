@@ -1,0 +1,2 @@
+LPVOID malloc(size_t size);
+void free(LPVOID memblock);

@@ -1,0 +1,3 @@
+LPFILE fopen(LPCSTR filename, LPCSTR mode);
+LPFILE _wfopen(LPCWSTR filename, LPCWSTR mode);
+int fclose(LPFILE stream);
