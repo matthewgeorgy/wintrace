@@ -46,6 +46,7 @@ main(int argc,
 					*SourceName,
 					*Prefix,
 					*IncludeGuard;
+	INT				Commas;
 
 
 	if (argc < 3)
@@ -92,7 +93,7 @@ main(int argc,
 		}
 		else
 		{
-			INT Commas = Func.ArgCount - 1;
+			Commas = Func.ArgCount - 1;
 
 			WriteBuffer(&SourceBuffer, "\n");
 
@@ -125,7 +126,7 @@ main(int argc,
 		WriteBuffer(&SourceBuffer, "\t\tWriteFuncBuffer(\"(");
 
 		// Arguments in WriteFuncBuffer string
-		INT Commas = Func.ArgCount - 1;
+		Commas = Func.ArgCount - 1;
 		for (INT K = 0; K < Func.ArgCount; K++)
 		{
 			CHAR Format[8];
@@ -191,9 +192,6 @@ main(int argc,
 
 		// EndTrace
 		WriteBuffer(&SourceBuffer, "\t\tEndTrace(E_%s, FALSE);\n", Func.Name);
-		/* if (strcmp(Func.ReturnType, "void")) */
-		/* { */
-		/* } */
 
 		WriteBuffer(&SourceBuffer, "\t}\n");
 
@@ -246,8 +244,6 @@ main(int argc,
 		WriteBuffer(&SourceBuffer, "\n}\n\n");
 	}
 
-	/* printf("%s\n", SourceBuffer.Buff); */
-
 	SourceFile = CreateFile(SourceName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	WriteFile(SourceFile, SourceBuffer.Buff, (DWORD)SourceBuffer.Pos, 0, 0);
 	CloseHandle(SourceFile);
@@ -265,8 +261,6 @@ main(int argc,
 	IncludeGuard[Len + 1] = 'H';
 	IncludeGuard[Len + 2] = 0;
 
-	/* printf("%s", IncludeGuard); */
-
 	File = StringFile(ListName, &Len);
 
 	WriteBuffer(&HeaderBuffer, "#ifndef %s\n", IncludeGuard);
@@ -275,10 +269,25 @@ main(int argc,
 
 	for (INT I = 0; I < Len; I++)
 	{
-		WriteBuffer(&HeaderBuffer, "%s\n", File[I]);
+		T_Function Func = Functions[I];
+
+		WriteBuffer(&HeaderBuffer, "%s %s%s(", Func.ReturnType, Prefix, Func.Name);
+		Commas = Func.ArgCount - 1;
+
+		for (INT J = 0; J < Func.ArgCount; J++)
+		{
+			WriteBuffer(&HeaderBuffer, "%s %s", Func.ArgTypes[J], Func.ArgNames[J]);
+			if (Commas > 0)
+			{
+				WriteBuffer(&HeaderBuffer, ", ");
+				Commas--;
+			}
+		}
+
+		WriteBuffer(&HeaderBuffer, ");\n");
 	}
 
-	WriteBuffer(&HeaderBuffer, "\n#endif %s\n", IncludeGuard);
+	WriteBuffer(&HeaderBuffer, "\n#endif // %s\n", IncludeGuard);
 
 	HeaderFile = CreateFile(HeaderName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	WriteFile(HeaderFile, HeaderBuffer.Buff, (DWORD)HeaderBuffer.Pos, 0, 0);
