@@ -1,5 +1,4 @@
 #include <common.h>
-#include <hashes.h>
 #include <stdio.h>
 
 // Globals

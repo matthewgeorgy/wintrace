@@ -6,7 +6,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <hashes.h>
+#include <func_hashes.h>
 #include <func_records.h>
 
 typedef FILE *LPFILE; 

@@ -1,6 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <dllmain.h>
-#include <hashes.h>
 
 T_WintraceOpts      *pOpts;
 HANDLE              g_Pipe;
