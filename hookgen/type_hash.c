@@ -113,7 +113,7 @@ main(void)
     CHAR        Str[256];
 
 
-    HashFile = CreateFile("w:\\wintrace\\codegen\\hashes.h", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    HashFile = CreateFile("w:\\wintrace\\hookgen\\type_hashes.h", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
     for (I = 0; I < TypesLen; I++)
     {
