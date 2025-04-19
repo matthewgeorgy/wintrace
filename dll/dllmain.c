@@ -35,7 +35,19 @@ DllMain(HMODULE hModule,
 			sprintf(PipeName, "\\\\.\\pipe\\WintracePipe_%u", ProcessId);
 			sprintf(FenceName, "WintraceFence_%u", ProcessId);
 
-			/* printf("[dll] PID: %u\n Opts:%s\n Pipe:%s\n Fence:%s\n", ProcessId, OptsName, PipeName, FenceName); */
+			g_Pipe = CreateFileA(PipeName,
+				GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
+				NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+			if (g_Pipe)
+			{
+				fprintf(stderr, "[DLL] Connected pipe...\r\n");
+			}
+
+			g_Fence = OpenEventA(SYNCHRONIZE, FALSE, FenceName);
+			if (g_Fence)
+			{
+				fprintf(stderr, "[DLL] Opened the fence...\r\n");
+			}
 
             FileMap = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, OptsName);
             if (FileMap)
@@ -43,52 +55,24 @@ DllMain(HMODULE hModule,
                 pOpts = (T_WintraceOpts *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WintraceOpts));
                 if (pOpts)
                 {
-                    if (!pOpts->OutputFilename[0])
-                    {
-                        pOpts->OutputFile = stderr;
-                    }
-                    else
-                    {
-                        pOpts->OutputFile = fopen(pOpts->OutputFilename, "w+");
-                    }
                 }
                 else
                 {
-                    printf("[DLL] Failed to map file view!(%d)\n", GetLastError());
+                    fprintf(stderr, "[DLL] Failed to map file view!(%d)\n", GetLastError());
                 }
             }
             else
             {
-                printf("[DLL] Could not open file map!(%d)\n", GetLastError());
+                fprintf(stderr, "[DLL] Could not open file map!(%d)\n", GetLastError());
             }
 
             InitFuncRecs();
             PatchIAT();
 
-            if (pOpts->UsePipes)
-            {
-                g_Pipe = CreateFileA(PipeName,
-                    GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
-                    NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-                if (g_Pipe)
-                {
-                    printf("[DLL] Connected pipe...\r\n");
-                }
-
-                g_Fence = OpenEventA(SYNCHRONIZE, FALSE, FenceName);
-                if (g_Fence)
-                {
-                    printf("[DLL] Opened the fence...\r\n");
-                }
-            }
         } break;
         case DLL_PROCESS_DETACH:
         {
-            fclose(pOpts->OutputFile);
-            if (pOpts->UsePipes)
-            {
-                CloseHandle(g_Pipe);
-            }
+			CloseHandle(g_Pipe);
         } break;
     }
 

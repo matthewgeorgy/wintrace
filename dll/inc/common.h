@@ -17,9 +17,7 @@ typedef struct _tag_WintraceOpts
     BOOL        ShowThreadID;
     BOOL        ShowProcessID;
     BOOL        ShowFuncCount;
-    BOOL        UsePipes;
     CHAR        OutputFilename[64];
-    FILE        *OutputFile;
     CHAR        TraceList[32][32];
 	CHAR		BlockList[32][32];
     CHAR        *ProgramName,

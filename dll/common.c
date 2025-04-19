@@ -85,22 +85,16 @@ WriteFuncBuffer(char *Format,
 void
 PrintFuncBuffer(T_FuncBuffer *Buffer)
 {
-	if (pOpts->UsePipes)
-	{
-		BOOL Status;
-		DWORD NumRead;
+	BOOL Status;
+	DWORD NumRead;
 
-		Status = WriteFile(g_Pipe, Buffer->Buff, 512, &NumRead, NULL);
-		if (!Status)
-		{
-			printf("failed to write to pipe %d...!\r\n", GetLastError());
-		}
-		WaitForSingleObject(g_Fence, INFINITE);
-	}
-	else
+
+	Status = WriteFile(g_Pipe, Buffer->Buff, 512, &NumRead, NULL);
+	if (!Status)
 	{
-    	fprintf(pOpts->OutputFile, "%s", Buffer->Buff);
+		fprintf(stderr, "[DLL] Failed to write to pipe %d...!\r\n", GetLastError());
 	}
+	WaitForSingleObject(g_Fence, INFINITE);
 
     Buffer->Pos = 0;
 }

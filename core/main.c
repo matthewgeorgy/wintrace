@@ -1,6 +1,7 @@
 /*
     Version History
 
+		0.3.0	All output printing is now done with pipes, ONLY
 		0.2.6	Made printing in core & dll a bit nicer
 		0.2.5   Explicit /B option for blocking functions to trace
         0.2.4   Naming Opts, Pipe, and Fence with the target PID
@@ -79,7 +80,7 @@
 #define CRLF "\r\n"
 
 // Version
-#define WINTRACE_CORE_VERSION "0.2.6"
+#define WINTRACE_CORE_VERSION "0.3.0"
 
 // Extra options here that aren't used by the DLL (ProgramName and CmdArgs)
 // Might rename this to T_WintraceOptsEx or something to specify this, or
@@ -90,9 +91,7 @@ typedef struct _tag_WintraceOpts
     BOOL        ShowThreadID;
     BOOL        ShowProcessID;
     BOOL        ShowFuncCount;
-    BOOL        UsePipes;
     CHAR        OutputFilename[64];
-    FILE        *OutputFile;
     CHAR        TraceList[32][32];
 	CHAR		BlockList[32][32];
     CHAR        *ProgramName,
@@ -153,12 +152,13 @@ main(int argc,
     sprintf(PipeName, "\\\\.\\pipe\\WintracePipe_%u", ProcessInfo.dwProcessId);
     sprintf(FenceName, "WintraceFence_%u", ProcessInfo.dwProcessId);
 
-    printf("[CORE] Initialized successfully:" CRLF
-		   "  PID: %u" CRLF
-		   "  Opts: %s" CRLF
-		   "  Pipe: %s" CRLF
-		   "  Fence: %s" CRLF,
-		   ProcessInfo.dwProcessId, OptsName, PipeName, FenceName);
+    fprintf(stderr,
+			"[CORE] Initialized successfully:" CRLF
+		    "  PID: %u" CRLF
+		    "  Opts: %s" CRLF
+		    "  Pipe: %s" CRLF
+		    "  Fence: %s" CRLF,
+		    ProcessInfo.dwProcessId, OptsName, PipeName, FenceName);
 
     // Map shared memory
     FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WintraceOpts), OptsName);
@@ -206,18 +206,15 @@ main(int argc,
     }
 
     // Fence
-    if (Opts.UsePipes)
-    {
-        Fence = CreateEventA(NULL, FALSE, FALSE, FenceName);
-        if (!Fence)
-        {
-            printf("[CORE] Failed to create fence %d\n", GetLastError());
-            return (-1);
-        }
+	Fence = CreateEventA(NULL, FALSE, FALSE, FenceName);
+	if (!Fence)
+	{
+		fprintf(stderr, "[CORE] Failed to create fence %d\n", GetLastError());
+		return (-1);
+	}
 
-        // Pipe thread
-        PipeThread = CreateThread(NULL, 0, &InitializePipe, NULL, 0, NULL);
-    }
+	// Pipe thread
+	PipeThread = CreateThread(NULL, 0, &InitializePipe, NULL, 0, NULL);
 
     // LoadLibrary thread
     LoadThread = CreateRemoteThread(ProcessInfo.hProcess, NULL, 0, lpfnLoadLibA, pDllPath, 0, NULL);
@@ -232,10 +229,16 @@ main(int argc,
     ResumeThread(ProcessInfo.hThread);
 
     // Read from pipe
-    if (Opts.UsePipes)
     {
         CHAR        Buffer[1024];
         DWORD       NumRead;
+		FILE		*OutputFile = stderr;
+
+
+		if (Opts.OutputFilename[0])
+		{
+			OutputFile = fopen(Opts.OutputFilename, "w+");
+		}
 
         for (;;)
         {
@@ -243,7 +246,7 @@ main(int argc,
             if (Status)
             {
                 Buffer[NumRead] = 0;
-                fprintf(stderr, "%s", Buffer);
+                fprintf(OutputFile, "%s", Buffer);
                 SetEvent(Fence);
             }
             else
@@ -252,6 +255,11 @@ main(int argc,
                 break;
             }
         }
+
+		if (Opts.OutputFilename[0])
+		{
+			fclose(OutputFile);
+		}
     }
 
     WaitForSingleObject(ProcessInfo.hThread, INFINITE);
@@ -264,11 +272,8 @@ main(int argc,
     VirtualFreeEx(ProcessInfo.hProcess, pDllPath, Len, MEM_RELEASE);
     UnmapViewOfFile(FileMap);
     CloseHandle(FileMap);
-    if (Opts.UsePipes)
-    {
-        CloseHandle(g_Pipe);
-        CloseHandle(Fence);
-    }
+	CloseHandle(g_Pipe);
+	CloseHandle(Fence);
 
     return 0;
 }
@@ -294,7 +299,6 @@ PrintUsage(void)
             "  /T:fns        Trace only fns, a comma separated list of function names" CRLF
             "  /B:fns        Trace all functions except fns, a comma separated list of function names" CRLF
             "  /o:file       Output to file" CRLF
-            "  /P            (BETA) Print debug output using pipes" CRLF
             "  /?            Show available options" CRLF,
             WINTRACE_CORE_VERSION, GetDllVersion());
 }
@@ -333,10 +337,6 @@ ParseOpts(int argc,
             case 'o':
             {
                 strcpy(Opts.OutputFilename, argv[OptInd] + 3);
-            } break;
-            case 'P':
-            {
-                Opts.UsePipes = TRUE;
             } break;
             case 'T':
             {
@@ -381,7 +381,7 @@ ParseOpts(int argc,
 
 	if (Opts.TraceList[0][0] && Opts.BlockList[0][0])
 	{
-		printf("Error: can only trace (/T) OR block (/B) functions...!" CRLF);
+		fprintf(stderr, "Error: can only trace (/T) OR block (/B) functions...!" CRLF);
 		exit(-1);
 	}
 
@@ -410,15 +410,15 @@ InitializePipe(LPVOID Param)
 
 
     g_Pipe = CreateNamedPipe(PipeName, PIPE_ACCESS_INBOUND, PIPE_TYPE_BYTE, 1, 0, 0, 0, NULL);
-    printf("[CORE] Created pipe...\r\n");
+    fprintf(stderr, "[CORE] Created pipe...\r\n");
     Status = ConnectNamedPipe(g_Pipe, NULL);
     if (!Status)
     {
-        printf("[CORE] Failed to connect pipe...!\r\n");
+        fprintf(stderr, "[CORE] Failed to connect pipe...!\r\n");
     }
     else
     {
-        printf("[CORE] Connected pipe...\r\n");
+        fprintf(stderr, "[CORE] Connected pipe...\r\n");
     }
 
     return (0);
