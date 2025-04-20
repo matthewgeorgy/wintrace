@@ -10,6 +10,7 @@ move wt_memoryapi.h ..\dll\inc\win32
 move wt_processthreadsapi.h ..\dll\inc\win32
 move wt_profileapi.h ..\dll\inc\win32
 move wt_winuser.h ..\dll\inc\win32
+move wt_syncapi.h ..\dll\inc\win32
 
 move wt_debugapi.c ..\dll\win32
 move wt_fileapi.c ..\dll\win32
@@ -18,6 +19,7 @@ move wt_memoryapi.c ..\dll\win32
 move wt_processthreadsapi.c ..\dll\win32
 move wt_profileapi.c ..\dll\win32
 move wt_winuser.c ..\dll\win32
+move wt_syncapi.c ..\dll\win32
 
 :: CRT hooks
 move wt_stdio.h ..\dll\inc\crt

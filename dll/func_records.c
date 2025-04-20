@@ -130,6 +130,32 @@ T_FuncRec  g_FuncRecs[] =
     { "ShowWindow", 0, FALSE },
     { "TranslateMessage", 0, FALSE },
     { "UpdateWindow", 0, FALSE },
+    // syncapi.h
+    { "CreateMutexA", 0, FALSE },
+    { "CreateMutexW", 0, FALSE },
+    { "CreateMutexExA", 0, FALSE },
+    { "CreateMutexExW", 0, FALSE },
+    { "ReleaseMutex", 0, FALSE },
+    { "CreateSemaphoreExW", 0, FALSE },
+    { "ReleaseSemaphore", 0, FALSE },
+    { "CreateEventA", 0, FALSE },
+    { "CreateEventW", 0, FALSE },
+    { "CreateEventExA", 0, FALSE },
+    { "CreateEventExW", 0, FALSE },
+    { "SetEvent", 0, FALSE },
+    { "ResetEvent", 0, FALSE },
+    { "InitializeCriticalSection", 0, FALSE },
+    { "EnterCriticalSection", 0, FALSE },
+    { "LeaveCriticalSection", 0, FALSE },
+    { "InitializeCriticalSectionAndSpinCount", 0, FALSE },
+    { "InitializeCriticalSectionEx", 0, FALSE },
+    { "SetCriticalSectionSpinCount", 0, FALSE },
+    { "TryEnterCriticalSection", 0, FALSE },
+    { "DeleteCriticalSection", 0, FALSE },
+    { "WaitForSingleObject", 0, FALSE },
+    { "WaitForSingleObjectEx", 0, FALSE },
+    { "WaitForMultipleObjectsEx", 0, FALSE },
+    { "SleepEx", 0, FALSE },
     // stdio.h
     { "fopen", 0, FALSE },
     { "_wfopen", 0, FALSE },
@@ -270,6 +296,32 @@ SetTrace(DWORD Hash,
         case FUNC_ShowWindow:                       { g_FuncRecs[E_ShowWindow].bTrace = bTrace; } break;
         case FUNC_TranslateMessage:                 { g_FuncRecs[E_TranslateMessage].bTrace = bTrace; } break;
         case FUNC_UpdateWindow:                     { g_FuncRecs[E_UpdateWindow].bTrace = bTrace; } break;
+        // syncapi.h
+        case FUNC_CreateMutexA:                     { g_FuncRecs[E_CreateMutexA].bTrace = bTrace; } break;
+        case FUNC_CreateMutexW:                     { g_FuncRecs[E_CreateMutexW].bTrace = bTrace; } break;
+        case FUNC_CreateMutexExA:                   { g_FuncRecs[E_CreateMutexExA].bTrace = bTrace; } break;
+        case FUNC_CreateMutexExW:                   { g_FuncRecs[E_CreateMutexExW].bTrace = bTrace; } break;
+        case FUNC_ReleaseMutex:                     { g_FuncRecs[E_ReleaseMutex].bTrace = bTrace; } break;
+        case FUNC_CreateSemaphoreExW:               { g_FuncRecs[E_CreateSemaphoreExW].bTrace = bTrace; } break;
+        case FUNC_ReleaseSemaphore:                 { g_FuncRecs[E_ReleaseSemaphore].bTrace = bTrace; } break;
+        case FUNC_CreateEventA:                     { g_FuncRecs[E_CreateEventA].bTrace = bTrace; } break;
+        case FUNC_CreateEventW:                     { g_FuncRecs[E_CreateEventW].bTrace = bTrace; } break;
+        case FUNC_CreateEventExA:                   { g_FuncRecs[E_CreateEventExA].bTrace = bTrace; } break;
+        case FUNC_CreateEventExW:                   { g_FuncRecs[E_CreateEventExW].bTrace = bTrace; } break;
+        case FUNC_SetEvent:                         { g_FuncRecs[E_SetEvent].bTrace = bTrace; } break;
+        case FUNC_ResetEvent:                       { g_FuncRecs[E_ResetEvent].bTrace = bTrace; } break;
+        case FUNC_InitializeCriticalSection:        { g_FuncRecs[E_InitializeCriticalSection].bTrace = bTrace; } break;
+        case FUNC_EnterCriticalSection:             { g_FuncRecs[E_EnterCriticalSection].bTrace = bTrace; } break;
+        case FUNC_LeaveCriticalSection:             { g_FuncRecs[E_LeaveCriticalSection].bTrace = bTrace; } break;
+        case FUNC_InitializeCriticalSectionAndSpinCount:    { g_FuncRecs[E_InitializeCriticalSectionAndSpinCount].bTrace = bTrace; } break;
+        case FUNC_InitializeCriticalSectionEx:      { g_FuncRecs[E_InitializeCriticalSectionEx].bTrace = bTrace; } break;
+        case FUNC_SetCriticalSectionSpinCount:      { g_FuncRecs[E_SetCriticalSectionSpinCount].bTrace = bTrace; } break;
+        case FUNC_TryEnterCriticalSection:          { g_FuncRecs[E_TryEnterCriticalSection].bTrace = bTrace; } break;
+        case FUNC_DeleteCriticalSection:            { g_FuncRecs[E_DeleteCriticalSection].bTrace = bTrace; } break;
+        case FUNC_WaitForSingleObject:              { g_FuncRecs[E_WaitForSingleObject].bTrace = bTrace; } break;
+        case FUNC_WaitForSingleObjectEx:            { g_FuncRecs[E_WaitForSingleObjectEx].bTrace = bTrace; } break;
+        case FUNC_WaitForMultipleObjectsEx:         { g_FuncRecs[E_WaitForMultipleObjectsEx].bTrace = bTrace; } break;
+        case FUNC_SleepEx:                          { g_FuncRecs[E_SleepEx].bTrace = bTrace; } break;
         // stdio.h
         case FUNC_fopen:                            { g_FuncRecs[E_fopen].bTrace = bTrace; } break;
         case FUNC__wfopen:                          { g_FuncRecs[E__wfopen].bTrace = bTrace; } break;

@@ -1,6 +1,7 @@
 /*
     Version History
 
+		0.6.1	Added wt_syncapi.c/h
 		0.6.0	All output printing is now done with pipes, ONLY
 		0.5.6	Made printing in core & dll a bit nicer
 		0.5.5   Explicit /B option for blocking functions to trace
@@ -93,10 +94,11 @@
 #include <win32/wt_debugapi.h>
 #include <win32/wt_profileapi.h>
 #include <win32/wt_memoryapi.h>
+#include <win32/wt_syncapi.h>
 #include <crt/wt_stdio.h>
 #include <crt/wt_stdlib.h>
 
-#define WINTRACE_DLL_VERSION "0.6.0"
+#define WINTRACE_DLL_VERSION "0.6.1"
 
 // Goes through the IAT and patches the function addresses
 void PatchIAT(void);

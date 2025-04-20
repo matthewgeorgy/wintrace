@@ -135,6 +135,32 @@ PatchFunction(DWORD FuncHash,
         case FUNC_ShowWindow:                       { PatchEntry(WtShowWindow); } break;
         case FUNC_TranslateMessage:                 { PatchEntry(WtTranslateMessage); } break;
         case FUNC_UpdateWindow:                     { PatchEntry(WtUpdateWindow); } break;
+        // syncapi.h
+        case FUNC_CreateMutexA:                     { PatchEntry(WtCreateMutexA); } break;
+        case FUNC_CreateMutexW:                     { PatchEntry(WtCreateMutexW); } break;
+        case FUNC_CreateMutexExA:                   { PatchEntry(WtCreateMutexExA); } break;
+        case FUNC_CreateMutexExW:                   { PatchEntry(WtCreateMutexExW); } break;
+        case FUNC_ReleaseMutex:                     { PatchEntry(WtReleaseMutex); } break;
+        case FUNC_CreateSemaphoreExW:               { PatchEntry(WtCreateSemaphoreExW); } break;
+        case FUNC_ReleaseSemaphore:                 { PatchEntry(WtReleaseSemaphore); } break;
+        case FUNC_CreateEventA:                     { PatchEntry(WtCreateEventA); } break;
+        case FUNC_CreateEventW:                     { PatchEntry(WtCreateEventW); } break;
+        case FUNC_CreateEventExA:                   { PatchEntry(WtCreateEventExA); } break;
+        case FUNC_CreateEventExW:                   { PatchEntry(WtCreateEventExW); } break;
+        case FUNC_SetEvent:                         { PatchEntry(WtSetEvent); } break;
+        case FUNC_ResetEvent:                       { PatchEntry(WtResetEvent); } break;
+        case FUNC_InitializeCriticalSection:        { PatchEntry(WtInitializeCriticalSection); } break;
+        case FUNC_EnterCriticalSection:             { PatchEntry(WtEnterCriticalSection); } break;
+        case FUNC_LeaveCriticalSection:             { PatchEntry(WtLeaveCriticalSection); } break;
+        case FUNC_InitializeCriticalSectionAndSpinCount:    { PatchEntry(WtInitializeCriticalSectionAndSpinCount); } break;
+        case FUNC_InitializeCriticalSectionEx:      { PatchEntry(WtInitializeCriticalSectionEx); } break;
+        case FUNC_SetCriticalSectionSpinCount:      { PatchEntry(WtSetCriticalSectionSpinCount); } break;
+        case FUNC_TryEnterCriticalSection:          { PatchEntry(WtTryEnterCriticalSection); } break;
+        case FUNC_DeleteCriticalSection:            { PatchEntry(WtDeleteCriticalSection); } break;
+        case FUNC_WaitForSingleObject:              { PatchEntry(WtWaitForSingleObject); } break;
+        case FUNC_WaitForSingleObjectEx:            { PatchEntry(WtWaitForSingleObjectEx); } break;
+        case FUNC_WaitForMultipleObjectsEx:         { PatchEntry(WtWaitForMultipleObjectsEx); } break;
+        case FUNC_SleepEx:                          { PatchEntry(WtSleepEx); } break;
         // stdio.h
         case FUNC_fopen:                            { PatchEntry(wt_fopen); } break;
         case FUNC__wfopen:                          { PatchEntry(wt__wfopen); } break;

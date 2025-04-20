@@ -126,6 +126,32 @@
 #define FUNC_ShowWindow 3810608670
 #define FUNC_TranslateMessage 3846330968
 #define FUNC_UpdateWindow 3899713536
+// syncapi.h
+#define FUNC_CreateMutexA 1872835085
+#define FUNC_CreateMutexW 1872835107
+#define FUNC_CreateMutexExA 3702917642
+#define FUNC_CreateMutexExW 3702917664
+#define FUNC_ReleaseMutex 1482652953
+#define FUNC_CreateSemaphoreExW 4058358097
+#define FUNC_ReleaseSemaphore 434477162
+#define FUNC_CreateEventA 1560408476
+#define FUNC_CreateEventW 1560408498
+#define FUNC_CreateEventExA 2772756825
+#define FUNC_CreateEventExW 2772756847
+#define FUNC_SetEvent 2273229779
+#define FUNC_ResetEvent 170852138
+#define FUNC_InitializeCriticalSection 1366379447
+#define FUNC_EnterCriticalSection 3228481347
+#define FUNC_LeaveCriticalSection 2482237650
+#define FUNC_InitializeCriticalSectionAndSpinCount 2697350381
+#define FUNC_InitializeCriticalSectionEx 1928535764
+#define FUNC_SetCriticalSectionSpinCount 932078804
+#define FUNC_TryEnterCriticalSection 1566883618
+#define FUNC_DeleteCriticalSection 763806584
+#define FUNC_WaitForSingleObject 3972899258
+#define FUNC_WaitForSingleObjectEx 1455227287
+#define FUNC_WaitForMultipleObjectsEx 1469995796
+#define FUNC_SleepEx 4230702811
 // stdio.h
 #define FUNC_fopen 259230589
 #define FUNC__wfopen 2980484915

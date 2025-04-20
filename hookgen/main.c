@@ -33,6 +33,7 @@ CHAR *HookList[] =
     "wt_processthreadsapi Wt win32",
     "wt_profileapi Wt win32",
     "wt_winuser Wt win32",
+	"wt_syncapi Wt win32",
     "wt_stdio wt_ crt",
     "wt_stdlib wt_ crt"
 };
@@ -50,9 +51,9 @@ void            GenerateFunctionHashes(T_Function *Functions[], INT Count[], CHA
 int
 main(void)
 {
-    T_Function      *Functions[9];
-    INT             Count[9];
-    CHAR            *LibNames[9];
+    T_Function      *Functions[10];
+    INT             Count[10];
+    CHAR            *LibNames[10];
     INT             I;
     CHAR            ListName[32],
                     Prefix[32],
@@ -223,6 +224,8 @@ GetFormat(CHAR *Format,
         case TYPE_LPOVERLAPPED:
         case TYPE_LPOVERLAPPED_COMPLETION_ROUTINE:
         case TYPE_PLONG:
+        case TYPE_LPLONG:
+		case TYPE_LPCRITICAL_SECTION:
         case TYPE_LPCVOID:
         case TYPE_PHANDLE:
         case TYPE_LPPROCESS_HEAP_ENTRY:
