@@ -8,6 +8,7 @@
 #include "type_hashes.h"
 
 #define BUFF_SIZE       1024 * 1024 // 1 MB
+#define CRLF			"\r\n"
 
 typedef struct _tag_Function
 {
@@ -306,7 +307,7 @@ GetFormat(CHAR *Format,
 
         default:
         {
-            printf("CODEGEN ERR: NO FORMAT FOUND FOR %s\n", Type);
+            printf("CODEGEN ERR: NO FORMAT FOUND FOR %s" CRLF, Type);
             exit(-1);
         } break;
     }
@@ -368,14 +369,14 @@ GenerateHooks(T_Function *Functions,
     SourceBuffer.Pos = 0;
 
     // Header and extern global pOpts
-    WriteBuffer(&SourceBuffer, "#include <%s/%s>\n\n", Folder, HeaderName);
-    WriteBuffer(&SourceBuffer, "extern T_WintraceOpts\t\t*pOpts;\n\n");
+    WriteBuffer(&SourceBuffer, "#include <%s/%s>" CRLF CRLF, Folder, HeaderName);
+    WriteBuffer(&SourceBuffer, "extern T_WintraceOpts\t\t*pOpts;" CRLF CRLF);
 
     for (INT J = 0; J < Count; J++)
     {
         T_Function Func = Functions[J];
 
-        WriteBuffer(&SourceBuffer, "%s\n%s%s", Func.ReturnType, Prefix, Func.Name);
+        WriteBuffer(&SourceBuffer, "%s" CRLF "%s%s", Func.ReturnType, Prefix, Func.Name);
         WriteBuffer(&SourceBuffer, "(");
 
         if (Func.ArgCount == 0)
@@ -386,7 +387,7 @@ GenerateHooks(T_Function *Functions,
         {
             Commas = Func.ArgCount - 1;
 
-            WriteBuffer(&SourceBuffer, "\n");
+            WriteBuffer(&SourceBuffer, CRLF);
 
             for (INT I = 0; I < Func.ArgCount; I++)
             {
@@ -398,22 +399,22 @@ GenerateHooks(T_Function *Functions,
                     Commas--;
                 }
 
-                WriteBuffer(&SourceBuffer, "\n");
+                WriteBuffer(&SourceBuffer, CRLF);
             }
 
             WriteBuffer(&SourceBuffer, ")");
         }
 
-        WriteBuffer(&SourceBuffer, "\n{\n");
+        WriteBuffer(&SourceBuffer, CRLF "{" CRLF);
 
         // Create stack
         if (strcmp(Func.ReturnType, "void"))
         {
-            WriteBuffer(&SourceBuffer, "\t%s Ret;\n\n", Func.ReturnType);
+            WriteBuffer(&SourceBuffer, "\t%s Ret;" CRLF CRLF, Func.ReturnType);
         }
 
         // BeginTrace
-        WriteBuffer(&SourceBuffer, "\tif (BeginTrace(E_%s))\n\t{\n", Func.Name);
+        WriteBuffer(&SourceBuffer, "\tif (BeginTrace(E_%s))"CRLF "\t{" CRLF, Func.Name);
         WriteBuffer(&SourceBuffer, "\t\tWriteFuncBuffer(\"(");
 
         // Arguments in WriteFuncBuffer string
@@ -446,7 +447,7 @@ GenerateHooks(T_Function *Functions,
                 Commas--;
             }
         }
-        WriteBuffer(&SourceBuffer, ");\n");
+        WriteBuffer(&SourceBuffer, ");" CRLF);
 
         // Call the real function
         // We call it inside the BeginTrace block if it's a non-void function.
@@ -464,7 +465,7 @@ GenerateHooks(T_Function *Functions,
                     Commas--;
                 }
             }
-            WriteBuffer(&SourceBuffer, ");\n");
+            WriteBuffer(&SourceBuffer, ");" CRLF);
         }
 
         // WriteFuncBuffer hook function return value
@@ -479,16 +480,16 @@ GenerateHooks(T_Function *Functions,
         {
             WriteBuffer(&SourceBuffer, "VOID\"");
         }
-        WriteBuffer(&SourceBuffer, ");\n");
+        WriteBuffer(&SourceBuffer, ");" CRLF);
 
         // EndTrace
-        WriteBuffer(&SourceBuffer, "\t\tEndTrace(E_%s, FALSE);\n", Func.Name);
+        WriteBuffer(&SourceBuffer, "\t\tEndTrace(E_%s, FALSE);" CRLF, Func.Name);
 
-        WriteBuffer(&SourceBuffer, "\t}\n");
+        WriteBuffer(&SourceBuffer, "\t}" CRLF);
 
         if (strcmp(Func.ReturnType, "void"))
         {
-            WriteBuffer(&SourceBuffer, "\telse\n\t{\n");
+            WriteBuffer(&SourceBuffer, "\telse" CRLF "\t{" CRLF);
             WriteBuffer(&SourceBuffer, "\t\tRet = ");
             WriteBuffer(&SourceBuffer, "%s(", Func.Name);
 
@@ -504,11 +505,11 @@ GenerateHooks(T_Function *Functions,
             }
 
             WriteBuffer(&SourceBuffer, ");");
-            WriteBuffer(&SourceBuffer, "\n\t}\n");
+            WriteBuffer(&SourceBuffer, CRLF "\t}" CRLF);
         }
         else
         {
-            WriteBuffer(&SourceBuffer, "\n\t%s(", Func.Name);
+            WriteBuffer(&SourceBuffer, CRLF "\t%s(", Func.Name);
 
             Commas = Func.ArgCount - 1;
             for (INT K = 0; K < Func.ArgCount; K++)
@@ -527,10 +528,10 @@ GenerateHooks(T_Function *Functions,
         // Return variable return
         if (strcmp(Func.ReturnType, "void"))
         {
-            WriteBuffer(&SourceBuffer, "\n\treturn (Ret);");
+            WriteBuffer(&SourceBuffer, CRLF "\treturn (Ret);");
         }
 
-        WriteBuffer(&SourceBuffer, "\n}\n\n");
+        WriteBuffer(&SourceBuffer, CRLF "}" CRLF CRLF);
     }
 
     SourceFile = CreateFile(SourceName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
@@ -553,9 +554,9 @@ GenerateHooks(T_Function *Functions,
     IncludeGuard[Len + 1] = 'H';
     IncludeGuard[Len + 2] = 0;
 
-    WriteBuffer(&HeaderBuffer, "#ifndef %s\n", IncludeGuard);
-    WriteBuffer(&HeaderBuffer, "#define %s\n\n", IncludeGuard);
-    WriteBuffer(&HeaderBuffer, "#include \"common.h\"\n\n");
+    WriteBuffer(&HeaderBuffer, "#ifndef %s" CRLF, IncludeGuard);
+    WriteBuffer(&HeaderBuffer, "#define %s" CRLF CRLF, IncludeGuard);
+    WriteBuffer(&HeaderBuffer, "#include \"common.h\"" CRLF CRLF);
 
     for (INT I = 0; I < Count; I++)
     {
@@ -574,10 +575,10 @@ GenerateHooks(T_Function *Functions,
             }
         }
 
-        WriteBuffer(&HeaderBuffer, ");\n");
+        WriteBuffer(&HeaderBuffer, ");" CRLF);
     }
 
-    WriteBuffer(&HeaderBuffer, "\n#endif // %s\n", IncludeGuard);
+    WriteBuffer(&HeaderBuffer, CRLF "#endif // %s" CRLF, IncludeGuard);
 
     HeaderFile = CreateFile(HeaderName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
     WriteFile(HeaderFile, HeaderBuffer.Buff, (DWORD)HeaderBuffer.Pos, 0, 0);
@@ -604,43 +605,43 @@ GenerateFuncRecords(T_Function *Functions[],
     SourceBuffer.Pos = 0;
 
     // Header and extern global pOpts
-    WriteBuffer(&SourceBuffer, "#include <common.h>\n\n");
-    WriteBuffer(&SourceBuffer, "extern T_WintraceOpts *pOpts;\n\n");
+    WriteBuffer(&SourceBuffer, "#include <common.h>" CRLF CRLF);
+    WriteBuffer(&SourceBuffer, "extern T_WintraceOpts *pOpts;" CRLF CRLF);
 
     // Function record array
-    WriteBuffer(&SourceBuffer, "// Full list of supported function records\n");
-    WriteBuffer(&SourceBuffer, "T_FuncRec  g_FuncRecs[] =\n{\n");
+    WriteBuffer(&SourceBuffer, "// Full list of supported function records" CRLF);
+    WriteBuffer(&SourceBuffer, "T_FuncRec  g_FuncRecs[] =" CRLF "{" CRLF);
 
     for (INT I = 0; I < HookListSize; I++)
     {
-        WriteBuffer(&SourceBuffer, "    // %s.h\n", LibNames[I]);
+        WriteBuffer(&SourceBuffer, "    // %s.h" CRLF, LibNames[I]);
 
         for (INT J = 0; J < Count[I]; J++)
         {
-            WriteBuffer(&SourceBuffer, "    { \"%s\", 0, FALSE },\n", Functions[I][J].Name);
+            WriteBuffer(&SourceBuffer, "    { \"%s\", 0, FALSE }," CRLF, Functions[I][J].Name);
         }
     }
-    WriteBuffer(&SourceBuffer, "};\n\n");
+    WriteBuffer(&SourceBuffer, "};" CRLF CRLF);
 
 
     // SetTrace function
-    WriteBuffer(&SourceBuffer, "void\nSetTrace(DWORD Hash,\n         BOOL bTrace)\n{\n");
-    WriteBuffer(&SourceBuffer, "    switch (Hash)\n    {\n");
+    WriteBuffer(&SourceBuffer, "void" CRLF "SetTrace(DWORD Hash," CRLF "         BOOL bTrace)" CRLF "{" CRLF);
+    WriteBuffer(&SourceBuffer, "    switch (Hash)" CRLF "    {" CRLF);
 
     for (INT I = 0; I < HookListSize; I++)
     {
-        WriteBuffer(&SourceBuffer, "        // %s.h\n", LibNames[I]);
+        WriteBuffer(&SourceBuffer, "        // %s.h" CRLF, LibNames[I]);
 
         for (INT J = 0; J < Count[I]; J++)
         {
             SIZE_T Written = WriteBuffer(&SourceBuffer, "        case FUNC_%s:", Functions[I][J].Name);
             Written = 52 - Written;
             WriteBuffer(&SourceBuffer, "%*c", Written, ' ');
-            WriteBuffer(&SourceBuffer, "{ g_FuncRecs[E_%s].bTrace = bTrace; } break;\n", Functions[I][J].Name);
+            WriteBuffer(&SourceBuffer, "{ g_FuncRecs[E_%s].bTrace = bTrace; } break;" CRLF, Functions[I][J].Name);
         }
     }
-    WriteBuffer(&SourceBuffer, "    }\n");
-    WriteBuffer(&SourceBuffer, "}\n");
+    WriteBuffer(&SourceBuffer, "    }" CRLF);
+    WriteBuffer(&SourceBuffer, "}" CRLF);
 
     SourceFile = CreateFile("func_records.c", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     WriteFile(SourceFile, SourceBuffer.Buff, (DWORD)SourceBuffer.Pos, 0, 0);
@@ -653,35 +654,35 @@ GenerateFuncRecords(T_Function *Functions[],
     HeaderBuffer.Pos = 0;
 
     // Include guards
-    WriteBuffer(&HeaderBuffer, "#ifndef FUNC_RECORDS_H\n");
-    WriteBuffer(&HeaderBuffer, "#define FUNC_RECORDS_H\n\n");
+    WriteBuffer(&HeaderBuffer, "#ifndef FUNC_RECORDS_H" CRLF);
+    WriteBuffer(&HeaderBuffer, "#define FUNC_RECORDS_H" CRLF CRLF);
 
     // Includes
-    WriteBuffer(&HeaderBuffer, "#define WIN32_LEAN_AND_MEAN\n");
-    WriteBuffer(&HeaderBuffer, "#include <windows.h>\n\n");
+    WriteBuffer(&HeaderBuffer, "#define WIN32_LEAN_AND_MEAN" CRLF);
+    WriteBuffer(&HeaderBuffer, "#include <windows.h>" CRLF CRLF);
 
     // T_FuncRec
-    WriteBuffer(&HeaderBuffer, "typedef struct _tag_FuncRec\n"
-                               "{\n"
-                               "    CHAR        *Name;\n"
-                               "    DWORD       Cnt;\n"
-                               "    BOOL        bTrace;\n"
-                               "} T_FuncRec;\n\n");
+    WriteBuffer(&HeaderBuffer, "typedef struct _tag_FuncRec" CRLF
+                               "{" CRLF
+                               "    CHAR        *Name;" CRLF
+                               "    DWORD       Cnt;" CRLF
+                               "    BOOL        bTrace;" CRLF
+                               "} T_FuncRec;" CRLF CRLF);
 
 
     // E_FuncEnum
-    WriteBuffer(&HeaderBuffer, "typedef enum _tag_FuncEnum\n{\n");
+    WriteBuffer(&HeaderBuffer, "typedef enum _tag_FuncEnum" CRLF "{" CRLF);
     for (INT I = 0; I < HookListSize; I++)
     {
-        WriteBuffer(&HeaderBuffer, "    // %s.h\n", LibNames[I]);
+        WriteBuffer(&HeaderBuffer, "    // %s.h" CRLF, LibNames[I]);
 
         for (INT J = 0; J < Count[I]; J++)
         {
-            WriteBuffer(&HeaderBuffer, "    E_%s,\n", Functions[I][J].Name);
+            WriteBuffer(&HeaderBuffer, "    E_%s," CRLF, Functions[I][J].Name);
         }
     }
-    WriteBuffer(&HeaderBuffer, "    E_Count,\n");
-    WriteBuffer(&HeaderBuffer, "} E_FuncEnum;\n\n");
+    WriteBuffer(&HeaderBuffer, "    E_Count," CRLF);
+    WriteBuffer(&HeaderBuffer, "} E_FuncEnum;" CRLF CRLF);
 
     WriteBuffer(&HeaderBuffer, "#endif // FUNC_RECORDS_H");
 
@@ -703,22 +704,22 @@ GeneratePatchFunction(T_Function *Functions[],
     Buffer.Buff = (CHAR *)malloc(BUFF_SIZE);
     Buffer.Pos = 0;
 
-    WriteBuffer(&Buffer, "#include <dllmain.h>\n\n");
+    WriteBuffer(&Buffer, "#include <dllmain.h>" CRLF CRLF);
 
     WriteBuffer(&Buffer,
-        "void\n"
-        "PatchFunction(DWORD FuncHash,\n"
-        "             PIMAGE_THUNK_DATA FirstThunk)\n"
-        "{\n"
-        "   DWORD       OldProtect;\n"
-        "\n\n"
-        "   switch (FuncHash)\n"
-        "   {\n"
-        "#pragma warning(disable: 4127)\n");
+        "void" CRLF
+        "PatchFunction(DWORD FuncHash," CRLF
+        "             PIMAGE_THUNK_DATA FirstThunk)" CRLF
+        "{" CRLF
+        "   DWORD       OldProtect;" CRLF
+        CRLF CRLF
+        "   switch (FuncHash)" CRLF
+        "   {" CRLF
+        "#pragma warning(disable: 4127)" CRLF);
 
     for (INT I = 0; I < HookListSize; I++)
     {
-        WriteBuffer(&Buffer, "        // %s.h\n", LibNames[I]);
+        WriteBuffer(&Buffer, "        // %s.h" CRLF, LibNames[I]);
 
         for (INT J = 0; J < Count[I]; J++)
         {
@@ -739,12 +740,12 @@ GeneratePatchFunction(T_Function *Functions[],
                 WriteBuffer(&Buffer, "Wt");
             }
 
-            WriteBuffer(&Buffer, "%s); } break;\n", Functions[I][J].Name);
+            WriteBuffer(&Buffer, "%s); } break;" CRLF, Functions[I][J].Name);
         }
     }
-    WriteBuffer(&Buffer, "#pragma warning(default: 4127)\n");
-    WriteBuffer(&Buffer, "    }\n");
-    WriteBuffer(&Buffer, "}\n");
+    WriteBuffer(&Buffer, "#pragma warning(default: 4127)" CRLF);
+    WriteBuffer(&Buffer, "    }" CRLF);
+    WriteBuffer(&Buffer, "}" CRLF);
 
     File = CreateFile("patch_function.c", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     WriteFile(File, Buffer.Buff, (DWORD)Buffer.Pos, 0, 0);
@@ -764,21 +765,21 @@ GenerateFunctionHashes(T_Function *Functions[],
     Buffer.Buff = (CHAR *)malloc(BUFF_SIZE);
     Buffer.Pos = 0;
 
-	WriteBuffer(&Buffer, "#ifndef FUNC_HASHES_H\n");
-	WriteBuffer(&Buffer, "#define FUNC_HASHES_H\n\n");
+	WriteBuffer(&Buffer, "#ifndef FUNC_HASHES_H" CRLF);
+	WriteBuffer(&Buffer, "#define FUNC_HASHES_H" CRLF CRLF);
 
     for (INT I = 0; I < HookListSize; I++)
     {
-        WriteBuffer(&Buffer, "// %s.h\n", LibNames[I]);
+        WriteBuffer(&Buffer, "// %s.h" CRLF, LibNames[I]);
         for (INT J = 0; J < Count[I]; J++)
         {
 			DWORD Hash = Djb2(Functions[I][J].Name);
 
-			WriteBuffer(&Buffer, "#define FUNC_%s %u\n", Functions[I][J].Name, Hash);
+			WriteBuffer(&Buffer, "#define FUNC_%s %u" CRLF, Functions[I][J].Name, Hash);
 		}
 	}
 
-	WriteBuffer(&Buffer, "\n#endif // FUNC_HASHES_H\n");
+	WriteBuffer(&Buffer, CRLF "#endif // FUNC_HASHES_H" CRLF);
 
     File = CreateFile("func_hashes.h", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     WriteFile(File, Buffer.Buff, (DWORD)Buffer.Pos, 0, 0);
