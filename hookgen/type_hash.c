@@ -1,7 +1,10 @@
 #define WIN32_LEAN_AND_MEAN
+#define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#define CRLF		"\r\n"
 
 LPSTR Types[] =
 {
@@ -93,16 +96,18 @@ LPSTR Types[] =
 	"LPFILE"
 };
 
-
 DWORD
 Djb2(LPSTR String)
 {
     DWORD       Hash = 5381;
-    INT         C;
+    INT         C = *String++;
 
 
-    while (C = *String++)
+    while (C)
+    {
         Hash = ((Hash << 5) + Hash) + C;
+        C = *String++;
+    }
 
     return Hash;
 }
@@ -116,15 +121,15 @@ main(void)
     CHAR        Str[256];
 
 
-    HashFile = CreateFile("w:\\wintrace\\hookgen\\type_hashes.h", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    HashFile = CreateFile("type_hashes.h", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
     for (I = 0; I < TypesLen; I++)
     {
-        sprintf(Str, "#define TYPE_%s %u\r\n", Types[I], Djb2(Types[I]));
-        WriteFile(HashFile, Str, strlen(Str), NULL, NULL);
+        sprintf(Str, "#define TYPE_%s %u" CRLF, Types[I], Djb2(Types[I]));
+        WriteFile(HashFile, Str, (DWORD)strlen(Str), NULL, NULL);
     }
-    sprintf(Str, "\r\n");
-    WriteFile(HashFile, Str, strlen(Str), NULL, NULL);
+    sprintf(Str, CRLF);
+    WriteFile(HashFile, Str, (DWORD)strlen(Str), NULL, NULL);
 
     CloseHandle(HashFile);
 

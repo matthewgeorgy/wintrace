@@ -10,24 +10,24 @@ if "%1"=="test"     goto :test
 		call compile.bat
 	popd
     pushd build
-		cl /W4 /c /I"..\dll\inc" ..\dll\crt\*.c
-		cl /W4 /c /I"..\dll\inc" ..\dll\win32\*.c
-		cl /W4 /c /I"..\dll\inc" ..\dll\*.c
-		link /DLL *.obj /OUT:wintrace.dll kernel32.lib user32.lib advapi32.lib
-        cl /W4 /MP /Fe"wintrace.exe" ..\core\*.c kernel32.lib
+		cl /MP /W4 /c /nologo /I"..\dll\inc" ..\dll\crt\*.c ..\dll\win32\*.c ..\dll\*.c
+		:: cl /W4 /c /I"..\dll\inc" ..\dll\win32\*.c
+		:: cl /W4 /c /I"..\dll\inc" ..\dll\*.c
+		link /DLL *.obj /nologo /OUT:wintrace.dll kernel32.lib user32.lib advapi32.lib
+        cl /W4 /MP /nologo /Fe"wintrace.exe" ..\core\*.c kernel32.lib
     popd
 if "%1"=="all"	goto :test
 goto :EOF
 
 :test
     pushd build\tests
-        cl /W4 /MD ..\..\tests\test_heapapi.c
-        cl /W4 /MD ..\..\tests\test_fileapi.c
-        cl /W4 /MD ..\..\tests\test_winuser.c user32.lib
-        cl /W4 /MD ..\..\tests\test_memoryapi.c
-        cl /W4 /MD ..\..\tests\test_stdio.c
-        cl /W4 /MD ..\..\tests\test_stdlib.c
-        cl /W4 /MD ..\..\tests\test_threads.c
+        cl /W4 /MD /nologo ..\..\tests\test_heapapi.c
+        cl /W4 /MD /nologo ..\..\tests\test_fileapi.c
+        cl /W4 /MD /nologo ..\..\tests\test_winuser.c user32.lib
+        cl /W4 /MD /nologo ..\..\tests\test_memoryapi.c
+        cl /W4 /MD /nologo ..\..\tests\test_stdio.c
+        cl /W4 /MD /nologo ..\..\tests\test_stdlib.c
+        cl /W4 /MD /nologo ..\..\tests\test_threads.c
 		del /Q *.obj
     popd
 goto :EOF
@@ -42,5 +42,4 @@ goto :EOF
 		popd
     popd
 goto :EOF
-
 
