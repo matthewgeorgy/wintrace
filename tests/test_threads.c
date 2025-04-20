@@ -40,7 +40,7 @@ main(void)
 	Threads[4] = (HANDLE)_beginthread(&TaskLocked, 0, "Fifth\r\n");
 
 	WaitForMultipleObjects(5, Threads, TRUE, INFINITE);
-	WriteFile(File, ClearLine, strlen(ClearLine), NULL, NULL);
+	WriteFile(File, ClearLine, (DWORD)strlen(ClearLine), NULL, NULL);
 
 	printf("-----------UNLOCKED------------\r\n\r\n");
 
