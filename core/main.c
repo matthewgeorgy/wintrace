@@ -1,9 +1,10 @@
 /*
     Version History
 
-		0.3.0	All output printing is now done with pipes, ONLY
-		0.2.6	Made printing in core & dll a bit nicer
-		0.2.5   Explicit /B option for blocking functions to trace
+        0.3.1	Cleanups
+        0.3.0   All output printing is now done with pipes, ONLY
+        0.2.6   Made printing in core & dll a bit nicer
+        0.2.5   Explicit /B option for blocking functions to trace
         0.2.4   Naming Opts, Pipe, and Fence with the target PID
         0.2.3   Added a switch /P to use named pipes to print debug output through the EXE instead of the DLL (WIP)
         0.2.2   /? now shows the core and dll version
@@ -52,26 +53,6 @@
     check that CallLvl == 1 before printing any output.
 */
 
-/*
-    Specific non-tracing:
-
-    Sometimes you don't care about tracing certain functions
-    (ie GetCurrentProcessId() or QueryPerformanceCounter() at the beginning of
-    each program).
-
-    We can modify how the /T entries are parsed to exclude functions from being
-    traced, while still tracing all the others.
-    Syntax proposal: add a ~ to the start of the name
-
-    Example:
-    wintrace /T:~GetCurrentProcessId test_blah.exe
-
-    Will trace ALL functions EXCEPT GetCurrentProcessId.
-    This will likely be a DLL only change, since that's where we actually parse
-    the function trace list. Putting it here since the rest of the TODO's are
-    here.
-*/
-
 #define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 #include <stdio.h>
@@ -80,7 +61,7 @@
 #define CRLF "\r\n"
 
 // Version
-#define WINTRACE_CORE_VERSION "0.3.0"
+#define WINTRACE_CORE_VERSION "0.3.1"
 
 // Extra options here that aren't used by the DLL (ProgramName and CmdArgs)
 // Might rename this to T_WintraceOptsEx or something to specify this, or
@@ -93,7 +74,7 @@ typedef struct _tag_WintraceOpts
     BOOL        ShowFuncCount;
     CHAR        OutputFilename[64];
     CHAR        TraceList[32][32];
-	CHAR		BlockList[32][32];
+    CHAR        BlockList[32][32];
     CHAR        *ProgramName,
                 CmdArgs[128];
 } T_WintraceOpts;
@@ -108,6 +89,7 @@ T_WintraceOpts  ParseOpts(int argc, char **argv);
 HANDLE      g_Pipe;
 DWORD __stdcall InitializePipe(LPVOID Param);
 
+// Function pointer signature for querying DLL version
 typedef LPSTR (__stdcall *MYPROC)(void);
 
 // Names
@@ -143,7 +125,7 @@ main(int argc,
     Status = CreateProcess(Opts.ProgramName, Opts.CmdArgs, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &StartupInfo, &ProcessInfo);
     if (!Status)
     {
-        fprintf(stderr, "Failed to create process!\n");
+        fprintf(stderr, "[CORE] Failed to create process...! (Error: %u)" CRLF, GetLastError());
         return -1;
     }
 
@@ -153,24 +135,24 @@ main(int argc,
     sprintf(FenceName, "WintraceFence_%u", ProcessInfo.dwProcessId);
 
     fprintf(stderr,
-			"[CORE] Initialized successfully:" CRLF
-		    "  PID: %u" CRLF
-		    "  Opts: %s" CRLF
-		    "  Pipe: %s" CRLF
-		    "  Fence: %s" CRLF,
-		    ProcessInfo.dwProcessId, OptsName, PipeName, FenceName);
+            "[CORE] Initialized successfully:" CRLF
+            "  PID: %u" CRLF
+            "  Opts: %s" CRLF
+            "  Pipe: %s" CRLF
+            "  Fence: %s" CRLF,
+            ProcessInfo.dwProcessId, OptsName, PipeName, FenceName);
 
     // Map shared memory
     FileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(T_WintraceOpts), OptsName);
     if (!FileMap)
     {
-        fprintf(stderr, "[CORE] Could not create file map (%d)\n", GetLastError());
+        fprintf(stderr, "[CORE] Could not create file map...! (Error: %u)" CRLF, GetLastError());
         return -1;
     }
     pOpts = (T_WintraceOpts *)MapViewOfFile(FileMap, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(T_WintraceOpts));
     if (!pOpts)
     {
-        fprintf(stderr, "[CORE] Could not create map view (%d)\n", GetLastError());
+        fprintf(stderr, "[CORE] Could not create map view...! (Error: %u)" CRLF, GetLastError());
         CloseHandle(FileMap);
         return -1;
     }
@@ -180,47 +162,47 @@ main(int argc,
     lpfnLoadLibA = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "LoadLibraryA");
     if (!lpfnLoadLibA)
     {
-        fprintf(stderr, "[CORE] Could no locate LoadLibraryA\n");
+        fprintf(stderr, "[CORE] Could no locate LoadLibraryA...! (Error: %u)" CRLF, GetLastError());
         return -1;
     }
 
     lpfnFreeLib = (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle("Kernel32.dll"), "FreeLibrary");
     if (!lpfnFreeLib)
     {
-        fprintf(stderr, "[CORE] Could no locate FreeLibrary\n");
+        fprintf(stderr, "[CORE] Could no locate FreeLibrary...! (Error: %u)" CRLF, GetLastError());
         return -1;
     }
 
     pDllPath = VirtualAllocEx(ProcessInfo.hProcess, 0, Len, MEM_COMMIT, PAGE_READWRITE);
     if (!pDllPath)
     {
-        fprintf(stderr, "[CORE] Failed to allocate DLL path!\n");
+        fprintf(stderr, "[CORE] Failed to allocate DLL path...! (Error: %u)" CRLF, GetLastError());
         return -1;
     }
 
     Status = WriteProcessMemory(ProcessInfo.hProcess, pDllPath, (LPVOID)DllPath, Len, 0);
     if (!Status)
     {
-        fprintf(stderr, "[CORE] Failed to write target memory!\n");
+        fprintf(stderr, "[CORE] Failed to write target memory...! (Error: %u)" CRLF, GetLastError());
         return -1;
     }
 
     // Fence
-	Fence = CreateEventA(NULL, FALSE, FALSE, FenceName);
-	if (!Fence)
-	{
-		fprintf(stderr, "[CORE] Failed to create fence %d\n", GetLastError());
-		return (-1);
-	}
+    Fence = CreateEventA(NULL, FALSE, FALSE, FenceName);
+    if (!Fence)
+    {
+        fprintf(stderr, "[CORE] Failed to create fence...! (Error: %u)" CRLF, GetLastError());
+        return (-1);
+    }
 
-	// Pipe thread
-	PipeThread = CreateThread(NULL, 0, &InitializePipe, NULL, 0, NULL);
+    // Pipe thread
+    PipeThread = CreateThread(NULL, 0, &InitializePipe, NULL, 0, NULL);
 
     // LoadLibrary thread
     LoadThread = CreateRemoteThread(ProcessInfo.hProcess, NULL, 0, lpfnLoadLibA, pDllPath, 0, NULL);
     if (!LoadThread)
     {
-        fprintf(stderr, "[CORE] Failed to load remote thread\n");
+        fprintf(stderr, "[CORE] Failed to load remote thread...! (Error: %u)" CRLF, GetLastError());
         return -1;
     }
     WaitForSingleObject(LoadThread, INFINITE);
@@ -232,13 +214,13 @@ main(int argc,
     {
         CHAR        Buffer[1024];
         DWORD       NumRead;
-		FILE		*OutputFile = stderr;
+        FILE        *OutputFile = stderr;
 
 
-		if (Opts.OutputFilename[0])
-		{
-			OutputFile = fopen(Opts.OutputFilename, "w+");
-		}
+        if (Opts.OutputFilename[0])
+        {
+            OutputFile = fopen(Opts.OutputFilename, "w+");
+        }
 
         for (;;)
         {
@@ -256,10 +238,10 @@ main(int argc,
             }
         }
 
-		if (Opts.OutputFilename[0])
-		{
-			fclose(OutputFile);
-		}
+        if (Opts.OutputFilename[0])
+        {
+            fclose(OutputFile);
+        }
     }
 
     WaitForSingleObject(ProcessInfo.hThread, INFINITE);
@@ -272,8 +254,8 @@ main(int argc,
     VirtualFreeEx(ProcessInfo.hProcess, pDllPath, Len, MEM_RELEASE);
     UnmapViewOfFile(FileMap);
     CloseHandle(FileMap);
-	CloseHandle(g_Pipe);
-	CloseHandle(Fence);
+    CloseHandle(g_Pipe);
+    CloseHandle(Fence);
 
     return 0;
 }
@@ -379,11 +361,11 @@ ParseOpts(int argc,
         }
     }
 
-	if (Opts.TraceList[0][0] && Opts.BlockList[0][0])
-	{
-		fprintf(stderr, "Error: can only trace (/T) OR block (/B) functions...!" CRLF);
-		exit(-1);
-	}
+    if (Opts.TraceList[0][0] && Opts.BlockList[0][0])
+    {
+        fprintf(stderr, "Error: can only trace (/T) OR block (/B) functions...!" CRLF);
+        exit(-1);
+    }
 
     // Fill out EXE name
     Opts.ProgramName = argv[OptInd++];
@@ -408,6 +390,8 @@ InitializePipe(LPVOID Param)
 {
     BOOL        Status;
 
+
+    UNREFERENCED_PARAMETER(Param);
 
     g_Pipe = CreateNamedPipe(PipeName, PIPE_ACCESS_INBOUND, PIPE_TYPE_BYTE, 1, 0, 0, 0, NULL);
     fprintf(stderr, "[CORE] Created pipe...\r\n");

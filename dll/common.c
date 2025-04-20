@@ -60,6 +60,8 @@ void
 EndTrace(E_FuncEnum FunctionName, // reserved for now*
          BOOL bError)
 {
+	UNREFERENCED_PARAMETER(FunctionName);
+
     if (bError)
         WriteFuncBuffer(" (ERROR: %u) ", GetLastError());
     WriteFuncBuffer("\r\n");
