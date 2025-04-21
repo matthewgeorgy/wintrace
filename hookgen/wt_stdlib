@@ -1,2 +1,7 @@
+double atof(LPCSTR str);
+int atoi(LPCSTR str);
+long atol(LPCSTR str);
 LPVOID malloc(size_t size);
+LPVOID calloc(size_t nitems, size_t size);
+LPVOID realloc(LPVOID ptr, size_t size);
 void free(LPVOID memblock);

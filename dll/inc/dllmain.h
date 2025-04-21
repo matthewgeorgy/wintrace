@@ -1,6 +1,7 @@
 /*
     Version History
 
+        0.6.3   More stdio & stdlib function hooks
         0.6.2   Cleanups
         0.6.1   Added wt_syncapi.c/h
         0.6.0   All output printing is now done with pipes, ONLY
@@ -99,7 +100,7 @@
 #include <crt/wt_stdio.h>
 #include <crt/wt_stdlib.h>
 
-#define WINTRACE_DLL_VERSION "0.6.2"
+#define WINTRACE_DLL_VERSION "0.6.3"
 
 // Goes through the IAT and patches the function addresses
 void PatchIAT(void);

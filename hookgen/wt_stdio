@@ -1,3 +1,10 @@
 LPFILE fopen(LPCSTR filename, LPCSTR mode);
 LPFILE _wfopen(LPCWSTR filename, LPCWSTR mode);
 int fclose(LPFILE stream);
+int feof(LPFILE stream);
+int ferror(LPFILE stream);
+int fflush(LPFILE stream);
+size_t fread(LPVOID ptr, size_t size, size_t nmemb, LPFILE stream);
+size_t fwrite(LPVOID ptr, size_t size, size_t nmemb, LPFILE stream);
+int fseek(LPFILE stream, long offset, int whence);
+long ftell(LPFILE stream);

@@ -282,6 +282,7 @@ GetFormat(CHAR *Format,
 
         // Int
         case TYPE_int:
+		case TYPE_long:
         case TYPE_INT:
         case TYPE_BOOL:
         case TYPE_LONG:
@@ -293,6 +294,7 @@ GetFormat(CHAR *Format,
         } break;
 
         // Char
+		case TYPE_char:
         case TYPE_CHAR:
         {
             strcpy(Format, "%c");
@@ -304,6 +306,16 @@ GetFormat(CHAR *Format,
         {
             strcpy(Format, "\\\"%ws\\\"");
         } break;
+
+		// Float
+		case TYPE_float:
+		{
+            strcpy(Format, "%f");
+		} break;
+		case TYPE_double:
+		{
+            strcpy(Format, "%lf");
+		} break;
 
         default:
         {

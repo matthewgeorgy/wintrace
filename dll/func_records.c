@@ -160,8 +160,20 @@ T_FuncRec  g_FuncRecs[] =
     { "fopen", 0, FALSE },
     { "_wfopen", 0, FALSE },
     { "fclose", 0, FALSE },
+    { "feof", 0, FALSE },
+    { "ferror", 0, FALSE },
+    { "fflush", 0, FALSE },
+    { "fread", 0, FALSE },
+    { "fwrite", 0, FALSE },
+    { "fseek", 0, FALSE },
+    { "ftell", 0, FALSE },
     // stdlib.h
+    { "atof", 0, FALSE },
+    { "atoi", 0, FALSE },
+    { "atol", 0, FALSE },
     { "malloc", 0, FALSE },
+    { "calloc", 0, FALSE },
+    { "realloc", 0, FALSE },
     { "free", 0, FALSE },
 };
 
@@ -326,8 +338,20 @@ SetTrace(DWORD Hash,
         case FUNC_fopen:                            { g_FuncRecs[E_fopen].bTrace = bTrace; } break;
         case FUNC__wfopen:                          { g_FuncRecs[E__wfopen].bTrace = bTrace; } break;
         case FUNC_fclose:                           { g_FuncRecs[E_fclose].bTrace = bTrace; } break;
+        case FUNC_feof:                             { g_FuncRecs[E_feof].bTrace = bTrace; } break;
+        case FUNC_ferror:                           { g_FuncRecs[E_ferror].bTrace = bTrace; } break;
+        case FUNC_fflush:                           { g_FuncRecs[E_fflush].bTrace = bTrace; } break;
+        case FUNC_fread:                            { g_FuncRecs[E_fread].bTrace = bTrace; } break;
+        case FUNC_fwrite:                           { g_FuncRecs[E_fwrite].bTrace = bTrace; } break;
+        case FUNC_fseek:                            { g_FuncRecs[E_fseek].bTrace = bTrace; } break;
+        case FUNC_ftell:                            { g_FuncRecs[E_ftell].bTrace = bTrace; } break;
         // stdlib.h
+        case FUNC_atof:                             { g_FuncRecs[E_atof].bTrace = bTrace; } break;
+        case FUNC_atoi:                             { g_FuncRecs[E_atoi].bTrace = bTrace; } break;
+        case FUNC_atol:                             { g_FuncRecs[E_atol].bTrace = bTrace; } break;
         case FUNC_malloc:                           { g_FuncRecs[E_malloc].bTrace = bTrace; } break;
+        case FUNC_calloc:                           { g_FuncRecs[E_calloc].bTrace = bTrace; } break;
+        case FUNC_realloc:                          { g_FuncRecs[E_realloc].bTrace = bTrace; } break;
         case FUNC_free:                             { g_FuncRecs[E_free].bTrace = bTrace; } break;
     }
 }

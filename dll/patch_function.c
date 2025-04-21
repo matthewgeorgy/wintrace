@@ -165,8 +165,20 @@ PatchFunction(DWORD FuncHash,
         case FUNC_fopen:                            { PatchEntry(wt_fopen); } break;
         case FUNC__wfopen:                          { PatchEntry(wt__wfopen); } break;
         case FUNC_fclose:                           { PatchEntry(wt_fclose); } break;
+        case FUNC_feof:                             { PatchEntry(wt_feof); } break;
+        case FUNC_ferror:                           { PatchEntry(wt_ferror); } break;
+        case FUNC_fflush:                           { PatchEntry(wt_fflush); } break;
+        case FUNC_fread:                            { PatchEntry(wt_fread); } break;
+        case FUNC_fwrite:                           { PatchEntry(wt_fwrite); } break;
+        case FUNC_fseek:                            { PatchEntry(wt_fseek); } break;
+        case FUNC_ftell:                            { PatchEntry(wt_ftell); } break;
         // stdlib.h
+        case FUNC_atof:                             { PatchEntry(wt_atof); } break;
+        case FUNC_atoi:                             { PatchEntry(wt_atoi); } break;
+        case FUNC_atol:                             { PatchEntry(wt_atol); } break;
         case FUNC_malloc:                           { PatchEntry(wt_malloc); } break;
+        case FUNC_calloc:                           { PatchEntry(wt_calloc); } break;
+        case FUNC_realloc:                          { PatchEntry(wt_realloc); } break;
         case FUNC_free:                             { PatchEntry(wt_free); } break;
 #pragma warning(default: 4127)
     }

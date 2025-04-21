@@ -156,8 +156,20 @@
 #define FUNC_fopen 259230589
 #define FUNC__wfopen 2980484915
 #define FUNC_fclose 4245278497
+#define FUNC_feof 2090252933
+#define FUNC_ferror 4247869109
+#define FUNC_fflush 4248842797
+#define FUNC_fread 259326279
+#define FUNC_fwrite 4269206038
+#define FUNC_fseek 259362355
+#define FUNC_ftell 259398524
 // stdlib.h
+#define FUNC_atof 2090089583
+#define FUNC_atoi 2090089586
+#define FUNC_atol 2090089589
 #define FUNC_malloc 221883709
+#define FUNC_calloc 4125497075
+#define FUNC_realloc 1038094023
 #define FUNC_free 2090266759
 
 #endif // FUNC_HASHES_H
