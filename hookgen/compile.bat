@@ -38,3 +38,6 @@ move patch_function.c ..\dll
 :: Function hashes
 move func_hashes.h ..\dll\inc
 
+:: Supported function list
+move supported_functions.md ..\
+

@@ -44,10 +44,12 @@ T_Function      *ParseFunctions(CHAR *Filename, INT *Count);
 SIZE_T          WriteBuffer(T_Buffer *Buffer, char *Format, ...);
 void            GetFormat(CHAR *Format, CHAR *Type);
 DWORD           Djb2(LPSTR String);
+
 void            GenerateHooks(T_Function *Functions, INT Count, CHAR *ListName, CHAR *Prefix, CHAR *Folder);
 void            GenerateFuncRecords(T_Function *Functions[], INT Count[], CHAR *LibNames[], SIZE_T HookListSize);
 void            GeneratePatchFunction(T_Function *Functions[], INT Count[], CHAR *LibNames[], SIZE_T HookListSize);
 void            GenerateFunctionHashes(T_Function *Functions[], INT Count[], CHAR *LibNames[], SIZE_T HookListSize);
+void            GenerateSupportedList(T_Function *Functions[], INT Count[], CHAR *LibNames[], SIZE_T HookListSize);
 
 int
 main(void)
@@ -79,6 +81,7 @@ main(void)
     GenerateFuncRecords(Functions, Count, LibNames, _countof(HookList));
     GeneratePatchFunction(Functions, Count, LibNames, _countof(HookList));
     GenerateFunctionHashes(Functions, Count, LibNames, _countof(HookList));
+    GenerateSupportedList(Functions, Count, LibNames, _countof(HookList));
 
     return (0);
 }
@@ -794,6 +797,42 @@ GenerateFunctionHashes(T_Function *Functions[],
 	WriteBuffer(&Buffer, CRLF "#endif // FUNC_HASHES_H" CRLF);
 
     File = CreateFile("func_hashes.h", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    WriteFile(File, Buffer.Buff, (DWORD)Buffer.Pos, 0, 0);
+    CloseHandle(File);
+}
+
+void            
+GenerateSupportedList(T_Function *Functions[],
+					  INT Count[],
+					  CHAR *LibNames[], 
+					  SIZE_T HookListSize)
+{
+	T_Buffer		Buffer;
+	HANDLE			File;
+
+
+	Buffer.Buff = (CHAR *)malloc(BUFF_SIZE);
+	Buffer.Pos = 0;
+
+	WriteBuffer(&Buffer, "# Supported function list" CRLF CRLF);
+	WriteBuffer(&Buffer, "Below is a list of all the functions currently supported by `wintrace`, sorted by library / header file" CRLF CRLF);
+
+	for (INT I = 0; I < HookListSize; I++)
+	{
+		WriteBuffer(&Buffer, "## %s" CRLF CRLF, LibNames[I]);
+		WriteBuffer(&Buffer, "<ul>" CRLF);
+
+		for (INT J = 0; J < Count[I]; J++)
+		{
+			WriteBuffer(&Buffer, "<li>");
+			WriteBuffer(&Buffer, "%s", Functions[I][J].Name);
+			WriteBuffer(&Buffer, "</li>" CRLF);
+		}
+
+		WriteBuffer(&Buffer, "</ul>" CRLF CRLF);
+	}
+
+	File = CreateFile("supported_functions.md", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     WriteFile(File, Buffer.Buff, (DWORD)Buffer.Pos, 0, 0);
     CloseHandle(File);
 }
