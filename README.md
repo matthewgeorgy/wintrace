@@ -15,7 +15,7 @@ To work with the codebase, you'll need Visual Studio 2015 (or later) and the Win
 
 ### 2. Build environment setup
 
-Building the codebase must be done in a terminal that can call MSVC. This is generally done by calling `vcvarsall.bat x64` in the Visual Studio install directory.
+Building the codebase must be done in a terminal that can call MSVC. This is generally done by calling `vcvarsall.bat x64` in the Visual Studio install directory. 
 
 Alternatively, you can use the developer command prompt that is provided with the Visual Studio install. It is typically called something like `x64 Native Tools Command Prompt for VS <year>`.
 
@@ -74,7 +74,16 @@ Options:
 Here is some sample output, taken from running the `test_fileapi` test:
 ```
 > wintrace /c /t /p tests\test_fileapi.exe
-
+[CORE] Initialized successfully:
+  PID: 7008
+  Opts: WintraceOpts_7008
+  Pipe: \\.\pipe\WintracePipe_7008
+  Fence: WintraceFence_7008
+[CORE] Created pipe...
+[DLL] Connected pipe...
+[DLL] Opened the fence...
+[CORE] Connected pipe...
+|------------TEST: ..\..\tests\test_fileapi.c------------|
 [7008] <3484> (1)  CreateDirectoryA("Foo", 0x0000000000000000) = 1
 [7008] <3484> (1)  CreateFileA("Foo\bar.txt", 3221225472, 0, 0x0000000000000000, 2, 128, 0x0000000000000000) = 0x00000000000000A0
 [7008] <3484> (1)  WriteFile(0x00000000000000A0, 0x00007FF6A3FE3000, 14, 0x0000000000FEFC60, 0x0000000000000000) = 1
@@ -90,6 +99,7 @@ Here is some sample output, taken from running the `test_fileapi` test:
 [7008] <3484> (2)  ReadFile(0x0000000000000058, 0x0000000000FEFC70, 199, 0x0000000000FEFC54, 0x0000000000000000) = 1
 [7008] <3484> (1)  DeleteFileW("Foo\bar.txt") = 0 (ERROR: 32)
 [7008] <3484> (1)  RemoveDirectoryW("Foo") = 0 (ERROR: 145)
+|-----------------------------|
 ```
 
 The full format of wintrace's output is as follows:
